@@ -23,22 +23,20 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    var post = {data: {
-      days: [
-        {date: 7, type: 1},
-        {date: 8, type: 1},
-        {date: 9, type: 4},
-        {date: 10, type: 2},
-        {date: 11, type: 3},
-        {date: 12, type: 3},
-        {date: 13, type: 3}
-      ]
-    }}
-    next(vm => vm.setData(post))
+    next(vm => {
+      vm.getWeekDays()
+    })
   },
   methods: {
-    setData (post) {
-      this.days = post.data.days
+
+    getWeekDays () {
+      this.$http.get('http://localhost:9001/api-time-dominator/1.0.0/week-days').then(response => {
+        if (response.body.code === 200) {
+          this.days = response.body.data.days
+        }
+      }, response => {
+        // error callback
+      })
     }
   }
 }

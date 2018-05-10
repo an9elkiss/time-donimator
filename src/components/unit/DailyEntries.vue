@@ -13,7 +13,12 @@
           <div :key="item.typeId" v-if="index == 0" :id="'timeEntryTag'+item.typeId" class="tab-pane active cont">
           <div class="panel-body">
             <form>
+
               <div class="form-group xs-pt-10">
+                <label>日期</label>
+                <input type="text" placeholder="日期" class="form-control" :value="item.date.split(' ')[0]" readonly="readonly">
+              </div>
+              <div class="form-group">
                 <label>持续时间</label>
                 <input type="text" placeholder="持续时间" class="form-control" :value="item.duration">
               </div>
@@ -37,6 +42,10 @@
             <div class="panel-body">
               <form>
                 <div class="form-group xs-pt-10">
+                  <label>日期</label>
+                  <input type="text" placeholder="日期" class="form-control" :value="item.date.split(' ')[0]" readonly="readonly">
+                </div>
+                <div class="form-group">
                   <label>持续时间</label>
                   <input type="text" placeholder="持续时间" class="form-control" :value="item.duration">
                 </div>
@@ -65,6 +74,7 @@
 
 <script>
 import Global from '@/components/Global'
+import Bus from '@/components/EventBus'
 
 export default {
   name: 'DailyEntries',
@@ -73,13 +83,17 @@ export default {
       timeEntries: null
     }
   },
-  beforeMount () {
-    this.getDailyTimeEntries()
+  created () {
+    var vm = this
+    Bus.$on('s_time_entry_date_change', function (date) {
+      vm.getDailyTimeEntries(date)
+    })
   },
+
   methods: {
 
-    getDailyTimeEntries () {
-      this.$http.get(Global.url.apiDailyTimeEntries + '?date=2018-01-01 00:00:00').then(response => {
+    getDailyTimeEntries (date) {
+      this.$http.get(Global.url.apiDailyTimeEntries + '?date=' + date).then(response => {
         if (response.body.code === 200) {
           this.timeEntries = response.body.data.timeEntries
         }
@@ -87,6 +101,7 @@ export default {
         // error callback
       })
     }
+
   }
 }
 </script>

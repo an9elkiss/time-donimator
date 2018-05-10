@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import WeekDays from '@/components/WeekDays'
-import DailyEntries from '@/components/DailyEntries'
+import WeekDays from '@/components/unit/WeekDays'
+import DailyEntries from '@/components/unit/DailyEntries'
 
 export default {
   name: 'TimeEntryPage',

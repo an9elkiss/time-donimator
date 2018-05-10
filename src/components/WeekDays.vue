@@ -28,10 +28,8 @@ export default {
       days: null
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.getWeekDays()
-    })
+  beforeMount () {
+    this.getWeekDays()
   },
   methods: {
 

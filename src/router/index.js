@@ -6,6 +6,8 @@ import TimeEntryPage from '@/components/pages/TimeEntryPage'
 Vue.use(VueResource)
 Vue.use(Router)
 
+Vue.http.options.emulateJSON = true
+
 export default new Router({
   routes: [
     {

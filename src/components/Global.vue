@@ -5,12 +5,15 @@ const apiBase = 'http://localhost:9001'
 const url = {
   apiBase: apiBase,
   apiWeekDays: apiBase + '/api-time-dominator/1.0.0/week-days',
-  apiDailyTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries/daily'
+  apiDailyTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries/daily',
+  apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
+  apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry'
 }
 
 const event = {
   timeEntryDateChange: 'e_time_entry_date_change',
-  timeEntryWeekDaysGot: 'e_time_entry_week_days_got'
+  timeEntryWeekDaysGot: 'e_time_entry_week_days_got',
+  timeEntrySaved: 'e_time_entry_saved'
 }
 
 export default {

@@ -37,17 +37,23 @@ export default {
     Bus.$on(Global.event.timeEntryWeekDaysGot, function () {
       vm.dateChange(vm.days[0].date)
     })
+
+    Bus.$on(Global.event.timeEntrySaved, function () {
+      vm.getWeekDays()
+    })
   },
   beforeMount () {
-    this.getWeekDays()
+    this.getWeekDays(true)
   },
   methods: {
-    getWeekDays () {
+    getWeekDays (sendEvent) {
       this.$http.get(Global.url.apiWeekDays).then(response => {
         if (response.body.code === 200) {
           this.days = response.body.data.days
 
-          Bus.$emit(Global.event.timeEntryWeekDaysGot)
+          if (sendEvent) {
+            Bus.$emit(Global.event.timeEntryWeekDaysGot)
+          }
         }
       }, response => {
         // error callback

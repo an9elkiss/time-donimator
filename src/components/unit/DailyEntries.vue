@@ -20,17 +20,18 @@
               </div>
               <div class="form-group">
                 <label>持续时间</label>
-                <input type="text" placeholder="持续时间" class="form-control" :value="item.duration">
+                <input type="text" placeholder="持续时间" class="form-control" v-model="item.duration" :readonly="vmStatus.readonly">
               </div>
               <div class="form-group">
                 <label>备注</label>
-                <input type="text" placeholder="备注" class="form-control" :value="item.comment">
+                <input type="text" placeholder="备注" class="form-control" v-model="item.comment" :readonly="vmStatus.readonly">
               </div>
               <div class="row xs-pt-15">
                 <div class="col-xs-12">
                   <p class="text-right">
-                    <button type="submit" class="btn btn-space btn-primary">保存</button>
-                    <button class="btn btn-space btn-default">取消</button>
+                    <button type="submit" class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
+                    <button class="btn btn-space btn-default" :style="vmStatus.saveBtnShow" @click="cancel()">取消</button>
+                    <button class="btn btn-space btn-default btn-primary" :style="vmStatus.editBtnShow" @click="edit">填写</button>
                   </p>
                 </div>
               </div>
@@ -47,17 +48,18 @@
                 </div>
                 <div class="form-group">
                   <label>持续时间</label>
-                  <input type="text" placeholder="持续时间" class="form-control" :value="item.duration">
+                  <input type="text" placeholder="持续时间" class="form-control" v-model="item.duration" :readonly="vmStatus.readonly">
                 </div>
                 <div class="form-group">
                   <label>备注</label>
-                  <input type="text" placeholder="备注" class="form-control" :value="item.comment">
+                  <input type="text" placeholder="备注" class="form-control" v-model="item.comment" :readonly="vmStatus.readonly">
                 </div>
                 <div class="row xs-pt-15">
                   <div class="col-xs-12">
                     <p class="text-right">
-                      <button type="submit" class="btn btn-space btn-primary">保存</button>
-                      <button class="btn btn-space btn-default">取消</button>
+                      <button type="submit" class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
+                      <button class="btn btn-space btn-default" :style="vmStatus.saveBtnShow" @click="cancel()">取消</button>
+                      <button class="btn btn-space btn-default btn-primary" :style="vmStatus.editBtnShow" @click="edit()">填写</button>
                     </p>
                   </div>
                 </div>
@@ -80,7 +82,12 @@ export default {
   name: 'DailyEntries',
   data () {
     return {
-      timeEntries: null
+      timeEntries: null,
+      vmStatus: {
+        readonly: 'readonly',
+        editBtnShow: {},
+        saveBtnShow: {display: 'none'}
+      }
     }
   },
   created () {
@@ -100,6 +107,55 @@ export default {
       }, response => {
         // error callback
       })
+    },
+
+    edit () {
+      this.vmStatus = {
+        readonly: null,
+        editBtnShow: {display: 'none'},
+        saveBtnShow: {}
+      }
+    },
+
+    cancel () {
+      this.vmStatus = {
+        readonly: 'readonly',
+        editBtnShow: {},
+        saveBtnShow: {display: 'none'}
+      }
+    },
+
+    save (typeId) {
+      var vm = this
+      this.timeEntries.forEach(item => {
+        if (item.typeId === typeId) {
+          vm.postEntry(item)
+          vm.cancel()
+          Bus.$emit(Global.event.timeEntrySaved)
+        }
+      })
+    },
+
+    postEntry (timeEntry) {
+      // var form = new FormData()
+      // form.append('date', timeEntry.date)
+      // form.append('duration', timeEntry.duration)
+      // form.append('comment', timeEntry.comment)
+      // form.append('typeId', timeEntry.typeId)
+
+      if (timeEntry.id != null) {
+        this.$http.post(Global.url.apiUpdateTimeEntry + timeEntry.id, timeEntry).then(response => {
+          console.info(response.body)
+        }, response => {
+          // error callback
+        })
+      } else {
+        this.$http.post(Global.url.apiCreateTimeEntry, timeEntry).then(response => {
+          console.info(response.body)
+        }, response => {
+          // error callback
+        })
+      }
     }
 
   }

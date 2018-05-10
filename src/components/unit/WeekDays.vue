@@ -34,7 +34,7 @@ export default {
   },
   created () {
     var vm = this
-    Bus.$on('s_time_entry_week_days_got', function () {
+    Bus.$on(Global.event.timeEntryWeekDaysGot, function () {
       vm.dateChange(vm.days[0].date)
     })
   },
@@ -47,7 +47,7 @@ export default {
         if (response.body.code === 200) {
           this.days = response.body.data.days
 
-          Bus.$emit('s_time_entry_week_days_got')
+          Bus.$emit(Global.event.timeEntryWeekDaysGot)
         }
       }, response => {
         // error callback
@@ -55,7 +55,7 @@ export default {
     },
 
     dateChange: function (date) {
-      Bus.$emit('s_time_entry_date_change', date)
+      Bus.$emit(Global.event.timeEntryDateChange, date)
     }
   }
 }

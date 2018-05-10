@@ -85,7 +85,7 @@ export default {
   },
   created () {
     var vm = this
-    Bus.$on('s_time_entry_date_change', function (date) {
+    Bus.$on(Global.event.timeEntryDateChange, function (date) {
       vm.getDailyTimeEntries(date)
     })
   },

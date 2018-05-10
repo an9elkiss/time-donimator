@@ -8,8 +8,14 @@ const url = {
   apiDailyTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries/daily'
 }
 
+const event = {
+  timeEntryDateChange: 'e_time_entry_date_change',
+  timeEntryWeekDaysGot: 'e_time_entry_week_days_got'
+}
+
 export default {
   url,
+  event,
   name: 'Global'
 }
 </script>

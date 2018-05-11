@@ -1,6 +1,7 @@
 <script>
 
-const apiBase = 'http://localhost:9001'
+// const apiBase = 'http://localhost:9001'
+const apiBase = process.env.BASE_API
 
 const url = {
   apiBase: apiBase,

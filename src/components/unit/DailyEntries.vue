@@ -131,7 +131,6 @@ export default {
         if (item.typeId === typeId) {
           vm.postEntry(item)
           vm.cancel()
-          Bus.$emit(Global.event.timeEntrySaved)
         }
       })
     },
@@ -145,13 +144,13 @@ export default {
 
       if (timeEntry.id != null) {
         this.$http.post(Global.url.apiUpdateTimeEntry + timeEntry.id, timeEntry).then(response => {
-          console.info(response.body)
+          Bus.$emit(Global.event.timeEntrySaved)
         }, response => {
           // error callback
         })
       } else {
         this.$http.post(Global.url.apiCreateTimeEntry, timeEntry).then(response => {
-          console.info(response.body)
+          Bus.$emit(Global.event.timeEntrySaved)
         }, response => {
           // error callback
         })

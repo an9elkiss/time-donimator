@@ -37,10 +37,6 @@
           <div :key="item.typeId" v-if="index != 0" :id="'timeEntryTag'+item.typeId" class="tab-pane cont">
             <div class="panel-body">
               <form>
-                <div class="form-group xs-pt-10">
-                  <label>日期</label>
-                  <input type="text" placeholder="日期" class="form-control" :value="item.date.split(' ')[0]" readonly="readonly">
-                </div>
                 <div class="form-group">
                   <label>持续时间</label>
                   <input type="text" placeholder="持续时间" class="form-control" v-model="item.duration" :readonly="vmStatus.readonly">

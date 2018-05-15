@@ -14,7 +14,8 @@ const url = {
 const event = {
   timeEntryDateChange: 'e_time_entry_date_change',
   timeEntryWeekDaysGot: 'e_time_entry_week_days_got',
-  timeEntrySaved: 'e_time_entry_saved'
+  timeEntrySaved: 'e_time_entry_saved',
+  appMounted: 'e_app_mounted'
 }
 
 export default {

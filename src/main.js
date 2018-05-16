@@ -19,6 +19,7 @@ new Vue({
   mounted () {
     window.$(document).ready(function () {
       window.App.init()
+      window.App.charts()
 
       Bus.$emit(Global.event.appMounted)
     })

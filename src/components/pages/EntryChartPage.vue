@@ -11,8 +11,8 @@
                 <span class="icon mdi mdi-refresh-sync"></span>
                 <span class="icon mdi mdi-close"></span>
               </div>
-              <span class="title">Chart Table</span>
-              <span class="description">This is a table widget with a chart inside</span>
+              <span class="title">月报表</span>
+              <span class="description">可以切换月份和工作日志类型</span>
             </div>
             <div class="widget-chart-container">
               <div id="line-chart3" style="height: 220px;"></div>
@@ -68,18 +68,29 @@ export default {
   name: 'EntryChartPage',
 
   created () {
+    let vm = this
     Bus.$on(Global.event.appMounted, function () {
-      window.$(document).ready(function () {
-        window.App.charts()
-      })
+      vm.draw()
     })
   },
 
   mounted () {
-    window.$(document).ready(function () {
-      window.App.charts()
-    })
+    this.draw()
+  },
+
+  methods: {
+    draw () {
+      let items = [
+        [0, 20], [1, 30], [2, 25], [3, 39], [4, 35], [5, 40], [6, 30], [7, 45],
+        [8, 20], [9, 30], [10, 25], [11, 39], [12, 35], [13, 40], [14, 30], [15, 45],
+        [16, 20], [17, 30], [18, 25], [19, 39], [20, 35], [21, 40], [22, 30], [23, 45],
+        [24, 20], [25, 30], [26, 25], [27, 39], [28, 35], [29, 40], [30, 30]
+      ]
+
+      window.App.chart.draw(items)
+    }
   }
+
 }
 </script>
 

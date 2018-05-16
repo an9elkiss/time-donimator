@@ -575,86 +575,61 @@ var App = (function () {
     }
 
     //Line Chart 2
-    function widget_linechart2(){
+    App.chart = {draw: function(data){
 
-      var color1 = tinycolor( App.color.primary ).lighten( 5 ).toString();
-      var color2 = tinycolor( App.color.danger ).lighten( 5 ).toString();
-      var color3 = tinycolor( App.color.success ).lighten( 5 ).toString();
+        var color = tinycolor( App.color.primary ).lighten( 5 ).toString();
 
-      var items1 = [
-        [0, 20], [1, 30], [2, 25], [3, 39], [4, 35], [5, 40], [6, 30], [7, 45],
-        [8, 20], [9, 30], [10, 25], [11, 39], [12, 35], [13, 40], [14, 30], [15, 45],
-        [16, 20], [17, 30], [18, 25], [19, 39], [20, 35], [21, 40], [22, 30], [23, 45],
-        [24, 20], [25, 30], [26, 25], [27, 39], [28, 35], [29, 40], [30, 30]
-      ];
-
-      var items2 = [
-        [0, 20], [1, 35], [2, 25], [3, 39], [4, 35], [5, 40], [6, 30], [7, 45],
-        [8, 20], [9, 30], [10, 25], [11, 39], [12, 35], [13, 40], [14, 30], [15, 45],
-        [16, 20], [17, 30], [18, 25], [19, 39], [20, 35], [21, 40], [22, 30], [23, 45],
-        [24, 20], [25, 30], [26, 25], [27, 39], [28, 35], [29, 40], [30, 30]
-      ];
-
-      var items3 = [
-        [0, 20], [1, 45], [2, 25], [3, 39], [4, 35], [5, 40], [6, 30], [7, 45],
-        [8, 20], [9, 30], [10, 25], [11, 39], [12, 35], [13, 40], [14, 30], [15, 45],
-        [16, 20], [17, 30], [18, 25], [19, 39], [20, 35], [21, 40], [22, 30], [23, 45],
-        [24, 20], [25, 30], [26, 25], [27, 39], [28, 35], [29, 40], [30, 30]
-      ];
-
-    	var plot_statistics = $.plot($("#line-chart3"), [
-    	  { data: items1, label: "Page Views" },
-    	  { data: items2, label: "2" },
-    	  { data: items3, label: "3" }
-      ], {
-        series: {
-          lines: {
-            show: true,
-            lineWidth: 2,
-            fill: true,
-            fillColor: {
-              colors: [{
-                opacity: 0.1
-              }, {
-                opacity: 0.1
+        var plot_statistics = $.plot($("#line-chart3"), [
+          { data: data, label: "Page Views" }
+        ], {
+          series: {
+            lines: {
+              show: true,
+              lineWidth: 2,
+              fill: true,
+              fillColor: {
+                colors: [{
+                  opacity: 0.1
+                }, {
+                  opacity: 0.1
+                }
+                ]
               }
-              ]
-            }
+            },
+            points: {
+              show: true
+            },
+            shadowSize: 0
           },
-          points: {
-            show: true
+          legend:{
+            show: false
           },
-          shadowSize: 0
-        },
-        legend:{
-          show: false
-        },
-        grid: {
-          margin: {
-            left: 23,
-            right: 30,
-            top: 20,
-            botttom: 40
+          grid: {
+            margin: {
+              left: 23,
+              right: 30,
+              top: 20,
+              botttom: 40
+            },
+            labelMargin: 15,
+            axisMargin: 500,
+            hoverable: true,
+            clickable: true,
+            tickColor: "rgba(0,0,0,0.15)",
+            borderWidth: 0
           },
-        	labelMargin: 15,
-          axisMargin: 500,
-          hoverable: true,
-          clickable: true,
-          tickColor: "rgba(0,0,0,0.15)",
-          borderWidth: 0
-        },
-        colors: [color1, color2, color3],
-        xaxis: {
-          ticks: null,
-          tickDecimals: 0
-        },
-        yaxis: {
-          ticks: 4,
-          tickSize: 15,
-          tickDecimals: 0
-        }
-      });
-    }
+          colors: [color],
+          xaxis: {
+            ticks: null,
+            tickDecimals: 0
+          },
+          yaxis: {
+            ticks: 4,
+            tickSize: 15,
+            tickDecimals: 0
+          }
+        });
+      }}
 
     //Bar Chart 2
     function widget_barchart2(){
@@ -726,7 +701,7 @@ var App = (function () {
     }
 
     //row 1
-      widget_linechart2();
+    //   widget_linechart2();
 	 //    widget_barchart2();
 
 

@@ -625,7 +625,7 @@ var App = (function () {
           },
           yaxis: {
             ticks: 4,
-            tickSize: 15,
+            tickSize: 30,
             tickDecimals: 0
           }
         });

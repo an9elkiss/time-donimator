@@ -24,7 +24,7 @@
               <div class="row xs-pt-15">
                 <div class="col-xs-12">
                   <p class="text-right">
-                    <button type="submit" class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
+                    <button class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
                     <button class="btn btn-space btn-default" :style="vmStatus.saveBtnShow" @click="cancel()">取消</button>
                     <button class="btn btn-space btn-default btn-primary" :style="vmStatus.editBtnShow" @click="edit">填写</button>
                   </p>
@@ -48,7 +48,7 @@
                 <div class="row xs-pt-15">
                   <div class="col-xs-12">
                     <p class="text-right">
-                      <button type="submit" class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
+                      <button class="btn btn-space btn-primary" :style="vmStatus.saveBtnShow" @click="save(item.typeId)">保存</button>
                       <button class="btn btn-space btn-default" :style="vmStatus.saveBtnShow" @click="cancel()">取消</button>
                       <button class="btn btn-space btn-default btn-primary" :style="vmStatus.editBtnShow" @click="edit()">填写</button>
                     </p>

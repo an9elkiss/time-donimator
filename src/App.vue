@@ -111,31 +111,7 @@
         </div>
       </div>
     </nav>
-    <div class="be-left-sidebar">
-      <div class="left-sidebar-wrapper"><a href="#" class="left-sidebar-toggle">菜单</a>
-        <div class="left-sidebar-spacer">
-          <div class="left-sidebar-scroll">
-            <div class="left-sidebar-content">
-              <ul class="sidebar-elements">
-                <li class="divider">菜单</li>
-                <li>
-                  <a href="#"><i class="icon mdi mdi-home"></i><span>首页</span></a>
-                </li>
-                <li class="parent active open">
-                  <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
-                  <ul class="sub-menu">
-                    <li class="active"><router-link to="/time-entry">日程记录</router-link>
-                    </li>
-                    <li><router-link to="/time-chart">日程报表</router-link>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <left-menu></left-menu>
 
     <div>
       <router-view/>
@@ -372,8 +348,14 @@
 </template>
 
 <script>
+import LeftMenu from '@/components/unit/Menu'
+
 export default {
-  name: 'App'
+  name: 'App',
+
+  components: {
+    LeftMenu
+  }
 
 }
 </script>

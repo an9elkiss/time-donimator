@@ -127,12 +127,6 @@ export default {
     },
 
     postEntry (timeEntry) {
-      // var form = new FormData()
-      // form.append('date', timeEntry.date)
-      // form.append('duration', timeEntry.duration)
-      // form.append('comment', timeEntry.comment)
-      // form.append('typeId', timeEntry.typeId)
-
       if (timeEntry.id != null) {
         this.$http.post(Global.url.apiUpdateTimeEntry + timeEntry.id, timeEntry).then(response => {
           Bus.$emit(Global.event.timeEntrySaved)

@@ -87,7 +87,9 @@ export default {
       vm.getDailyTimeEntries(date)
     })
   },
-
+  destroyed () {
+    Bus.$off(Global.event.timeEntryDateChange)
+  },
   methods: {
 
     getDailyTimeEntries (date) {

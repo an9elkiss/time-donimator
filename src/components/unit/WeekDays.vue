@@ -57,6 +57,10 @@ export default {
   beforeMount () {
     this.getWeekDays(true)
   },
+  destroyed () {
+    Bus.$off([Global.event.timeEntryWeekDaysGot, Global.event.timeEntrySaved])
+  },
+
   methods: {
     getWeekDays (sendEvent) {
       this.$http.get(Global.url.apiWeekDays).then(response => {
@@ -89,6 +93,7 @@ export default {
           item.selected = false
         }
       })
+
       Bus.$emit(Global.event.timeEntryDateChange, date)
     }
   }

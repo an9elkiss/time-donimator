@@ -17,12 +17,23 @@ const event = {
   timeEntryWeekDaysGot: 'e_time_entry_week_days_got',
   timeEntrySaved: 'e_time_entry_saved',
   appMounted: 'e_app_mounted',
-  subMenuClicked: 'e_submenu_clicked'
+  subMenuClicked: 'e_submenu_clicked',
+  entryTypeMenuClicked: 'e_entry_type_menu_clicked'
+}
+
+const timeEntryType = {
+  sportsExercise: 1,
+  reading: 2,
+  itLearning: 3,
+  entertainment: 4,
+  finance: 5,
+  childEducation: 6
 }
 
 export default {
   url,
   event,
+  timeEntryType,
   name: 'Global'
 }
 </script>

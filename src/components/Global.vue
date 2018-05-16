@@ -7,6 +7,7 @@ const url = {
   apiBase: apiBase,
   apiWeekDays: apiBase + '/api-time-dominator/1.0.0/week-days',
   apiDailyTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries/daily',
+  apiTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries',
   apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry'
 }

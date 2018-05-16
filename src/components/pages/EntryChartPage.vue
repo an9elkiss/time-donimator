@@ -66,6 +66,11 @@ import Bus from '@/components/EventBus'
 
 export default {
   name: 'EntryChartPage',
+  // data () {
+  //   return {
+  //     items: null
+  //   }
+  // },
 
   created () {
     let vm = this
@@ -80,14 +85,19 @@ export default {
 
   methods: {
     draw () {
-      let items = [
-        [0, 20], [1, 30], [2, 25], [3, 39], [4, 35], [5, 40], [6, 30], [7, 45],
-        [8, 20], [9, 30], [10, 25], [11, 39], [12, 35], [13, 40], [14, 30], [15, 45],
-        [16, 20], [17, 30], [18, 25], [19, 39], [20, 35], [21, 40], [22, 30], [23, 45],
-        [24, 20], [25, 30], [26, 25], [27, 39], [28, 35], [29, 40], [30, 30]
-      ]
+      this.$http.get(Global.url.apiTimeEntries + '?month=5').then(response => {
+        let items = []
 
-      window.App.chart.draw(items)
+        if (response.body.code === 200) {
+          response.body.data.timeEntries.forEach(item => {
+            items.push([item.dateNum, item.duration])
+          })
+
+          window.App.chart.draw(items)
+        }
+      }, response => {
+        // error callback
+      })
     }
   }
 

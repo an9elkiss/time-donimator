@@ -10,6 +10,32 @@ import Bus from '@/components/EventBus'
 
 Vue.config.productionTip = false
 
+Vue.http.interceptors.push((request, next) => {
+  next((response) => {
+    // response.body = '...'
+    // router.replace({
+    //   path: 'login',
+    //   query: {redirect: router.currentRoute.fullPath}
+    // })
+    return response
+  })
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if (Global.token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+      })
+    }
+  } else {
+    next()
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

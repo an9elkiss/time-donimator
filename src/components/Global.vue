@@ -34,6 +34,9 @@ export default {
   url,
   event,
   timeEntryType,
+
+  token: null,
+
   name: 'Global'
 }
 </script>

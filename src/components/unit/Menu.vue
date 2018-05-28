@@ -6,16 +6,16 @@
           <div class="left-sidebar-content">
             <ul class="sidebar-elements">
               <li class="divider">菜单</li>
-              <li>
-                <a href="#"><i class="icon mdi mdi-home"></i><span>首页</span></a>
-              </li>
-              <li class="parent active open">
-                <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
-                <ul class="sub-menu">
-                  <sub-menu id="sm_1" path="/time-entry" name="日程记录" />
-                  <sub-menu id="sm_2" path="/time-chart" name="日程报表" />
-                </ul>
-              </li>
+                <li v-show="menuBtn.m1">
+                  <a href="#"><i class="icon mdi mdi-home"></i><span>首页</span></a>
+                </li>
+                <li v-show="menuBtn.m101" class="parent active open">
+                  <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
+                  <ul class="sub-menu">
+                      <sub-menu v-show="menuBtn.m102" id="sm_1" path="/time-entry" name="日程记录" />
+                      <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
+                  </ul>
+                </li>
             </ul>
           </div>
         </div>
@@ -26,10 +26,66 @@
 
 <script>
 import SubMenu from './SubMenu'
+import Global from '@/components/Global'
+import Bus from '@/components/EventBus'
 
 export default {
   name: 'Menu',
-  components: {SubMenu}
+  components: {SubMenu},
+
+  data () {
+    return {
+      menus: null,
+      menuBtn: {
+        m1: false,
+        m101: false,
+        m102: false,
+        m103: false
+      }
+    }
+  },
+
+  beforeMount () {
+    this.findMenus()
+  },
+
+  mounted () {
+    window.$(document).ready(function () {
+      window.App.init()
+      window.App.charts()
+
+      Bus.$emit(Global.event.appMounted)
+    })
+  },
+
+  methods: {
+    findMenus () {
+      this.$http.get(Global.url.apiMenus).then(response => {
+        if (response.body.code === 200) {
+          this.menus = response.body.data.menus
+
+          this.menuBtn.m1 = false
+          this.menuBtn.m101 = false
+          this.menuBtn.m102 = false
+          this.menuBtn.m103 = false
+
+          this.menus.forEach(item => {
+            if (item.menuId === 1) {
+              this.menuBtn.m1 = true
+            } else if (item.menuId === 101) {
+              this.menuBtn.m101 = true
+            } else if (item.menuId === 102) {
+              this.menuBtn.m102 = true
+            } else if (item.menuId === 103) {
+              this.menuBtn.m103 = true
+            }
+          })
+        }
+      }, response => {
+        // error callback
+      })
+    }
+  }
 }
 </script>
 

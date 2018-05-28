@@ -12,7 +12,7 @@ export default {
   name: 'EntryTypeMenu',
 
   props: {
-    id: String,
+    id: Number,
     iconClass: String,
     typeName: String,
     defaultSelected: Boolean

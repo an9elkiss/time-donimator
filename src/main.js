@@ -11,12 +11,19 @@ import Bus from '@/components/EventBus'
 Vue.config.productionTip = false
 
 Vue.http.interceptors.push((request, next) => {
+  if (request.method === 'POST') {
+    request.body.token = Global.token
+  } else if (request.method === 'GET' || request.method === 'DELETE') {
+    request.params.token = Global.token
+  }
+
   next((response) => {
-    // response.body = '...'
-    // router.replace({
-    //   path: 'login',
-    //   query: {redirect: router.currentRoute.fullPath}
-    // })
+    if (response.body.code === 500) {
+      router.replace({
+        path: '/login',
+        query: {redirect: router.currentRoute.fullPath}
+      })
+    }
     return response
   })
 })

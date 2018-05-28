@@ -2,6 +2,7 @@
 
 // const apiBase = 'http://localhost:9001'
 const apiBase = process.env.BASE_API
+const userApiBase = process.env.BASE_API_USER ? process.env.BASE_API_USER : process.env.BASE_API
 
 const url = {
   apiBase: apiBase,
@@ -9,7 +10,8 @@ const url = {
   apiDailyTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries/daily',
   apiTimeEntries: apiBase + '/api-time-dominator/1.0.0/time-entries',
   apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
-  apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry'
+  apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
+  apiLogin: userApiBase + '/api-union-user/1.0.0/login'
 }
 
 const event = {

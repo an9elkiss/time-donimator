@@ -93,6 +93,30 @@ html {
 body {
   margin: 0;
 }
+.cfix:after,
+.optionBox:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    clear: both;
+    height: 0;
+}
+.center{
+  text-align:center;
+}
+.rel{
+  position:relative;
+}
+.cfix,
+.optionBox {
+    zoom: 1;
+}
+.fLeft{
+  float: left;
+}
+.fRight{
+  float:right;
+}
 article,
 aside,
 details,

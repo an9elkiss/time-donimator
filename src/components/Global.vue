@@ -12,7 +12,8 @@ const url = {
   apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
-  apiMenus: userApiBase + '/api-union-user/1.0.0/menus'
+  apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
+  apiPersons: userApiBase + '/api-union-user/1.0.0/persons'
 }
 
 const event = {
@@ -38,7 +39,7 @@ export default {
   event,
   timeEntryType,
 
-  token: null,
+  token: '132444f1-47c3-425e-9a87-76d3e0bf6813',
 
   name: 'Global'
 }

@@ -4,9 +4,15 @@ import Vue from 'vue'
 // import App from './App'
 import Root from './Root'
 import router from './router'
-
 import Global from '@/components/Global'
+import Globals from '@/assets/js/global'
+import {http} from '@/assets/js/http'
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
+Vue.use(MintUI)
+Vue.prototype.$api = http
+Vue.prototype.$global = Globals
 Vue.config.productionTip = false
 
 Vue.http.interceptors.push((request, next) => {
@@ -17,7 +23,9 @@ Vue.http.interceptors.push((request, next) => {
   }
 
   next((response) => {
-    if (response.body.code === 500) {
+    console.log(response)
+    console.log(response.data)
+    if (response.data.status === 500) {
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}

@@ -12,8 +12,7 @@
               <ul role="menu" class="dropdown-menu">
                 <li>
                   <div class="user-info">
-                    <div class="user-name">Túpac Amaru</div>
-                    <div class="user-position online">Available</div>
+                    <div class="user-name">{{ userName }}</div>
                   </div>
                 </li>
                 <li><a href="#"><span class="icon mdi mdi-face"></span> Account</a></li>
@@ -348,6 +347,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import LeftMenu from '@/components/unit/Menu'
 
 export default {
@@ -355,6 +355,12 @@ export default {
 
   components: {
     LeftMenu
+  },
+
+  computed: {
+    ...mapGetters([
+      'userName'
+    ])
   }
 
 }

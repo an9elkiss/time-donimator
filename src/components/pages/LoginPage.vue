@@ -48,11 +48,9 @@ export default {
   },
   methods: {
     login () {
-      console.info(this.loginName + this.password)
-
       this.$http.post(Global.url.apiLogin, {loginName: this.loginName, password: this.password}).then(response => {
         if (response.body.code === 200) {
-          Global.token = response.body.data.token
+          this.$store.commit('login', response.body.data)
           this.errorMessage = ''
           this.$router.push('/')
         } else {

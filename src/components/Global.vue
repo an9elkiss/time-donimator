@@ -38,8 +38,6 @@ export default {
   event,
   timeEntryType,
 
-  token: null,
-
   name: 'Global'
 }
 </script>

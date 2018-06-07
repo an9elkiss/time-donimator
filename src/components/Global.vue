@@ -12,7 +12,8 @@ const url = {
   apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
-  apiMenus: userApiBase + '/api-union-user/1.0.0/menus'
+  apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
+  apiPersons: userApiBase + '/api-union-user/1.0.0/persons'
 }
 
 const event = {

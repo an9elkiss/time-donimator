@@ -16,6 +16,9 @@
                       <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
                   </ul>
                 </li>
+                <li class="parent active open">
+                  <router-link :to="{name:'TaskMangementList'}"><i class="icon mdi mdi-hourglass-alt"></i><span>任务管理</span></router-link>
+                </li>
             </ul>
           </div>
         </div>
@@ -82,6 +85,7 @@ export default {
           })
         }
       }, response => {
+        console.log('err')
         // error callback
       })
     }

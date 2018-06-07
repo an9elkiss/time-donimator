@@ -6,7 +6,14 @@ import Root from './Root'
 import router from './router'
 
 import store from './store'
+import Globals from '@/assets/js/global'
+import {http} from '@/assets/js/http'
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
+Vue.use(MintUI)
+Vue.prototype.$api = http
+Vue.prototype.$global = Globals
 Vue.config.productionTip = false
 
 Vue.http.interceptors.push((request, next) => {

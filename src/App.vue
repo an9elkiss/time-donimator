@@ -6,8 +6,7 @@
         </div>
         <div class="be-right-navbar">
           <ul class="nav navbar-nav navbar-right be-user-nav">
-            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false"
-                                    class="dropdown-toggle"><img src="static/img/avatar.png" alt="Avatar"><span
+            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><img src="static/img/avatar.png" alt="Avatar"><span
               class="user-name">Túpac Amaru</span></a>
               <ul role="menu" class="dropdown-menu">
                 <li>
@@ -25,8 +24,7 @@
           <ul class="nav navbar-nav navbar-right be-icons-nav">
             <li class="dropdown"><a href="#" role="button" aria-expanded="false" class="be-toggle-right-sidebar"><span
               class="icon mdi mdi-settings"></span></a></li>
-            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false"
-                                    class="dropdown-toggle"><span class="icon mdi mdi-notifications"></span><span
+            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon mdi mdi-notifications"></span><span
               class="indicator"></span></a>
               <ul class="dropdown-menu be-notifications">
                 <li>
@@ -35,35 +33,43 @@
                     <div class="be-scroller">
                       <div class="content">
                         <ul>
-                          <li class="notification notification-unread"><a href="#">
-                            <div class="image"><img src="static/img/avatar2.png" alt="Avatar"></div>
-                            <div class="notification-info">
-                              <div class="text"><span class="user-name">Jessica Caruso</span> accepted your invitation to
-                                join the team.
+                          <li class="notification notification-unread">
+                            <a href="#">
+                              <div class="image"><img src="static/img/avatar2.png" alt="Avatar"></div>
+                              <div class="notification-info">
+                                <div class="text"><span class="user-name">Jessica Caruso</span> accepted your invitation to join the team.
+                                </div>
+                                <span class="date">2 min ago</span>
                               </div>
-                              <span class="date">2 min ago</span>
-                            </div>
-                          </a></li>
-                          <li class="notification"><a href="#">
-                            <div class="image"><img src="static/img/avatar3.png" alt="Avatar"></div>
-                            <div class="notification-info">
-                              <div class="text"><span class="user-name">Joel King</span> is now following you</div>
-                              <span class="date">2 days ago</span>
-                            </div>
-                          </a></li>
-                          <li class="notification"><a href="#">
-                            <div class="image"><img src="static/img/avatar4.png" alt="Avatar"></div>
-                            <div class="notification-info">
-                              <div class="text"><span class="user-name">John Doe</span> is watching your main repository
+                            </a>
+                          </li>
+                          <li class="notification">
+                            <a href="#">
+                              <div class="image"><img src="static/img/avatar3.png" alt="Avatar"></div>
+                              <div class="notification-info">
+                                <div class="text"><span class="user-name">Joel King</span> is now following you</div>
+                                <span class="date">2 days ago</span>
                               </div>
-                              <span class="date">2 days ago</span>
-                            </div>
-                          </a></li>
-                          <li class="notification"><a href="#">
-                            <div class="image"><img src="static/img/avatar5.png" alt="Avatar"></div>
-                            <div class="notification-info"><span class="text"><span class="user-name">Emily Carter</span> is now following you</span><span
-                              class="date">5 days ago</span></div>
-                          </a></li>
+                            </a>
+                          </li>
+                          <li class="notification">
+                            <a href="#">
+                              <div class="image"><img src="static/img/avatar4.png" alt="Avatar"></div>
+                              <div class="notification-info">
+                                <div class="text"><span class="user-name">John Doe</span> is watching your main repository
+                                </div>
+                                <span class="date">2 days ago</span>
+                              </div>
+                            </a>
+                          </li>
+                          <li class="notification">
+                            <a href="#">
+                              <div class="image"><img src="static/img/avatar5.png" alt="Avatar"></div>
+                              <div class="notification-info"><span class="text"><span class="user-name">Emily Carter</span> is now following you</span>
+                                <span class="date">5 days ago</span>
+                              </div>
+                            </a>
+                          </li>
                         </ul>
                       </div>
                     </div>
@@ -72,8 +78,7 @@
                 </li>
               </ul>
             </li>
-            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false"
-                                    class="dropdown-toggle"><span class="icon mdi mdi-apps"></span></a>
+            <li class="dropdown"><a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="dropdown-toggle"><span class="icon mdi mdi-apps"></span></a>
               <ul class="dropdown-menu be-connections">
                 <li>
                   <div class="list">
@@ -113,15 +118,14 @@
     <left-menu></left-menu>
 
     <div>
-      <router-view/>
+      <router-view />
     </div>
 
     <nav class="be-right-sidebar">
       <div class="sb-content">
         <div class="tab-navigation">
           <ul role="tablist" class="nav nav-tabs nav-justified">
-            <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab"
-                                                      data-toggle="tab">Chat</a></li>
+            <li role="presentation" class="active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Chat</a></li>
             <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Todo</a></li>
             <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Settings</a></li>
           </ul>
@@ -202,8 +206,7 @@
                 </div>
                 <div class="chat-input">
                   <div class="input-wrapper"><span class="photo mdi mdi-camera"></span>
-                    <input type="text" placeholder="Message..." name="q" autocomplete="off"><span
-                      class="send-msg mdi mdi-mail-send"></span>
+                    <input type="text" placeholder="Message..." name="q" autocomplete="off"><span class="send-msg mdi mdi-mail-send"></span>
                   </div>
                 </div>
               </div>
@@ -349,10 +352,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import LeftMenu from '@/components/unit/Menu'
-
 export default {
   name: 'App',
-
   components: {
     LeftMenu
   },
@@ -362,9 +363,9 @@ export default {
       'userName'
     ])
   }
-
 }
-</script>
 
-<style>
+</script>
+<style scoped>
+
 </style>

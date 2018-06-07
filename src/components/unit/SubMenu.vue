@@ -1,5 +1,5 @@
 <template>
-  <li v-bind:class="{active:isActive}" @click="active"><router-link :to="path">{{name}}</router-link>
+  <li :class="{active:isActive}" @click="active"><router-link :to="path">{{name}}</router-link>
   </li>
 </template>
 

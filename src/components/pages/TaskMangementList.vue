@@ -1,51 +1,30 @@
 <template>
   <div class="be-content taskMangementList">
     <div class="main-content container-fluid">
-          <form action="#" class="form-horizontal">
-            <div class="form-group cfix">
-              <!--<span class="list-time-filter fLeft">时间筛选：</span>-->
-              <!--<div class="fLeft">-->
-                <div class="form-group">
-                  <div class="col-sm-2">
-                    <select class="form-control input-sm" v-model="timeFilter.year">
-                                  <option value="2018年">2018年</option>
-                                </select>
-                  </div>
-                  <div class="col-sm-2">
-                    <select class="form-control input-sm" v-model="timeFilter.month">
-                                  <option :value="itemmonth" :key="itemmonth" v-for="itemmonth in timeFilter.months">{{itemmonth}}</option>
-                                </select>
-                  </div>
-                  <div class="col-sm-2">
-                    <select class="form-control input-sm" v-model="timeFilter.week">
-                                  <option :value="itemweek" :key="itemweek" v-for="itemweek in timeFilter.weeks">{{itemweek}}</option>
-                                </select>
-                  </div>
-                <!--</div>-->
-                <!--<select id="icon-category" class="select2" v-model="timeFilter.year">
-                    <option value="2018年">2018年</option>
-                  </select>
-                <select id="icon-category" class="select2" v-model="timeFilter.month">
-                    <option :value="itemmonth" :key="itemmonth" v-for="itemmonth in timeFilter.months">{{itemmonth}}</option>
-                  </select>
-                <select id="icon-category" class="select2" v-model="timeFilter.week">
-                    <option :value="itemweek" :key="itemweek" v-for="itemweek in timeFilter.weeks">{{itemweek}}</option>
-                  </select>-->
-              </div>
+        <div class="flexBox  list-layout-filter" style="margin-bottom:0">
+            <div class="list-select boxFlex_1">
+              <select class="form-control input-sm" v-model="timeFilter.year">
+                              <option value="2018年">2018年</option>
+                            </select>
             </div>
-          </form>
+            <div class="list-select boxFlex_1">
+              <select class="form-control input-sm" v-model="timeFilter.month">
+                              <option :value="itemmonth" :key="itemmonth" v-for="itemmonth in timeFilter.months">{{itemmonth}}</option>
+                            </select>
+            </div>
+            <div class="list-select boxFlex_1">
+              <select class="form-control input-sm" v-model="timeFilter.week">
+                              <option :value="itemweek" :key="itemweek" v-for="itemweek in timeFilter.weeks">{{itemweek}}</option>
+                            </select>
+            </div>
+        </div>
       <div id="accordion1" class="panel-group accordion">
         <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
           <div class="panel-heading">
             <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
           </div>
           <div :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:10px;">
-            <!-- collapse in-->
             <div class="panel-body list-pad-5">
-              <!--<div class="well well-sm" v-for="(task,index_2) in item.taskLists">
-                <router-link :to="{name:'TaskMangementDetail'}">{{task.name}}</router-link>
-                <div class="tools"><span class="icon mdi mdi-close"></span></div>
-              </div>-->
               <div class="col-md-4" v-for="(task,index_2) in item.taskLists" :key="index_2">
                 <div class="panel panel-default panel-contrast list-body-new">
                   <div class="panel-heading">{{task.name}}
@@ -73,28 +52,6 @@
         </div>
       </div>
     </div>
-
-    <!--<div id="mod-warning" tabindex="-1" role="dialog" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" data-dismiss="modal" aria-hidden="true" class="close"><span class="mdi mdi-close"></span></button>
-          </div>
-          <div class="modal-body">
-            <div class="text-center">
-              <div class="text-warning"><span class="modal-main-icon mdi mdi-alert-triangle"></span></div>
-              <h3>Warning!</h3>
-              <p>确定要删除此任务吗？</p>
-              <div class="xs-mt-50">
-                <button type="button" data-dismiss="modal" class="btn btn-space btn-default">取消</button>
-                <button type="button" data-dismiss="modal" class="btn btn-space btn-warning">确定</button>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer"></div>
-        </div>
-      </div>
-    </div>-->
     <v-warn id="mod-warning"></v-warn>
   </div>
 </template>
@@ -252,7 +209,16 @@ export default {
     margin-bottom: 10px;
   }
 
-  .list-time-filter {}
+  .list-time-filter {
+    height: 37px;
+    line-height: 37px;
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  .list-pad-12{
+    padding:12px 20px;
+  }
 
   .taskMangementList .list-pad-5 {
     padding: 0 5px 5px 5px !important;
@@ -264,6 +230,10 @@ export default {
 
   .taskMangementList .list-mr-10 {
     margin-right: 10px;
+  }
+  .list-mr-2{
+    margin-right: 2px;
+    border-radius: 3px;
   }
 
 </style>

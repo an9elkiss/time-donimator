@@ -1,10 +1,8 @@
 import axios from 'axios'
-import Global from './global'
 import router from 'vue-router'
-// require('es6-promise').polyfill()
+import Global from '@/components/Global'
 
 axios.interceptors.request.use(config => {
-  console.log('-- interceptor config--', config)
   if (config.method === 'post' || config.method === 'put') {
     config.data = {
       ...config.data,
@@ -22,7 +20,6 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  console.log('-- interceptor response--', response)
   switch (response.data.code) {
     case 500:
       router.replace({
@@ -46,18 +43,7 @@ axios.interceptors.response.use(response => {
   }
 })
 
-// const path = Global.url.apiPersons
-// const formatUrl = url => {
-//   const isAbsolutePath = /^http+/.test(url)
-//   if (isAbsolutePath) {
-//     return url
-//   } else {
-//     return path + url
-//   }
-// }
-
 export const http = async function (url, form, method = 'POST') {
-  // url = formatUrl(url)
   const config = {
     method: method,
     url: url,
@@ -80,7 +66,5 @@ export const http = async function (url, form, method = 'POST') {
     if (result) {
       return result
     }
-  } catch (err) {
-    console.log(err)
-  }
+  } catch (err) {}
 }

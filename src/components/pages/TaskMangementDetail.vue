@@ -4,7 +4,6 @@
     <div class="panel-heading panel-heading-divider rel">张三/任务4</div>
     <div class="panel-body">
       <form action="#" class="form-horizontal group-border-dashed">
-
         <div class="form-group">
           <label class="col-sm-3 control-label">项目名称</label>
           <div class="col-sm-6">
@@ -157,7 +156,6 @@ export default {
     this.initalProjectStatusAndTag()
     this.initalParentProjectList()
   },
-  destroyed () {},
   methods: {
     buttonClicked (index) {
       if (this.task.selectedType.indexOf(index) >= 0) {

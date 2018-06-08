@@ -25,6 +25,21 @@
           </div>
         </div>
         <div class="form-group">
+          <label class="col-sm-3 control-label"></label>
+          <div class="be-checkbox col-sm-6" style=" text-align:left; padding: 0 12px;">
+            <input id="check1" type="checkbox" v-model="isParentFlag">
+            <label for="check1">父任务</label>
+          </div>
+        </div>
+        <div class="form-group" v-if="isParentFlag">
+          <label class="col-sm-3 control-label">选择父任务</label>
+          <div class="col-sm-6">
+            <select class="form-control input-sm" v-model="task.task.parentId">
+              <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
           <label class="col-sm-3 control-label">任务内容</label>
           <div class="col-sm-6">
             <textarea required="" class="form-control input-sm" v-model="task.task.description"></textarea>
@@ -86,25 +101,6 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label">选择父任务</label>
-          <div class="col-sm-6">
-            <select class="form-control input-sm" v-model="task.task.parentId">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 control-label"></label>
-          <div class="be-checkbox col-sm-6" style=" text-align:left; padding: 0 12px;">
-            <input id="check1" type="checkbox">
-            <label for="check1">父任务</label>
-          </div>
-        </div>
-        <div class="form-group">
           <div class="center">
             <button type="submit" class="btn btn-space btn-primary">提交</button>
             <button type="submit" class="btn btn-space btn-primary" @click="goBack">返回</button>
@@ -123,7 +119,7 @@ export default {
         project: {},
         status: {},
         tag: {},
-        type: {},
+        parentProject: [],
         task: {
           project: 0,
           tags: '',
@@ -146,7 +142,8 @@ export default {
         time2: 1,
         time3: 1,
         selectedType: []
-      }
+      },
+      isParentFlag: false
     }
   },
   components: {
@@ -158,6 +155,7 @@ export default {
       window.App.formElements()
     })
     this.initalProjectStatusAndTag()
+    this.initalParentProjectList()
   },
   destroyed () {},
   methods: {
@@ -183,6 +181,19 @@ export default {
         this.task.project = Object.assign({}, result.data.data.project)
         this.task.status = Object.assign({}, result.data.data.status)
         this.task.tag = Object.assign({}, result.data.data.tag)
+      }
+    },
+    async initalParentProjectList () {
+      var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/task/parents', '', 'GET')
+      if (result) {
+        this.task.parentProject = result.data.data
+      }
+    }
+  },
+  watch: {
+    isParentFlag: function (newValue) {
+      if (newValue) {
+        this.task.task.parentId = ''
       }
     }
   }

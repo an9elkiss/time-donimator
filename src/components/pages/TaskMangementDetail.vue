@@ -24,16 +24,23 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label"></label>
-          <div class="be-checkbox col-sm-6" style=" text-align:left; padding: 0 12px;">
-            <input id="check1" type="checkbox" v-model="isParentFlag">
-            <label for="check1">父任务</label>
+          <label class="col-sm-3 control-label">父任务</label>
+          <div class="col-sm-6" style=" text-align:center; padding: 0 12px;">
+            <div class="be-radio inline">
+              <input type="radio" v-model="isParentFlag" value="true" id="radio1"/>
+              <label for="radio1">是</label>
+            </div>
+            <div class="be-radio inline">
+              <input type="radio" v-model="isParentFlag" value='' id="radio2" checked/>
+              <label for="radio2">否</label>
+            </div>
           </div>
+
         </div>
-        <div class="form-group" v-if="isParentFlag">
+        <div class="form-group" v-if="!isParentFlag">
           <label class="col-sm-3 control-label">选择父任务</label>
           <div class="col-sm-6">
-            <select class="form-control input-sm" v-model="task.task.parentId">
+            <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource">
               <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
             </select>
           </div>
@@ -84,7 +91,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（预估）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
+            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model.number="task.task.planHours">
           </div>
         </div>
         <div class="form-group">
@@ -142,7 +149,7 @@ export default {
         time3: 1,
         selectedType: []
       },
-      isParentFlag: false
+      isParentFlag: ''
     }
   },
   components: {
@@ -153,8 +160,8 @@ export default {
       window.App.init()
       window.App.formElements()
     })
-    this.initalProjectStatusAndTag()
-    this.initalParentProjectList()
+    this.initialProjectStatusAndTag()
+    this.initialParentProjectList()
   },
   methods: {
     buttonClicked (index) {
@@ -173,7 +180,7 @@ export default {
         path: 'task-mangement-list'
       })
     },
-    async initalProjectStatusAndTag () {
+    async initialProjectStatusAndTag () {
       var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/common/type', '', 'GET')
       if (result) {
         this.task.project = Object.assign({}, result.data.data.project)
@@ -181,10 +188,19 @@ export default {
         this.task.tag = Object.assign({}, result.data.data.tag)
       }
     },
-    async initalParentProjectList () {
+    async initialParentProjectList () {
       var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/task/parents', '', 'GET')
       if (result) {
         this.task.parentProject = result.data.data
+      }
+    },
+    async initialProjectResource () {
+      if (this.task.task.parentId) {
+        var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/task/parent/resource/' + this.task.task.parentId, '', 'GET')
+        if (result) {
+          this.task.task.planHours = result.data.data.surplusHours
+          this.task.task.planScore = result.data.data.surplusScore
+        }
       }
     }
   },

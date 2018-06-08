@@ -4,25 +4,27 @@ import Vue from 'vue'
 // import App from './App'
 import Root from './Root'
 import router from './router'
-import Global from '@/components/Global'
+
+import store from '.store'
+import Globals from '@/components/js/global'
 import {http} from '@/assets/js/http'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 
 Vue.use(MintUI)
 Vue.prototype.$api = http
-// Vue.prototype.$global = Globals
+Vue.prototype.$global = Globals
 Vue.config.productionTip = false
 
 Vue.http.interceptors.push((request, next) => {
   if (request.method === 'POST') {
-    request.body.token = Global.token
+    request.body.token = store.state.user.token
   } else if (request.method === 'GET' || request.method === 'DELETE') {
-    request.params.token = Global.token
+    request.params.token = store.state.user.token
   }
 
   next((response) => {
-    if (response.data.status === 500) {
+    if (response.body.code === 500) {
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}
@@ -34,7 +36,7 @@ Vue.http.interceptors.push((request, next) => {
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    if (Global.token) {
+    if (store.state.user.token) {
       next()
     } else {
       next({
@@ -50,6 +52,7 @@ router.beforeEach((to, from, next) => {
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { Root },
   template: '<Root rep="app"/>'

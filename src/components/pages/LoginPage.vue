@@ -50,7 +50,7 @@ export default {
     login () {
       this.$http.post(Global.url.apiLogin, {loginName: this.loginName, password: this.password}).then(response => {
         if (response.body.code === 200) {
-          Global.token = response.body.data.token
+          this.$store.commit('login', response.body.data)
           this.errorMessage = ''
           this.$router.push('/')
         } else {

@@ -24,7 +24,7 @@
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">父任务</label>
-          <div class="col-sm-6" style=" text-align:center; padding: 0 12px;">
+          <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
             <div class="be-radio inline">
               <input type="radio" v-model="isParentFlag" value="true" id="radio1"/>
               <label for="radio1">是</label>
@@ -55,6 +55,9 @@
           <div class="col-sm-6">
             <input data-parsley-type="number" type="text" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore">
           </div>
+          <div class="remind col-sm-3" v-if="task.parentScore && (task.parentScore < task.task.planScore || task.task.planScore == null)">
+            <span>贡献值不得超过{{task.parentScore}}</span>
+          </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">实际值</label>
@@ -83,14 +86,17 @@
           <div class="col-md-6">
             <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
               <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16"
-                type="text" required="" value="" class="form-control input-sm" v-model="task.task.endTime">
+                type="text" required="" value="" class="form-control input-sm" v-model="task.task.endTime" id="endTime">
             </div>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（预估）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model.number="task.task.planHours">
+            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
+          </div>
+          <div class="remind col-sm-3" v-if="task.parentHours && (task.parentHours < task.task.planHours || task.task.planHours == null)">
+            <span>工时不得超过{{task.parentHours}}小时</span>
           </div>
         </div>
         <div class="form-group">
@@ -126,19 +132,21 @@ export default {
         status: {},
         tag: {},
         parentProject: [],
+        parentHours: '',
+        parentScore: '',
         task: {
           title: '',
           project: 0,
           tags: '',
           description: '',
-          planScore: 0,
-          actualScore: 0,
+          planScore: '',
+          actualScore: '',
           currentStatus: 0,
           planStatus: 0,
           parentId: 0,
           endTime: '',
-          planHours: 0,
-          actualHours: 0
+          planHours: '',
+          actualHours: ''
         },
         num1: 0,
         num2: 1,
@@ -210,8 +218,8 @@ export default {
       if (this.task.task.parentId) {
         var result = await this.$api(Global.url.apiGetParentResource + this.task.task.parentId, '', 'GET')
         if (result) {
-          this.task.task.planHours = result.data.data.surplusHours
-          this.task.task.planScore = result.data.data.surplusScore
+          this.task.parentHours = result.data.data.surplusHours
+          this.task.parentScore = result.data.data.surplusScore
         }
       }
     }
@@ -221,11 +229,27 @@ export default {
       if (newValue) {
         this.task.task.parentId = ''
       }
+    },
+    task: function (newValue, oldValue) {
+      if (oldValue.task.planScore !== newValue.task.planScore) {
+
+      }
+      if (oldValue.task.planHours !== newValue.task.planHours) {
+
+      }
     }
   }
 }
 
 </script>
 <style scoped>
-
+  div.form-group{
+    padding: 15px 0 0 0;
+  }
+  div.remind{
+    color: red;
+    text-align: center;
+    font-size: 12px;
+    padding-top: 5px;
+  }
 </style>

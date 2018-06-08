@@ -1,8 +1,14 @@
 <template>
   <div class="be-content panel panel-default panel-border-color panel-border-color-primary">
-    <div class="panel-heading panel-heading-divider rel">张三/任务4</div>
+    <div class="panel-heading panel-heading-divider rel">{{task.task.userName}}</div>
     <div class="panel-body">
       <form action="#" class="form-horizontal group-border-dashed">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">任务名称</label>
+          <div class="col-sm-6">
+            <input type="text" required="" placeholder="实际值" class="form-control input-sm" v-model="task.task.title">
+          </div>
+        </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">项目名称</label>
           <div class="col-sm-6">
@@ -15,11 +21,6 @@
           <label class="col-sm-3 control-label">任务类型</label>
           <div class="col-sm-6">
             <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" @buttonClicked="buttonClicked"></clickable-button>
-            <!--<div v-for="(value, key) of task.tag" :key="key" class="be-checkbox">-->
-              <!--<input type="checkbox" required="" :value="value" :id="key" data-parsley-multiple="group1" data-parsley-errors-container="#error-container2">-->
-              <!--<label :for="key">{{value}}</label>-->
-            <!--</div>-->
-            <!--<div id="error-container2"></div>-->
           </div>
         </div>
         <div class="form-group">
@@ -85,8 +86,7 @@
           <label class="col-sm-3 control-label">计划日期</label>
           <div class="col-md-6">
             <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-              <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16"
-                type="text" required="" value="" class="form-control input-sm" v-model="task.task.endTime" id="endTime">
+              <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm">
             </div>
           </div>
         </div>
@@ -100,12 +100,6 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label">工时（折算）</label>
-          <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（折算）" class="form-control input-sm">
-          </div>
-        </div>
-        <div class="form-group">
           <label class="col-sm-3 control-label">工时（实际）</label>
           <div class="col-sm-6">
             <input data-parsley-type="number" type="number" required="" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
@@ -113,7 +107,7 @@
         </div>
         <div class="form-group">
           <div class="center">
-            <button type="submit" class="btn btn-space btn-primary">提交</button>
+            <button type="submit" class="btn btn-space btn-primary" @click="submitTask">提交</button>
             <button type="submit" class="btn btn-space btn-primary" @click="goBack">返回</button>
           </div>
         </div>
@@ -122,6 +116,9 @@
   </div>
 </template>
 <script>
+import {
+  mapState
+} from 'vuex'
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 export default {
@@ -162,11 +159,18 @@ export default {
         time3: 1,
         selectedType: []
       },
-      isParentFlag: ''
+      isParentFlag: false,
+      taskWeekId: 0
     }
   },
   components: {
     ClickableButton
+  },
+  computed: {
+    ...mapState({
+      personMsg: 'person',
+      taskMsg: 'task'
+    })
   },
   mounted () {
     window.$(document).ready(function () {
@@ -196,18 +200,36 @@ export default {
     },
     init () {
       var t = this
-      // t.person = t.$route.params
-      console.log(t.$route.params)
-      t.task.task.userName = t.$route.params.name
-      t.task.task.userId = t.$route.params.userId
-      t.task.task.level = t.$route.params.level
-      t.task.task.percent = t.$route.params.percent
-      console.log(t.task.task)
+      t.task.task.userName = t.personMsg.name
+      t.task.task.userId = t.personMsg.userId
+      t.task.task.level = t.personMsg.level
+      t.task.task.percent = t.personMsg.percent
+      t.taskWeekId = t.$route.params.id
+      if (t.taskWeekId) {
+        t.getTask()
+      }
     },
-    async submitFun () {
+    async getTask () {
       var t = this
-      const result = await t.$api(Global.url.apiGetTaskSave, t.submitData, '')
-      if (result.data && result.data.code === 200) {
+      const result = await t.$api(Global.url.apiGetTask + '/' + t.taskWeekId, '', 'GET')
+      if (result) {
+        var res = result.data.data
+        if (res.parentId) {
+          t.isParentFlag = false
+        } else {
+          t.isParentFlag = true
+        }
+        t.task.task = res
+        t.$refs.inputTimer.value = t.task.task.endTime
+      }
+    },
+    async submitTask () {
+      var t = this
+      t.task.task.endTime = t.$refs.inputTimer.value
+      var api = t.taskWeekId ? Global.url.apiTaskUpdate : Global.url.apiTaskSave
+      const result = await t.$api(api, t.task.task)
+      if (result) {
+        console.log(result)
       }
     },
     async initialProjectStatusAndTag () {
@@ -237,7 +259,7 @@ export default {
   watch: {
     isParentFlag: function (newValue) {
       if (newValue) {
-        this.task.task.parentId = ''
+        this.task.task.parentId = null
       }
     }
   }

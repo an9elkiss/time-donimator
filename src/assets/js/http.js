@@ -62,7 +62,6 @@ export const http = async function (url, form, method = 'POST') {
   }
   try {
     const result = await axios(config)
-    console.log(result)
     if (result) {
       return result
     }

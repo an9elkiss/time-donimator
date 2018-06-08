@@ -9,7 +9,8 @@ export default new Vuex.Store({
     user: {
       name: null,
       token: null
-    }
+    },
+    person: {}
   },
   mutations: {
     login (state, data) {
@@ -20,6 +21,10 @@ export default new Vuex.Store({
     logout (state) {
       state.user.name = null
       state.user.token = null
+    },
+
+    GetPersonMsg (state, data) {
+      state.person = data
     }
   },
 

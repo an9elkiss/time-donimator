@@ -23,8 +23,6 @@ Vue.http.interceptors.push((request, next) => {
   }
 
   next((response) => {
-    console.log(response)
-    console.log(response.data)
     if (response.data.status === 500) {
       router.replace({
         path: '/login',

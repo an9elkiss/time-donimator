@@ -163,10 +163,20 @@ export default {
     'v-warn': Warning
   },
   mounted () {
-
+    this.$api(this.$global.url.apiAllProgramProgress, '', 'GET').then(function (r) {
+      console.log(r)
+    }).catch(function (err) {
+      console.log(err)
+    })
   },
   methods: {
-    addTask (data, i) {
+    async load () {
+      var result = await this.$api()
+      if (result) {
+
+      }
+    },
+    async addTask (data, i) {
       // this.$emit('addData', data, i)
       this.$router.push({
         path: 'task-mangement-detail'

@@ -20,7 +20,7 @@
       </div>
       <div id="accordion1" class="panel-group accordion">
         <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
-          <div class="panel-heading" @click="getTask(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
+          <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
             <h4 class="panel-title font-16"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed p-all-10"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
           </div>
           <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:10px;">
@@ -28,7 +28,7 @@
               <div class="m-b-10" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
                 <div class="panel panel-default panel-contrast list-body-new">
                   <div class="panel-heading p-all-10 font-14">{{item.name}}
-                    <div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask()"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask()"></span></div>
+                    <div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask(task)"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask(item)"></span></div>
                   </div>
                   <div class="panel-body panel-body-contrast p-all-10 list-p-box">
                     <p>项目：BYD</p>
@@ -46,7 +46,7 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-space btn-primary btn-add" @click="addTask(item,index_1)">新增任务</button>
+            <button class="btn btn-space btn-primary btn-add" @click="addTask(item)">新增任务</button>
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default {data: function () {
     timeFilter: {
       year: 2018,
       month: 6,
-      week: 1,
+      week: 2,
       months: [{
         id: 1,
         value: '1月'
@@ -137,29 +137,42 @@ methods: {
     var t = this
     const result = await t.$api(Global.url.apiPersons, '', 'GET')
     if (result.data && result.data.code === 200) {
-      var res = result.data
-      t.tabLists = res.data
+      t.tabLists = result.data.data
+      t.tabLists.forEach(function (ele) {
+        ele.taskLists = {}
+      })
     }
   },
   changeSelect () {
     var t = this
     if (t.userId) {
-      t.getTask(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+      t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
     }
   },
-  async getTask (id, y, m, w, i) {
+  async getTasks (id, y, m, w, i) {
     var t = this
     t.userId = id
     t.num = i
-    const result = await t.$api(Global.url.apiGetTask + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
+    const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
     if (result.data && result.data.code === 200) {
       var res = result.data
       t.tabLists[i].taskLists = res.data
       t.$set(t.tabLists, i, t.tabLists[i])
     }
   },
-  addTask (data, i) {
-    this.$router.push({name: 'TaskMangementDetail', params: data})
+  addTask (data) {
+    this.$router.push({name: 'TaskMangementDetail'})
+    this.$store.commit('GetPersonMsg', data)
+  },
+  editTask (data) {
+    this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId}})
+  },
+  async closeTask (data) {
+    var t = this
+    const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '')
+    if (result.data && result.data.code === 200) {
+      // console.log(result)
+    }
   }
 }
 }

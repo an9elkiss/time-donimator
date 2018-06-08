@@ -13,7 +13,8 @@ const url = {
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
-  apiPersons: userApiBase + '/api-union-user/1.0.0/persons'
+  apiPersons: userApiBase + '/api-union-user/1.0.0/persons',
+  apiWxLogin: userApiBase + '/api-union-user/1.0.0/wx-login'
 }
 
 const event = {

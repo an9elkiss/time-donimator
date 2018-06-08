@@ -46,9 +46,35 @@ export default {
       errorMessage: ''
     }
   },
+
+  beforeMount () {
+    if (this.$route.query.code) {
+      this.weiXinLogin(this.$route.query.code)
+    }
+  },
+
   methods: {
     login () {
       this.$http.post(Global.url.apiLogin, {loginName: this.loginName, password: this.password}).then(response => {
+        if (response.body.code === 200) {
+          this.$store.commit('login', response.body.data)
+          this.errorMessage = ''
+          this.$router.push('/')
+        } else {
+          this.errorMessage = response.body.message
+        }
+      }, response => {
+        // error callback
+      })
+    },
+
+    weiXinLogin (code) {
+      if (code) {
+        console.info(code)
+        return
+      }
+
+      this.$http.post(Global.url.apiWxLogin, {code: code}).then(response => {
         if (response.body.code === 200) {
           this.$store.commit('login', response.body.data)
           this.errorMessage = ''

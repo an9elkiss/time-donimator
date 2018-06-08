@@ -18,7 +18,8 @@ const url = {
   apiGetTask: managerApiBase + '/api-super-manager/1.0.0/tasks',
   apiGetTaskSave: managerApiBase + '/api-super-manager/1.0.0/task/save',
   apiGetCommonType: managerApiBase + '/api-super-manager/1.0.0/common/type',
-  apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents'
+  apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents',
+  apiGetParentResource: managerApiBase + '/api-super-manager/1.0.0/task/parent/resource/'
 }
 
 const event = {

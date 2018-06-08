@@ -4,7 +4,6 @@
     <div class="panel-heading panel-heading-divider rel">张三/任务4</div>
     <div class="panel-body">
       <form action="#" class="form-horizontal group-border-dashed">
-
         <div class="form-group">
           <label class="col-sm-3 control-label">项目名称</label>
           <div class="col-sm-6">
@@ -157,17 +156,7 @@ export default {
       window.App.init()
       window.App.formElements()
     })
-    console.log(this.$global.token)
-    console.log('11111')
-    this.$api('?token=' + this.$global.token, '', 'GET')
-      .then(function (response) {
-        console.log(response)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
   },
-  destroyed () {},
   methods: {
     goBack () {
       this.$router.push({

@@ -1,18 +1,49 @@
 import axios from 'axios'
-import Global from './global'
-// require('es6-promise').polyfill()
-const path = Global.url.apiPersons
-const formatUrl = url => {
-  const isAbsolutePath = /^http+/.test(url)
-  if (isAbsolutePath) {
-    return url
-  } else {
-    return path + url
+import router from 'vue-router'
+import Global from '@/components/Global'
+
+axios.interceptors.request.use(config => {
+  if (config.method === 'post' || config.method === 'put') {
+    config.data = {
+      ...config.data,
+      token: Global.token
+    }
+  } else if (config.method === 'get' || config.method === 'delete') {
+    config.params = {
+      ...config.params,
+      token: Global.token
+    }
   }
-}
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+
+axios.interceptors.response.use(response => {
+  switch (response.data.code) {
+    case 500:
+      router.replace({
+        path: '/login'
+      })
+      break
+    default: return response
+  }
+  return response
+}, error => {
+  if (error.response) {
+    switch (error.response.status) {
+      case 500:
+        router.replace({
+          path: '/login',
+          query: {redirect: router.currentRoute.fullPath}
+        })
+        break
+      default: console.log('cannot handle response status %d', error.response.status)
+    }
+  }
+})
 
 export const http = async function (url, form, method = 'POST') {
-  url = formatUrl(url)
   const config = {
     method: method,
     url: url,
@@ -34,7 +65,5 @@ export const http = async function (url, form, method = 'POST') {
     if (result.status === 200) {
       return result
     }
-  } catch (err) {
-    console.log(err)
-  }
+  } catch (err) {}
 }

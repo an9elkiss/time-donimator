@@ -85,7 +85,6 @@ export default {
           })
         }
       }, response => {
-        console.log('err')
         // error callback
       })
     }

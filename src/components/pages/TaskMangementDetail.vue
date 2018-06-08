@@ -20,7 +20,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">任务类型</label>
           <div class="col-sm-6">
-            <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" @buttonClicked="buttonClicked"></clickable-button>
+            <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
           </div>
         </div>
         <div class="form-group">
@@ -180,6 +180,7 @@ export default {
     this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
+    this.$nextTick()
   },
   methods: {
     buttonClicked (index) {
@@ -189,6 +190,12 @@ export default {
         this.task.selectedType.push(index)
       }
       this.task.task.tags = this.tagsArrayToString()
+    },
+    buttonStatus (index) {
+      if (this.task.selectedType.indexOf(index) >= 0) {
+        return true
+      }
+      return false
     },
     tagsArrayToString () {
       return this.task.selectedType.toString()
@@ -220,6 +227,7 @@ export default {
           t.isParentFlag = true
         }
         t.task.task = res
+        this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
       }
     },

@@ -1,5 +1,4 @@
 <template>
-
   <div class="be-content panel panel-default panel-border-color panel-border-color-primary">
     <div class="panel-heading panel-heading-divider rel">张三/任务4</div>
     <div class="panel-body">
@@ -117,6 +116,7 @@
   </div>
 </template>
 <script>
+import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 export default {
   data () {
@@ -127,6 +127,7 @@ export default {
         tag: {},
         parentProject: [],
         task: {
+          title: '',
           project: 0,
           tags: '',
           description: '',
@@ -160,6 +161,7 @@ export default {
       window.App.init()
       window.App.formElements()
     })
+    this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
   },
@@ -177,11 +179,21 @@ export default {
     },
     goBack () {
       this.$router.push({
-        path: 'task-mangement-list'
+        name: 'TaskMangementList'
       })
     },
+    init () {
+      var t = this
+      t.person = t.$route.params
+    },
+    async submitFun () {
+      var t = this
+      const result = await t.$api(Global.url.apiGetTaskSave, t.submitData, '')
+      if (result.data && result.data.code === 200) {
+      }
+    },
     async initialProjectStatusAndTag () {
-      var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/common/type', '', 'GET')
+      var result = await this.$api(Global.url.apiGetCommonType, '', 'GET')
       if (result) {
         this.task.project = Object.assign({}, result.data.data.project)
         this.task.status = Object.assign({}, result.data.data.status)
@@ -189,14 +201,14 @@ export default {
       }
     },
     async initialParentProjectList () {
-      var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/task/parents', '', 'GET')
+      var result = await this.$api(Global.url.apiGetTaskParents, '', 'GET')
       if (result) {
         this.task.parentProject = result.data.data
       }
     },
     async initialProjectResource () {
       if (this.task.task.parentId) {
-        var result = await this.$api('http://10.88.91.194:9006/api-super-manager/1.0.0/task/parent/resource/' + this.task.task.parentId, '', 'GET')
+        var result = await this.$api(Global.url.apiGetParentResource + this.task.task.parentId, '', 'GET')
         if (result) {
           this.task.task.planHours = result.data.data.surplusHours
           this.task.task.planScore = result.data.data.surplusScore

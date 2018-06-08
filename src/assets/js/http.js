@@ -1,17 +1,17 @@
 import axios from 'axios'
-import router from 'vue-router'
-import Global from '@/components/Global'
+import router from 'vue-router'//
+import store from '@/store'
 
 axios.interceptors.request.use(config => {
   if (config.method === 'post' || config.method === 'put') {
     config.data = {
       ...config.data,
-      token: Global.token
+      token: store.state.user.token
     }
   } else if (config.method === 'get' || config.method === 'delete') {
     config.params = {
       ...config.params,
-      token: Global.token
+      token: store.state.user.token
     }
   }
   return config

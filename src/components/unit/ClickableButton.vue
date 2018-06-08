@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-space" :class="[type ? 'btn-default' : 'btn-primary', active]" @click="buttonClicked(index)">{{value}}</button>
+  <a class="btn btn-space btnA" :class="[type ? 'btn-default' : 'btn-primary', active]" @click="buttonClicked(index)">{{value}}</a>
 </template>
 
 <script>
@@ -23,5 +23,8 @@ export default {
 </script>
 
 <style scoped>
-
+.btnA{
+  display: block;
+  float: left;
+}
 </style>

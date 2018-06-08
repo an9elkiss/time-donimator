@@ -39,8 +39,6 @@ export default {
   event,
   timeEntryType,
 
-  token: '132444f1-47c3-425e-9a87-76d3e0bf6813',
-
   name: 'Global'
 }
 </script>

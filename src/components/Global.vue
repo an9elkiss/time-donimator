@@ -22,7 +22,9 @@ const url = {
   apiGetTask: managerApiBase + '/api-super-manager/1.0.0/task',
   apiGetCommonType: managerApiBase + '/api-super-manager/1.0.0/common/type',
   apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents',
-  apiGetParentResource: managerApiBase + '/api-super-manager/1.0.0/task/parent/resource/'
+  apiGetParentResource: managerApiBase + '/api-super-manager/1.0.0/task/parent/resource/',
+  apiGetWeekFromYearAndMonth: managerApiBase + '/api-super-manager/1.0.0/common/week/count',
+  apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week'
 }
 
 const event = {

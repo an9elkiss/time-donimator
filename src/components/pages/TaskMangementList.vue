@@ -3,18 +3,18 @@
     <div class="main-content container-fluid">
       <div class="flexBox m-b-15">
         <div class="boxFlex_1">
-          <select class="form-control input-sm" v-model="timeFilter.year">
+          <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
             <option value="2018">2018年</option>
           </select>
         </div>
         <div class="boxFlex_1">
-          <select class="form-control input-sm" v-model="timeFilter.month">
+          <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
             <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
           </select>
         </div>
         <div class="boxFlex_1">
           <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
-            <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks">{{itemweek.value}}</option>
+            <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
           </select>
         </div>
       </div>
@@ -57,124 +57,151 @@
 <script>
 import Global from '@/components/Global'
 import Warning from '../comModals/warning'
-export default {data: function () {
-  return {
-    timeFilter: {
-      year: 2018,
-      month: 6,
-      week: 2,
-      months: [{
-        id: 1,
-        value: '1月'
-      }, {
-        id: 2,
-        value: '2月'
-      }, {
-        id: 3,
-        value: '3月'
-      }, {
-        id: 4,
-        value: '4月'
-      }, {
-        id: 5,
-        value: '5月'
-      }, {
-        id: 6,
-        value: '6月'
-      }, {
-        id: 7,
-        value: '7月'
-      }, {
-        id: 8,
-        value: '8月'
-      }, {
-        id: 9,
-        value: '9月'
-      }, {
-        id: 10,
-        value: '10月'
-      }, {
-        id: 11,
-        value: '11月'
-      }, {
-        id: 12,
-        value: '12月'
-      }],
-      weeks: [{
-        id: 1,
-        value: '第一周'
-      }, {
-        id: 2,
-        value: '第二周'
-      }, {
-        id: 3,
-        value: '第三周'
-      }, {
-        id: 4,
-        value: '第四周'
-      }, {
-        id: 5,
-        value: '第五周'
-      }]
+export default {
+  data: function () {
+    return {
+      timeFilter: {
+        year: 2018,
+        month: 6,
+        week: 2,
+        maxWeek: 0,
+        months: [{
+          id: 1,
+          value: '1月'
+        }, {
+          id: 2,
+          value: '2月'
+        }, {
+          id: 3,
+          value: '3月'
+        }, {
+          id: 4,
+          value: '4月'
+        }, {
+          id: 5,
+          value: '5月'
+        }, {
+          id: 6,
+          value: '6月'
+        }, {
+          id: 7,
+          value: '7月'
+        }, {
+          id: 8,
+          value: '8月'
+        }, {
+          id: 9,
+          value: '9月'
+        }, {
+          id: 10,
+          value: '10月'
+        }, {
+          id: 11,
+          value: '11月'
+        }, {
+          id: 12,
+          value: '12月'
+        }],
+        weeks: [{
+          id: 1,
+          value: '第一周'
+        }, {
+          id: 2,
+          value: '第二周'
+        }, {
+          id: 3,
+          value: '第三周'
+        }, {
+          id: 4,
+          value: '第四周'
+        }, {
+          id: 5,
+          value: '第五周'
+        }, {
+          id: 6,
+          value: '第六周'
+        }]
+      },
+      number: ['One', 'Two', 'Three', 'Four'],
+      tabLists: [],
+      userId: '',
+      num: 0
+    }
+  },
+  components: {
+    'v-warn': Warning
+  },
+  mounted () {
+    this.$nextTick(function () {
+      this.loadPersons()
+    })
+  },
+  created: function () {
+    var now = new Date()
+    this.timeFilter.year = now.getFullYear()
+    this.timeFilter.month = now.getMonth() + 1
+    this.initialWeek()
+    this.initialWeekFromYearAndMonth()
+  },
+  methods: {
+    async loadPersons () {
+      var t = this
+      const result = await t.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        t.tabLists = result.data.data
+        t.tabLists.forEach(function (ele) {
+          ele.taskLists = {}
+        })
+      }
     },
-    number: ['One', 'Two', 'Three', 'Four'],
-    tabLists: [],
-    userId: '',
-    num: 0
-  }
-},
-components: {
-  'v-warn': Warning
-},
-mounted () {
-  var t = this
-  t.$nextTick(function () {
-    t.loadPersons()
-  })
-},
-methods: {
-  async loadPersons () {
-    var t = this
-    const result = await t.$api(Global.url.apiPersons, '', 'GET')
-    if (result.data && result.data.code === 200) {
-      t.tabLists = result.data.data
-      t.tabLists.forEach(function (ele) {
-        ele.taskLists = {}
-      })
-    }
-  },
-  changeSelect () {
-    var t = this
-    if (t.userId) {
-      t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
-    }
-  },
-  async getTasks (id, y, m, w, i) {
-    var t = this
-    t.userId = id
-    t.num = i
-    const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
-    if (result.data && result.data.code === 200) {
-      var res = result.data
-      t.tabLists[i].taskLists = res.data
-      t.$set(t.tabLists, i, t.tabLists[i])
-    }
-  },
-  addTask (data) {
-    this.$router.push({name: 'TaskMangementDetail'})
-    this.$store.commit('GetPersonMsg', data)
-  },
-  editTask (data) {
-    this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId}})
-  },
-  async closeTask (data) {
-    var t = this
-    const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '')
-    if (result.data && result.data.code === 200) {
+    changeSelect () {
+      var t = this
+      if (t.userId) {
+        t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+      }
+    },
+    changeYearOrMonth () {
+      this.initialWeekFromYearAndMonth()
+    },
+    async getTasks (id, y, m, w, i) {
+      var t = this
+      t.userId = id
+      t.num = i
+      const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        var res = result.data
+        t.tabLists[i].taskLists = res.data
+        t.$set(t.tabLists, i, t.tabLists[i])
+      }
+    },
+    addTask (data) {
+      this.$router.push({name: 'TaskMangementDetail'})
+      this.$store.commit('GetPersonMsg', data)
+    },
+    editTask (data) {
+      this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId}})
+    },
+    async closeTask (data) {
+      var t = this
+      const result = await
+      t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '')
+      if (result.data && result.data.code === 200) {
       // console.log(result)
+      }
+    },
+    async initialWeekFromYearAndMonth () {
+      var result = await this.$api(Global.url.apiGetWeekFromYearAndMonth + '?year=' + this.timeFilter.year + '&month=' + this.timeFilter.month, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.timeFilter.maxWeek = result.data.data
+      }
+    },
+    async initialWeek () {
+      var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.timeFilter.week = result.data.data.week
+      }
     }
   }
-}
 }
 
 </script>

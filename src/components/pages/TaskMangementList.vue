@@ -154,7 +154,8 @@ methods: {
     const result = await t.$api(Global.url.apiGetTask + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
     if (result.data && result.data.code === 200) {
       var res = result.data
-      t.tabLists[i].taskLists = Object.assign({}, res.data)
+      t.tabLists[i].taskLists = res.data
+      t.$set(t.tabLists, i, t.tabLists[i])
     }
   },
   addTask (data, i) {

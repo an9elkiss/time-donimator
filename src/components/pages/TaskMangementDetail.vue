@@ -131,7 +131,11 @@ export default {
           parentId: 0,
           endTime: '',
           planHours: 0,
-          actualHours: 0
+          actualHours: 0,
+          percent: 0,
+          level: '',
+          userId: '',
+          userName: ''
         },
         num1: 0,
         num2: 1,
@@ -177,7 +181,13 @@ export default {
     },
     init () {
       var t = this
-      t.person = t.$route.params
+      // t.person = t.$route.params
+      console.log(t.$route.params)
+      t.task.task.userName = t.$route.params.name
+      t.task.task.userId = t.$route.params.userId
+      t.task.task.level = t.$route.params.level
+      t.task.task.percent = t.$route.params.percent
+      console.log(t.task.task)
     },
     async submitFun () {
       var t = this

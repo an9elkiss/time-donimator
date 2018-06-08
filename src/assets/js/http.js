@@ -62,7 +62,8 @@ export const http = async function (url, form, method = 'POST') {
   }
   try {
     const result = await axios(config)
-    if (result.status === 200) {
+    console.log(result)
+    if (result) {
       return result
     }
   } catch (err) {}

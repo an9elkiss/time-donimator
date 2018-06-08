@@ -16,7 +16,9 @@ const url = {
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
   apiPersons: userApiBase + '/api-union-user/1.0.0/persons',
   apiGetTask: managerApiBase + '/api-super-manager/1.0.0/tasks',
-  apiGetTaskSave: managerApiBase + '/api-super-manager/1.0.0/task/save'
+  apiGetTaskSave: managerApiBase + '/api-super-manager/1.0.0/task/save',
+  apiGetCommonType: managerApiBase + '/api-super-manager/1.0.0/common/type',
+  apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents'
 }
 
 const event = {

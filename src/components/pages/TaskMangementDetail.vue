@@ -53,16 +53,16 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">贡献值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore">
+            <input data-parsley-type="number" type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
           </div>
-          <div class="remind col-sm-3" v-if="task.parentScore && (task.parentScore < task.task.planScore || task.task.planScore == null)">
+          <div class="remind col-sm-3" v-if="task.parentScore != '' && (!task.task.planScore || task.parentScore < task.task.planScore)">
             <span>贡献值不得超过{{task.parentScore}}</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">实际值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore">
+            <input data-parsley-type="number" type="number" required="" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
           </div>
         </div>
         <div class="form-group">
@@ -93,9 +93,9 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（预估）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
+            <input data-parsley-type="number" type="number" required="" placeholder="工时（预估）" class="form-control input-sm" v-model.number="task.task.planHours">
           </div>
-          <div class="remind col-sm-3" v-if="task.parentHours && (task.parentHours < task.task.planHours || task.task.planHours == null)">
+          <div class="remind col-sm-3" v-if="task.parentHours != '' && (!task.task.planHours || task.parentHours < task.task.planHours)">
             <span>工时不得超过{{task.parentHours}}小时</span>
           </div>
         </div>
@@ -108,7 +108,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（实际）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（实际）" class="form-control input-sm" v-model="task.task.actualHours">
+            <input data-parsley-type="number" type="number" required="" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
           </div>
         </div>
         <div class="form-group">
@@ -238,14 +238,6 @@ export default {
     isParentFlag: function (newValue) {
       if (newValue) {
         this.task.task.parentId = ''
-      }
-    },
-    task: function (newValue, oldValue) {
-      if (oldValue.task.planScore !== newValue.task.planScore) {
-
-      }
-      if (oldValue.task.planHours !== newValue.task.planHours) {
-
       }
     }
   }

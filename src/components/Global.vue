@@ -15,6 +15,7 @@ const url = {
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
   apiPersons: userApiBase + '/api-union-user/1.0.0/persons',
+  apiWxLogin: userApiBase + '/api-union-user/1.0.0/wx-login',
   apiTaskSave: managerApiBase + '/api-super-manager/1.0.0/task/save',
   apiTaskUpdate: managerApiBase + '/api-super-manager/1.0.0/task/update',
   apiTaskDelete: managerApiBase + '/api-super-manager/1.0.0/task/week/delete',

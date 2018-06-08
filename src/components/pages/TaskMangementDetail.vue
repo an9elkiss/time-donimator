@@ -1,5 +1,4 @@
 <template>
-
   <div class="be-content panel panel-default panel-border-color panel-border-color-primary">
     <div class="panel-heading panel-heading-divider rel">张三/任务4</div>
     <div class="panel-body">
@@ -133,6 +132,7 @@
   </div>
 </template>
 <script>
+import Global from '@/components/Global'
 export default {
   data () {
     return {
@@ -148,6 +148,25 @@ export default {
         time1: 2,
         time2: 1,
         time3: 1
+      },
+      person: {},
+      submitData: {
+        title: '',
+        parentId: '',
+        project: '',
+        tags: '',
+        description: '',
+        planScore: '',
+        actualScore: '',
+        planStatus: '',
+        currentStatus: '',
+        endTime: '',
+        planHours: '',
+        percent: '',
+        level: '',
+        actualHours: '',
+        userId: '',
+        userName: ''
       }
     }
   },
@@ -156,12 +175,22 @@ export default {
       window.App.init()
       window.App.formElements()
     })
+    this.addInit()
   },
   methods: {
     goBack () {
       this.$router.push({
-        path: 'task-mangement-list'
+        name: 'TaskMangementList'
       })
+    },
+    addInit () {
+      var t = this
+      t.person = Object.assign({}, t.$route.params)
+    },
+    async submitFun () {
+      var t = this
+      const result = await t.$api(Global.url.apiGetTaskSave, t.submitData, '')
+      if (result.data && result.data.code === 200) {}
     }
   }
 }

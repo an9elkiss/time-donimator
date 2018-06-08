@@ -1,9 +1,10 @@
 <script>
 
 // const apiBase = 'http://localhost:9001'
+
 const apiBase = process.env.BASE_API
 const userApiBase = process.env.BASE_API_USER ? process.env.BASE_API_USER : process.env.BASE_API
-
+const managerApiBase = process.env.BASE_API_MANAGER ? process.env.BASE_API_MANAGER : process.env.BASE_API
 const url = {
   apiBase: apiBase,
   apiWeekDays: apiBase + '/api-time-dominator/1.0.0/week-days',
@@ -14,7 +15,17 @@ const url = {
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
   apiPersons: userApiBase + '/api-union-user/1.0.0/persons',
-  apiWxLogin: userApiBase + '/api-union-user/1.0.0/wx-login'
+  apiWxLogin: userApiBase + '/api-union-user/1.0.0/wx-login',
+  apiTaskSave: managerApiBase + '/api-super-manager/1.0.0/task/save',
+  apiTaskUpdate: managerApiBase + '/api-super-manager/1.0.0/task/update',
+  apiTaskDelete: managerApiBase + '/api-super-manager/1.0.0/task/week/delete',
+  apiGetTasks: managerApiBase + '/api-super-manager/1.0.0/tasks',
+  apiGetTask: managerApiBase + '/api-super-manager/1.0.0/task',
+  apiGetCommonType: managerApiBase + '/api-super-manager/1.0.0/common/type',
+  apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents',
+  apiGetParentResource: managerApiBase + '/api-super-manager/1.0.0/task/parent/resource/',
+  apiGetWeekFromYearAndMonth: managerApiBase + '/api-super-manager/1.0.0/common/week/count',
+  apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week'
 }
 
 const event = {
@@ -34,12 +45,10 @@ const timeEntryType = {
   finance: 5,
   childEducation: 6
 }
-
 export default {
   url,
   event,
   timeEntryType,
-
   name: 'Global'
 }
 </script>

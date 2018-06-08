@@ -24,7 +24,7 @@ Vue.http.interceptors.push((request, next) => {
   }
 
   next((response) => {
-    if (response.body.code === 500) {
+    if (response.data.status === 500) {
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}

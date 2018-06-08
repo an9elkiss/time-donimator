@@ -55,9 +55,10 @@
   </div>
 </template>
 <script>
-  import Global from '@/components/Global'
-  import Warning from '../comModals/warning'
-  export default {data: function () {return {
+import Global from '@/components/Global'
+import Warning from '../comModals/warning'
+export default {data: function () {
+  return {
     timeFilter: {
       year: 2018,
       month: 6,
@@ -65,102 +66,102 @@
       months: [{
         id: 1,
         value: '1月'
-      },{
+      }, {
         id: 2,
         value: '2月'
-      },{
+      }, {
         id: 3,
         value: '3月'
-      },{
+      }, {
         id: 4,
         value: '4月'
-      },{
+      }, {
         id: 5,
         value: '5月'
-      },{
+      }, {
         id: 6,
         value: '6月'
-      },{
+      }, {
         id: 7,
         value: '7月'
-      },{
+      }, {
         id: 8,
         value: '8月'
-      },{
+      }, {
         id: 9,
         value: '9月'
-      },{
+      }, {
         id: 10,
         value: '10月'
-      },{
+      }, {
         id: 11,
         value: '11月'
-      },{
+      }, {
         id: 12,
         value: '12月'
       }],
       weeks: [{
         id: 1,
         value: '第一周'
-      },{
+      }, {
         id: 2,
         value: '第二周'
-      },{
+      }, {
         id: 3,
         value: '第三周'
-      },{
+      }, {
         id: 4,
         value: '第四周'
-      },{
+      }, {
         id: 5,
         value: '第五周'
       }]
     },
-      number: ['One', 'Two', 'Three', 'Four'],
-      tabLists: [],
-      userId: '',
-      num: 0
+    number: ['One', 'Two', 'Three', 'Four'],
+    tabLists: [],
+    userId: '',
+    num: 0
   }
-  },
-    components: {
-    'v-warn': Warning
-    },
-    mounted () {
-    var t = this;
-    t.$nextTick(function(){
-      t.loadPersons()
-    })
-    },
-    methods: {
-      async loadPersons(){
-        var t = this;
-        const result = await t.$api(Global.url.apiPersons, '', 'GET')
-        if(result.data && result.data.code === 200){
-          var res = result.data;
-          t.tabLists = res.data;
-        }
-      },
-      changeSelect(){
-        var t = this;
-        if(t.userId){
-          t.getTask(t.userId, t.timeFilter.year, t.timeFilter,month, t.timeFilter.week, t.num)
-        }
-      },
-      async getTask(id, y, m, w, i){
-        var t = this;
-        t.userId = id;
-        t.num = i;
-        const result = await t.$api(Global.url.apiGetTask+'?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
-        if(result.data && result.data.code === 200){
-          var res = result.data;
-          t.tabLists[i].taskLists = Object.assign({},res.data);
-          t.$set(t.tabLists,i,t.tabLists[i])
-        }
-      },
-      addTask (data, i) {
-        this.$router.push({name:'TaskMangementDetail',params:data})
-      }
+},
+components: {
+  'v-warn': Warning
+},
+mounted () {
+  var t = this
+  t.$nextTick(function () {
+    t.loadPersons()
+  })
+},
+methods: {
+  async loadPersons () {
+    var t = this
+    const result = await t.$api(Global.url.apiPersons, '', 'GET')
+    if (result.data && result.data.code === 200) {
+      var res = result.data
+      t.tabLists = res.data
     }
+  },
+  changeSelect () {
+    var t = this
+    if (t.userId) {
+      t.getTask(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+    }
+  },
+  async getTask (id, y, m, w, i) {
+    var t = this
+    t.userId = id
+    t.num = i
+    const result = await t.$api(Global.url.apiGetTask + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
+    if (result.data && result.data.code === 200) {
+      var res = result.data
+      t.tabLists[i].taskLists = Object.assign({}, res.data)
+      t.$set(t.tabLists, i, t.tabLists[i])
+    }
+  },
+  addTask (data, i) {
+    this.$router.push({name: 'TaskMangementDetail', params: data})
+  }
+}
 }
 
 </script>

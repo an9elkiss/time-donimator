@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import Root from './Root'
 import router from './router'
-
+import axios from 'axios'
 import store from './store'
 import Globals from '@/assets/js/global'
 import {http} from '@/assets/js/http'
@@ -23,7 +23,9 @@ Vue.http.interceptors.push((request, next) => {
   }
 
   next((response) => {
-    if (response.data.status === 500) {
+    console.log(response)
+    if (response.body.code === 500) {
+      console.log(response.body)
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}
@@ -45,6 +47,49 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next()
+  }
+})
+axios.interceptors.request.use(config => {
+  if (config.method === 'post' || config.method === 'put') {
+    config.data = {
+      ...config.data,
+      token: store.state.user.token
+    }
+  } else if (config.method === 'get' || config.method === 'delete') {
+    config.params = {
+      ...config.params,
+      token: store.state.user.token
+    }
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+
+axios.interceptors.response.use(response => {
+  console.log(response)
+  console.log(response.data)
+  switch (response.data.code) {
+    case 500:
+      router.push({
+        path: '/login'
+      })
+      break
+    default: return response
+  }
+  return response
+}, error => {
+  console.log(error)
+  if (error.response) {
+    switch (error.response.status) {
+      case 500:
+        router.replace({
+          path: '/login',
+          query: {redirect: router.currentRoute.fullPath}
+        })
+        break
+      default: console.log('cannot handle response status %d', error.response.status)
+    }
   }
 })
 

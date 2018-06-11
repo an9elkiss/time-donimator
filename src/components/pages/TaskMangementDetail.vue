@@ -65,14 +65,13 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">实际值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
-
+              <input data-parsley-type="number" type="number" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">当期状态</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.currentStatus" required="">
+              <select class="form-control input-sm" v-model="task.task.currentStatus">
                 <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
               </select>
             </div>
@@ -105,7 +104,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">实际工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
+              <input data-parsley-type="number" type="number" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
             </div>
           </div>
           <div class="form-group">
@@ -119,7 +118,6 @@
     </div>
     </div>
     <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
-
   </div>
 </template>
 <script>
@@ -150,6 +148,7 @@ export default {
           currentStatus: 0,
           planStatus: 0,
           parentId: 0,
+          isParent: null,
           endTime: '',
           planHours: '',
           actualHours: '',
@@ -248,15 +247,39 @@ export default {
     async submitTask () {
       var t = this
       t.task.task.endTime = t.$refs.inputTimer.value
+      if (t.isParentFlag === 'true') {
+        t.task.task.isParent = 1
+      } else {
+        t.task.task.isParent = null
+      }
       var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
       const result = await t.$api(api, t.task.task)
-      if (result) {
+      if (result.data && result.data.code === 200) {
         this.operatingResult = result.data
+        t.task.task = {
+          title: '',
+          project: 0,
+          tags: '',
+          description: '',
+          planScore: '',
+          actualScore: '',
+          currentStatus: 0,
+          planStatus: 0,
+          parentId: 0,
+          isParent: null,
+          endTime: '',
+          planHours: '',
+          actualHours: '',
+          percent: 0,
+          level: '',
+          userId: '',
+          userName: ''
+        }
       }
     },
     async initialProjectStatusAndTag () {
       var result = await this.$api(Global.url.apiGetCommonType, '', 'GET')
-      if (result) {
+      if (result.data && result.data.code === 200) {
         this.task.project = Object.assign({}, result.data.data.project)
         this.task.status = Object.assign({}, result.data.data.status)
         this.task.tag = Object.assign({}, result.data.data.tag)
@@ -264,14 +287,14 @@ export default {
     },
     async initialParentProjectList () {
       var result = await this.$api(Global.url.apiGetTaskParents, '', 'GET')
-      if (result) {
+      if (result.data && result.data.code === 200) {
         this.task.parentProject = result.data.data
       }
     },
     async initialProjectResource () {
       if (this.task.task.parentId) {
         var result = await this.$api(Global.url.apiGetParentResource + this.task.task.parentId, '', 'GET')
-        if (result) {
+        if (result.data && result.data.code === 200) {
           this.task.parentHours = result.data.data.surplusHours
           this.task.parentScore = result.data.data.surplusScore
         }

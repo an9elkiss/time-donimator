@@ -37,7 +37,7 @@
           </div>
 
         </div>
-        <div class="form-group" v-if="!isParentFlag">
+        <div class="form-group" v-if="isParentFlag === 'false'">
           <label class="col-sm-3 control-label">选择父任务</label>
           <div class="col-sm-6">
             <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource">
@@ -161,7 +161,7 @@ export default {
         time3: 1,
         selectedType: []
       },
-      isParentFlag: false,
+      isParentFlag: 'false',
       taskWeekId: 0
     }
   },
@@ -224,9 +224,9 @@ export default {
       if (result) {
         var res = result.data.data
         if (res.parentId) {
-          t.isParentFlag = false
+          t.isParentFlag = 'false'
         } else {
-          t.isParentFlag = true
+          t.isParentFlag = 'true'
         }
         t.task.task = res
         this.task.selectedType = t.task.task.tags.split(',')
@@ -266,7 +266,7 @@ export default {
   },
   watch: {
     isParentFlag: function (newValue) {
-      if (newValue) {
+      if (newValue === 'true') {
         this.task.task.parentId = null
       }
     }

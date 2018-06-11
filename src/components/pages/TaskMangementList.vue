@@ -32,7 +32,7 @@
                       <div class="btn-group btn-space">
                         <button type="button" class="btn btn-default" @click="getTaskCopy(item)"><i class="icon mdi mdi-edit"></i>延后</button>
                         <button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>
-                        <button type="button" class="btn btn-default" @click="closeTask(task)"><i class="icon mdi mdi-close"></i></button>
+                        <button type="button" class="btn btn-default" @click="markUpTask(task)" data-toggle="modal" data-target="#mod-warning"><i class="icon mdi mdi-close"></i></button>
                       </div>
                     </div>
                     <!--<div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask(task)"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask(task)"></span></div>-->
@@ -58,13 +58,15 @@
         </div>
       </div>
     </div>
-    <!--<v-warn id="mod-warning"></v-warn>-->
+    <v-warn id="mod-warning" @handleSureButtonClicked="sureButtonClicked" @handleCancelButtonClicked="cancelButtonClicked"></v-warn>
+    <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
   </div>
 </template>
 <script>
 // import { MessageBox, Toast } from 'mint-ui'
 import Global from '@/components/Global'
-// import Warning from '../comModals/warning'
+import Warning from '../comModals/warning'
+import ResultModal from '../comModals/ResultModal'
 export default {
   data: function () {
     return {
@@ -133,11 +135,17 @@ export default {
       number: ['One', 'Two', 'Three', 'Four'],
       tabLists: [],
       userId: '',
-      num: 0
+      num: 0,
+      operatingTask: {},
+      operatingResult: {
+        message: '',
+        code: ''
+      }
     }
   },
   components: {
-    // 'v-warn': Warning
+    ResultModal,
+    'v-warn': Warning
   },
   mounted () {
     this.$nextTick(function () {
@@ -192,9 +200,10 @@ export default {
     async closeTask (data) {
       var t = this
       const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '', 'DELETE')
-      if (result.data && result.data.code === 200) {
-        t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
-      }
+      // if (result.data && result.data.code === 200) {
+      //   t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+      // }
+      return result.data
     },
     async initialWeekFromYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeekFromYearAndMonth + '?year=' + this.timeFilter.year + '&month=' + this.timeFilter.month, '', 'GET')
@@ -221,6 +230,21 @@ export default {
       // _data.memberIds.toString()
       var result = await t.$api(Global.url.apiTaskWeekCopy, _data)
       if (result.data && result.data.code === 200) {}
+    },
+    markUpTask (task) {
+      this.operatingTask = task
+    },
+    async sureButtonClicked () {
+      if (this.operatingTask) {
+        this.operatingResult = await this.closeTask(this.operatingTask)
+        this.operatingTask = {}
+      }
+    },
+    cancelButtonClicked () {
+      this.operatingTask = {}
+    },
+    confirmButtonClicked () {
+      this.operatingResult = {}
     }
   }
 }

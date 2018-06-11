@@ -114,6 +114,7 @@
         </div>
       </form>
     </div>
+    <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
   </div>
 </template>
 <script>
@@ -122,6 +123,7 @@ import {
 } from 'vuex'
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
+import ResultModal from '../comModals/ResultModal'
 // import { MessageBox } from 'mint-ui'
 export default {
   data () {
@@ -162,11 +164,16 @@ export default {
         selectedType: []
       },
       isParentFlag: 'false',
-      taskWeekId: 0
+      taskWeekId: 0,
+      operatingResult: {
+        message: '',
+        code: ''
+      }
     }
   },
   components: {
-    ClickableButton
+    ClickableButton,
+    ResultModal
   },
   computed: {
     ...mapState({
@@ -238,7 +245,9 @@ export default {
       t.task.task.endTime = t.$refs.inputTimer.value
       var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
       const result = await t.$api(api, t.task.task)
-      if (result) {}
+      if (result) {
+        this.operatingResult = result.data
+      }
     },
     async initialProjectStatusAndTag () {
       var result = await this.$api(Global.url.apiGetCommonType, '', 'GET')
@@ -262,6 +271,9 @@ export default {
           this.task.parentScore = result.data.data.surplusScore
         }
       }
+    },
+    confirmButtonClicked () {
+      this.operatingResult = {}
     }
   },
   watch: {

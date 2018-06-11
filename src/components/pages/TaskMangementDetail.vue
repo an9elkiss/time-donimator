@@ -12,6 +12,28 @@
             </div>
           </div>
           <div class="form-group">
+            <label class="col-sm-3 control-label">父任务</label>
+            <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
+              <div class="be-radio inline">
+                <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1"/>
+                <label for="radio1">是</label>
+              </div>
+              <div class="be-radio inline">
+                <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" checked/>
+                <label for="radio2">否</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" v-if="isParentFlag === 'false'">
+            <label class="col-sm-3 control-label">选择父任务</label>
+            <div class="col-sm-6">
+              <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource" required="" @change="initialChildProject">
+                <option value="">未选择</option>
+                <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.project" required="">
@@ -24,29 +46,6 @@
             <label class="col-sm-3 control-label">任务类型</label>
             <div class="col-sm-6">
               <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">父任务</label>
-            <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
-              <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1"/>
-                <label for="radio1">是</label>
-              </div>
-              <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" checked/>
-                <label for="radio2">否</label>
-              </div>
-            </div>
-
-          </div>
-          <div class="form-group" v-if="isParentFlag === 'false'">
-            <label class="col-sm-3 control-label">选择父任务</label>
-            <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource">
-                <option value="">未选择</option>
-                <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
-              </select>
             </div>
           </div>
           <div class="form-group">
@@ -149,9 +148,9 @@ export default {
           description: '',
           planScore: '',
           actualScore: '',
-          currentStatus: 0,
-          planStatus: 0,
-          parentId: 0,
+          currentStatus: '',
+          planStatus: '',
+          parentId: '',
           isParent: null,
           endTime: '',
           planHours: '',
@@ -316,6 +315,18 @@ export default {
     },
     confirmButtonClicked () {
       this.operatingResult = {}
+    },
+    initialChildProject () {
+      var targetParentId = this.task.task.parentId
+      if (targetParentId) {
+        var target = null
+        for (var index in this.task.parentProject) {
+          if (targetParentId === this.task.parentProject[index].id) {
+            target = this.task.parentProject[index]
+          }
+        }
+        this.task.task.project = target.project
+      }
     }
   },
   watch: {

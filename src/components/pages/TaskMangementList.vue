@@ -1,59 +1,63 @@
 <template>
   <div class="be-content taskMangementList">
     <div class="main-content container-fluid">
-      <div class="flexBox m-b-15">
-        <div class="boxFlex_1">
-          <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
-            <option value="2018">2018年</option>
-          </select>
-        </div>
-        <div class="boxFlex_1">
-          <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
-            <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
-          </select>
-        </div>
-        <div class="boxFlex_1">
-          <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
-            <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
-          </select>
+
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">时间筛选</div>
+        <div class="panel-body flexBox">
+          <div class="boxFlex_1">
+            <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
+              <option value="2018">2018年</option>
+            </select>
+          </div>
+          <div class="boxFlex_1">
+            <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
+              <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
+            </select>
+          </div>
+          <div class="boxFlex_1">
+            <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
+              <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
+            </select>
+          </div>
         </div>
       </div>
-      <div id="accordion1" class="panel-group accordion">
-        <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
-          <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
-            <h4 class="panel-title font-16"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed p-all-10"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
-          </div>
-          <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:10px;">
-            <div class="panel-body p-r-b-l-5">
-              <div class="m-b-10" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
-                <div class="panel panel-default panel-contrast list-body-new">
-                  <div class="panel-heading p-all-10 font-14">{{task.title}}
-                    <div class="tools" style="margin-top: -4px;">
-                      <div class="btn-group btn-space">
-                        <button type="button" class="btn btn-default" @click="getTaskCopy(item)"><i class="icon mdi mdi-edit"></i>延后</button>
-                        <button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>
-                        <button type="button" class="btn btn-default" @click="closeTask(task)"><i class="icon mdi mdi-close"></i></button>
-                      </div>
+      <div class="panel panel-default task-lists">
+        <div class="panel-heading panel-heading-divider">人员列表</div>
+        <div class="panel-body">
+          <div id="accordion1" class="panel-group accordion">
+            <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
+              <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
+                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
+              </div>
+              <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:15px;">
+                <div class="panel-body">
+                  <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
+                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" @click="closeTask(task)"></i></h2>
+                    <div class="task-ul-list">
+                      <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务描述：</span><span>{{task.description}}</span></p>
+                      <p class="cfix"><span class="fLeft">项目名称：</span><span>{{task.project}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务类型：</span><span>{{task.tags}}</span></p>
+                      <p class="cfix"><span class="fLeft">贡献值：</span><span>{{task.planScore}}</span></p>
+                      <p class="cfix"><span class="fLeft">实际值：</span><span>{{task.actualScore}}</span></p>
+                      <p class="cfix"><span class="fLeft">当期状态：</span><span>{{task.currentStatus}}</span></p>
+                      <p class="cfix"><span class="fLeft">计划状态：</span><span>{{task.planStatus}}</span></p>
+                      <p class="cfix"><span class="fLeft">计划日期：</span><span>{{task.endTime}}</span></p>
+                      <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
+                      <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
+                      <p class="cfix"><span class="fLeft">实际工时：</span><span>{{task.actualScore}}小时</span></p>
                     </div>
-                    <!--<div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask(task)"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask(task)"></span></div>-->
-                  </div>
-                  <div class="panel-body panel-body-contrast p-all-10 list-p-box">
-                    <p>项目：{{task.project}}</p>
-                    <p>类型：{{task.tags}}</p>
-                    <p>任务：{{task.description}}</p>
-                    <p>贡献值：{{task.planScore}}</p>
-                    <p>实际值：{{task.actualScore}}</p>
-                    <p>当期状态：{{task.currentStatus}}</p>
-                    <p>计划状态：{{task.planStatus}}</p>
-                    <p>计划日期：{{task.endTime}}</p>
-                    <p>工时（预估）：{{task.planHours}}</p>
-                    <p>工时（折算）：{{task.percentHours}}</p>
-                    <p>工时（实际）：{{task.actualScore}}</p>
+                    <div class="btn-center">
+                      <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(item)">延后</button>
+                      <button class="btn btn-space btn-primary btn-sm" @click="editTask(task)">编辑</button>
+                    </div>
                   </div>
                 </div>
+                <button class="btn btn-space btn-primary btn-add" @click="addTask(item)">新增任务</button>
               </div>
             </div>
-            <button class="btn btn-space btn-primary btn-add" @click="addTask(item)">新增任务</button>
           </div>
         </div>
       </div>
@@ -62,7 +66,7 @@
   </div>
 </template>
 <script>
-// import { MessageBox, Toast } from 'mint-ui'
+// import { MessageBox } from 'mint-ui'
 import Global from '@/components/Global'
 // import Warning from '../comModals/warning'
 export default {
@@ -191,6 +195,7 @@ export default {
     },
     async closeTask (data) {
       var t = this
+      // MessageBox('Notice', 'You clicked the button')
       const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '', 'DELETE')
       if (result.data && result.data.code === 200) {
         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
@@ -228,40 +233,79 @@ export default {
 </script>
 <style scoped>
   .btn-add {
-    margin: 0 auto;
+    margin: 15px auto 0;
     display: block;
   }
-
-  .m-b-10 {
-    margin-bottom: 10px!important;
+  .task-lists .panel{
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1)
   }
-
-  .m-b-15{
-    margin-bottom: 15px!important;
+  .task-lists .accordion .panel .panel-heading a.collapsed{
+    padding: 10px;
   }
-
-  .m-r-10 {
-    margin-right: 10px!important;
+  .task-lists .panel-full{
+    background-color: #f5f5f5;
+    color: #000;
   }
-
-  .p-r-b-l-5 {
-    padding: 0 5px 5px 5px !important;
+  .task-block{
+    background: rgba(245, 245, 245, 0.4);
+    color: #454545;
+    padding: 10px 20px;
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1)
   }
-
-  .p-all-10{
-    padding:10px!important;
+  .task-block h2{
+    font-size: 14px;
+    margin-top: 0px;
+    font-weight: bold;
   }
-
-  .font-16{
-    font-size:16px!important;
+  .task-ul-list p{
+    margin-bottom: 5px;
+    font-size: 12px;
   }
-
-  .font-14{
-    font-size:14px!important;
+  .task-ul-list p span{
+    display: block;
   }
-
-  .list-p-box p{
-    margin-bottom: 5px!important;
-    font-size:12px!important;
+  .task-ul-list p span:first-child{
+    width: 85px;
   }
+  .task-ul-list p span:last-child{
+    overflow: hidden;
+  }
+  .task-lists .accordion .panel .panel-collapse .panel-body{
+    padding: 0px;
+  }
+  .btn-center{
+    text-align: center;
+  }
+  /*.m-b-10 {*/
+    /*margin-bottom: 10px!important;*/
+  /*}*/
+
+  /*.m-b-15{*/
+    /*margin-bottom: 15px!important;*/
+  /*}*/
+
+  /*.m-r-10 {*/
+    /*margin-right: 10px!important;*/
+  /*}*/
+
+  /*.p-r-b-l-5 {*/
+    /*padding: 0 5px 5px 5px !important;*/
+  /*}*/
+
+  /*.p-all-10{*/
+    /*padding:10px!important;*/
+  /*}*/
+
+  /*.font-16{*/
+    /*font-size:16px!important;*/
+  /*}*/
+
+  /*.font-14{*/
+    /*font-size:14px!important;*/
+  /*}*/
+
+  /*.list-p-box p{*/
+    /*margin-bottom: 5px!important;*/
+    /*font-size:12px!important;*/
+  /*}*/
 </style>

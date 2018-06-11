@@ -15,6 +15,7 @@
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.project" required="">
+                <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
             </div>
@@ -43,6 +44,7 @@
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource" required="">
+                <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
             </div>
@@ -72,6 +74,7 @@
             <label class="col-sm-3 control-label">当期状态</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.currentStatus">
+                <option value="">未选择</option>
                 <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
               </select>
             </div>
@@ -80,6 +83,7 @@
             <label class="col-sm-3 control-label">计划状态</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.planStatus" required="">
+                <option value="">未选择</option>
                 <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
               </select>
             </div>
@@ -140,7 +144,7 @@ export default {
         parentScore: '',
         task: {
           title: '',
-          project: 0,
+          project: '',
           tags: '',
           description: '',
           planScore: '',
@@ -152,7 +156,7 @@ export default {
           endTime: '',
           planHours: '',
           actualHours: '',
-          percent: 0,
+          percent: '',
           level: '',
           userId: '',
           userName: ''
@@ -234,10 +238,10 @@ export default {
       const result = await t.$api(Global.url.apiGetTask + '/' + t.taskWeekId, '', 'GET')
       if (result) {
         var res = result.data.data
-        if (res.parentId) {
-          t.isParentFlag = 'false'
-        } else {
+        if (res.isParent != null) {
           t.isParentFlag = 'true'
+        } else {
+          t.isParentFlag = 'false'
         }
         t.task.task = res
         this.task.selectedType = t.task.task.tags.split(',')

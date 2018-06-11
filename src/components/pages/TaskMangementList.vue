@@ -17,7 +17,6 @@
             <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
           </select>
         </div>
-        <button class="btn btn-primary boxFlex_1" @click="getTaskCopy">延后</button>
       </div>
       <div id="accordion1" class="panel-group accordion">
         <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
@@ -31,6 +30,7 @@
                   <div class="panel-heading p-all-10 font-14">{{task.title}}
                     <div class="tools" style="margin-top: -4px;">
                       <div class="btn-group btn-space">
+                        <button type="button" class="btn btn-default" @click="getTaskCopy"><i class="icon mdi mdi-edit"></i>延后</button>
                         <button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>
                         <button type="button" class="btn btn-default" @click="closeTask(task)"><i class="icon mdi mdi-close"></i></button>
                       </div>

@@ -6,7 +6,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">任务名称</label>
           <div class="col-sm-6">
-            <input type="text" placeholder="实际值" class="form-control input-sm" v-model="task.task.title">
+            <input type="text" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title">
           </div>
         </div>
         <div class="form-group">
@@ -20,7 +20,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">任务类型</label>
           <div class="col-sm-6">
-            <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" @buttonClicked="buttonClicked"></clickable-button>
+            <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
           </div>
         </div>
         <div class="form-group">
@@ -54,16 +54,17 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">贡献值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
+            <input data-parsley-type="number" type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
           </div>
-          <div class="remind col-sm-3" v-if="task.parentScore && (task.parentScore < task.task.planScore || task.task.planScore == null)">
+          <div class="remind col-sm-3" v-if="task.parentScore != '' && (!task.task.planScore || task.parentScore < task.task.planScore)">
             <span>贡献值不得超过{{task.parentScore}}</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">实际值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
+            <input data-parsley-type="number" type="number" required="" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
+
           </div>
         </div>
         <div class="form-group">
@@ -93,16 +94,16 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（预估）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
+            <input data-parsley-type="number" type="number" required="" placeholder="工时（预估）" class="form-control input-sm" v-model.number="task.task.planHours">
           </div>
-          <div class="remind col-sm-3" v-if="task.parentHours && (task.parentHours < task.task.planHours || task.task.planHours == null)">
+          <div class="remind col-sm-3" v-if="task.parentHours != '' && (!task.task.planHours || task.parentHours < task.task.planHours)">
             <span>工时不得超过{{task.parentHours}}小时</span>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（实际）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
+            <input data-parsley-type="number" type="number" required="" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
           </div>
         </div>
         <div class="form-group">
@@ -181,6 +182,7 @@ export default {
     this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
+    this.$nextTick()
   },
   methods: {
     buttonClicked (index) {
@@ -190,6 +192,12 @@ export default {
         this.task.selectedType.push(index)
       }
       this.task.task.tags = this.tagsArrayToString()
+    },
+    buttonStatus (index) {
+      if (this.task.selectedType.indexOf(index) >= 0) {
+        return true
+      }
+      return false
     },
     tagsArrayToString () {
       return this.task.selectedType.toString()
@@ -221,6 +229,7 @@ export default {
           t.isParentFlag = true
         }
         t.task.task = res
+        this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
       }
     },
@@ -259,14 +268,6 @@ export default {
     isParentFlag: function (newValue) {
       if (newValue) {
         this.task.task.parentId = null
-      }
-    },
-    task: function (newValue, oldValue) {
-      if (oldValue.task.planScore !== newValue.task.planScore) {
-
-      }
-      if (oldValue.task.planHours !== newValue.task.planHours) {
-
       }
     }
   }

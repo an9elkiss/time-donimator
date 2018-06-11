@@ -1,21 +1,13 @@
 <template>
-  <a class="btn btn-space btnA" :class="[type ? 'btn-default' : 'btn-primary', active]" @click="buttonClicked(index)">{{value}}</a>
+  <a class="btn btn-space btnA" :class="[activeFlag ? 'btn-primary active' : 'btn-default']" @click="buttonClicked(index)">{{value}}</a>
 </template>
 
 <script>
 export default {
   name: 'ClickableButton',
-  props: ['value', 'index'],
-  data: function () {
-    return {
-      type: true,
-      active: false
-    }
-  },
+  props: ['value', 'index', 'activeFlag'],
   methods: {
     buttonClicked (index) {
-      this.type = !this.type
-      this.active = !this.active
       this.$emit('buttonClicked', index)
     }
   }

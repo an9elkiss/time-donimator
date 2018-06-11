@@ -19,6 +19,7 @@ const url = {
   apiTaskUpdate: managerApiBase + '/api-super-manager/1.0.0/task',
   apiTaskDelete: managerApiBase + '/api-super-manager/1.0.0/task/week',
   apiTaskWeekCopy: managerApiBase + '/api-super-manager/1.0.0/task/week/copy',
+  apiWxLogin: userApiBase + '/api-union-user/1.0.0/wx-login',
   apiGetTasks: managerApiBase + '/api-super-manager/1.0.0/tasks',
   apiGetTask: managerApiBase + '/api-super-manager/1.0.0/task',
   apiGetCommonType: managerApiBase + '/api-super-manager/1.0.0/common/type',

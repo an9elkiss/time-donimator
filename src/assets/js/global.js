@@ -31,12 +31,15 @@ const timeEntryType = {
   finance: 5,
   childEducation: 6
 }
+
+export const goNext = (t, x) => {
+  t.$router.push({name: x})
+}
+
 export default {
   url,
   event,
   timeEntryType,
-
-  token: '',
-
+  goNext,
   name: 'Global'
 }

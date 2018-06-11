@@ -17,6 +17,7 @@
             <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
           </select>
         </div>
+        <button class="btn btn-primary boxFlex_1" @click="getTaskCopy">延后</button>
       </div>
       <div id="accordion1" class="panel-group accordion">
         <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
@@ -27,21 +28,27 @@
             <div class="panel-body p-r-b-l-5">
               <div class="m-b-10" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
                 <div class="panel panel-default panel-contrast list-body-new">
-                  <div class="panel-heading p-all-10 font-14">{{item.name}}
-                    <div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask(task)"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask(item)"></span></div>
+                  <div class="panel-heading p-all-10 font-14">{{task.title}}
+                    <div class="tools" style="margin-top: -4px;">
+                      <div class="btn-group btn-space">
+                        <button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>
+                        <button type="button" class="btn btn-default" @click="closeTask(task)"><i class="icon mdi mdi-close"></i></button>
+                      </div>
+                    </div>
+                    <!--<div class="tools"><span class="icon mdi mdi-edit m-r-10" @click="editTask(task)"></span><span data-toggle="modal" data-target="#mod-warning" class="icon mdi mdi-close" @click="closeTask(task)"></span></div>-->
                   </div>
                   <div class="panel-body panel-body-contrast p-all-10 list-p-box">
-                    <p>项目：BYD</p>
-                    <p>类型：新功能</p>
-                    <p>任务：pts经销商维护功能上生产、frontend、微信商城都要上，试驾的缓存结构调整了</p>
-                    <p>贡献值：0</p>
-                    <p>实际值：1</p>
-                    <p>当期状态：2</p>
-                    <p>计划状态：2</p>
-                    <p>计划日期：2</p>
-                    <p>工时（预估）：2</p>
-                    <p>工时（折算）：2</p>
-                    <p>工时（实际）：2</p>
+                    <p>项目：{{task.project}}</p>
+                    <p>类型：{{task.tags}}</p>
+                    <p>任务：{{task.description}}</p>
+                    <p>贡献值：{{task.planScore}}</p>
+                    <p>实际值：{{task.actualScore}}</p>
+                    <p>当期状态：{{task.currentStatus}}</p>
+                    <p>计划状态：{{task.planStatus}}</p>
+                    <p>计划日期：{{task.endTime}}</p>
+                    <p>工时（预估）：{{task.planHours}}</p>
+                    <p>工时（折算）：{{task.percentHours}}</p>
+                    <p>工时（实际）：{{task.actualScore}}</p>
                   </div>
                 </div>
               </div>
@@ -51,12 +58,13 @@
         </div>
       </div>
     </div>
-    <v-warn id="mod-warning"></v-warn>
+    <!--<v-warn id="mod-warning"></v-warn>-->
   </div>
 </template>
 <script>
+// import { MessageBox, Toast } from 'mint-ui'
 import Global from '@/components/Global'
-import Warning from '../comModals/warning'
+// import Warning from '../comModals/warning'
 export default {
   data: function () {
     return {
@@ -129,7 +137,7 @@ export default {
     }
   },
   components: {
-    'v-warn': Warning
+    // 'v-warn': Warning
   },
   mounted () {
     this.$nextTick(function () {
@@ -183,10 +191,9 @@ export default {
     },
     async closeTask (data) {
       var t = this
-      const result = await
-      t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '')
+      const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '', 'DELETE')
       if (result.data && result.data.code === 200) {
-      // console.log(result)
+        t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
       }
     },
     async initialWeekFromYearAndMonth () {
@@ -200,6 +207,20 @@ export default {
       if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
       }
+    },
+    async getTaskCopy () {
+      var t = this
+      var _data = {}
+      _data.year = t.timeFilter.year
+      _data.month = t.timeFilter.month
+      _data.week = t.timeFilter.week
+      _data.memberIds = []
+      t.tabLists.forEach(function (ele) {
+        _data.memberIds.push(ele.userId)
+      })
+      _data.memberIds.toString()
+      var result = await t.$api(Global.url.apiTaskWeekCopy, _data)
+      if (result.data && result.data.code === 200) {}
     }
   }
 }

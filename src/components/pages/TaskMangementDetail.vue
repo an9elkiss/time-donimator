@@ -6,13 +6,13 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">任务名称</label>
           <div class="col-sm-6">
-            <input type="text" required="" placeholder="实际值" class="form-control input-sm" v-model="task.task.title">
+            <input type="text" placeholder="实际值" class="form-control input-sm" v-model="task.task.title">
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">项目名称</label>
           <div class="col-sm-6">
-            <select class="form-control input-sm" required="" v-model="task.task.project">
+            <select class="form-control input-sm" v-model="task.task.project">
               <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
             </select>
           </div>
@@ -31,7 +31,7 @@
               <label for="radio1">是</label>
             </div>
             <div class="be-radio inline">
-              <input type="radio" v-model="isParentFlag" value='' id="radio2" checked/>
+              <input type="radio" v-model="isParentFlag" value='false' id="radio2" checked/>
               <label for="radio2">否</label>
             </div>
           </div>
@@ -48,13 +48,13 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">任务内容</label>
           <div class="col-sm-6">
-            <textarea required="" class="form-control input-sm" v-model="task.task.description"></textarea>
+            <textarea class="form-control input-sm" v-model="task.task.description"></textarea>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">贡献值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
+            <input data-parsley-type="number" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
           </div>
           <div class="remind col-sm-3" v-if="task.parentScore && (task.parentScore < task.task.planScore || task.task.planScore == null)">
             <span>贡献值不得超过{{task.parentScore}}</span>
@@ -63,13 +63,13 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">实际值</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
+            <input data-parsley-type="number" type="text" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">当期状态</label>
           <div class="col-sm-6">
-            <select class="form-control input-sm" required="" v-model="task.task.currentStatus">
+            <select class="form-control input-sm" v-model="task.task.currentStatus">
               <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
             </select>
           </div>
@@ -77,7 +77,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">计划状态</label>
           <div class="col-sm-6">
-            <select class="form-control input-sm" required="" v-model="task.task.planStatus">
+            <select class="form-control input-sm" v-model="task.task.planStatus">
               <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
             </select>
           </div>
@@ -86,14 +86,14 @@
           <label class="col-sm-3 control-label">计划日期</label>
           <div class="col-md-6">
             <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-              <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm">
+              <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" ref="inputTimer" value="" class="form-control input-sm">
             </div>
           </div>
         </div>
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（预估）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
+            <input data-parsley-type="number" type="text" placeholder="工时（预估）" class="form-control input-sm" v-model="task.task.planHours">
           </div>
           <div class="remind col-sm-3" v-if="task.parentHours && (task.parentHours < task.task.planHours || task.task.planHours == null)">
             <span>工时不得超过{{task.parentHours}}小时</span>
@@ -102,7 +102,7 @@
         <div class="form-group">
           <label class="col-sm-3 control-label">工时（实际）</label>
           <div class="col-sm-6">
-            <input data-parsley-type="number" type="text" required="" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
+            <input data-parsley-type="number" type="text" placeholder="工时（实际）" class="form-control input-sm" v-model.number="task.task.actualHours">
           </div>
         </div>
         <div class="form-group">
@@ -121,6 +121,7 @@ import {
 } from 'vuex'
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
+// import { MessageBox } from 'mint-ui'
 export default {
   data () {
     return {
@@ -226,11 +227,9 @@ export default {
     async submitTask () {
       var t = this
       t.task.task.endTime = t.$refs.inputTimer.value
-      var api = t.taskWeekId ? Global.url.apiTaskUpdate : Global.url.apiTaskSave
+      var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
       const result = await t.$api(api, t.task.task)
-      if (result) {
-        console.log(result)
-      }
+      if (result) {}
     },
     async initialProjectStatusAndTag () {
       var result = await this.$api(Global.url.apiGetCommonType, '', 'GET')

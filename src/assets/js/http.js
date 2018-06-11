@@ -1,6 +1,7 @@
 import axios from 'axios'
-import router from 'vue-router'//
+import router from 'vue-router'
 import store from '@/store'
+// import Qs from 'qs'
 
 axios.interceptors.request.use(config => {
   if (config.method === 'post' || config.method === 'put') {
@@ -48,11 +49,18 @@ export const http = async function (url, form, method = 'POST') {
     method: method,
     url: url,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
     xhrFields: {
       withCredentials: true
     },
+    transformRequest: [function (data) {
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+      }
+      return ret
+    }],
     crossDomain: true,
     withCredentials: false
   }

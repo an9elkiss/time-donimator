@@ -30,7 +30,7 @@
                   <div class="panel-heading p-all-10 font-14">{{task.title}}
                     <div class="tools" style="margin-top: -4px;">
                       <div class="btn-group btn-space">
-                        <button type="button" class="btn btn-default" @click="getTaskCopy"><i class="icon mdi mdi-edit"></i>延后</button>
+                        <button type="button" class="btn btn-default" @click="getTaskCopy(item)"><i class="icon mdi mdi-edit"></i>延后</button>
                         <button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>
                         <button type="button" class="btn btn-default" @click="closeTask(task)"><i class="icon mdi mdi-close"></i></button>
                       </div>
@@ -208,17 +208,17 @@ export default {
         this.timeFilter.week = result.data.data.week
       }
     },
-    async getTaskCopy () {
+    async getTaskCopy (data) {
       var t = this
       var _data = {}
       _data.year = t.timeFilter.year
       _data.month = t.timeFilter.month
       _data.week = t.timeFilter.week
-      _data.memberIds = []
-      t.tabLists.forEach(function (ele) {
-        _data.memberIds.push(ele.userId)
-      })
-      _data.memberIds.toString()
+      _data.memberIds = data.userId
+      // t.tabLists.forEach(function (ele) {
+      //   _data.memberIds.push(ele.userId)
+      // })
+      // _data.memberIds.toString()
       var result = await t.$api(Global.url.apiTaskWeekCopy, _data)
       if (result.data && result.data.code === 200) {}
     }

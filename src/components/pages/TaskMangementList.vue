@@ -33,7 +33,7 @@
               <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
                   <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
-                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" @click="closeTask(task)"></i></h2>
+                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="closeTask(task)"></i></h2>
                     <div class="task-ul-list">
                       <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
@@ -52,6 +52,24 @@
                     <div class="btn-center">
                       <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(item)">延后</button>
                       <button class="btn btn-space btn-primary btn-sm" @click="editTask(task)">编辑</button>
+<!--=======-->
+      <!--<div id="accordion1" class="panel-group accordion">-->
+        <!--<div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">-->
+          <!--<div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">-->
+            <!--<h4 class="panel-title font-16"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed p-all-10"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>-->
+          <!--</div>-->
+          <!--<div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:10px;">-->
+            <!--<div class="panel-body p-r-b-l-5">-->
+              <!--<div class="m-b-10" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">-->
+                <!--<div class="panel panel-default panel-contrast list-body-new">-->
+                  <!--<div class="panel-heading p-all-10 font-14">{{task.title}}-->
+                    <!--<div class="tools" style="margin-top: -4px;">-->
+                      <!--<div class="btn-group btn-space">-->
+                        <!--<button type="button" class="btn btn-default" @click="getTaskCopy(item)"><i class="icon mdi mdi-edit"></i>延后</button>-->
+                        <!--<button type="button" class="btn btn-default" @click="editTask(task)"><i class="icon mdi mdi-edit"></i></button>-->
+                        <!--<button type="button" class="btn btn-default" @click="markUpTask(task)" data-toggle="modal" data-target="#mod-warning"><i class="icon mdi mdi-close"></i></button>-->
+                      <!--</div>-->
+<!--&gt;>>>>>> fcd8c4b607acf35aeee00f630a45accb3ada377e-->
                     </div>
                   </div>
                 </div>
@@ -62,13 +80,15 @@
         </div>
       </div>
     </div>
-    <!--<v-warn id="mod-warning"></v-warn>-->
+    <v-warn id="mod-warning" @handleSureButtonClicked="sureButtonClicked" @handleCancelButtonClicked="cancelButtonClicked"></v-warn>
+    <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
   </div>
 </template>
 <script>
 // import { MessageBox } from 'mint-ui'
 import Global from '@/components/Global'
-// import Warning from '../comModals/warning'
+import Warning from '../comModals/warning'
+import ResultModal from '../comModals/ResultModal'
 export default {
   data: function () {
     return {
@@ -137,11 +157,17 @@ export default {
       number: ['One', 'Two', 'Three', 'Four'],
       tabLists: [],
       userId: '',
-      num: 0
+      num: 0,
+      operatingTask: {},
+      operatingResult: {
+        message: '',
+        code: ''
+      }
     }
   },
   components: {
-    // 'v-warn': Warning
+    ResultModal,
+    'v-warn': Warning
   },
   mounted () {
     this.$nextTick(function () {
@@ -197,9 +223,10 @@ export default {
       var t = this
       // MessageBox('Notice', 'You clicked the button')
       const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '', 'DELETE')
-      if (result.data && result.data.code === 200) {
-        t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
-      }
+      // if (result.data && result.data.code === 200) {
+      //   t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+      // }
+      return result.data
     },
     async initialWeekFromYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeekFromYearAndMonth + '?year=' + this.timeFilter.year + '&month=' + this.timeFilter.month, '', 'GET')
@@ -226,6 +253,21 @@ export default {
       // _data.memberIds.toString()
       var result = await t.$api(Global.url.apiTaskWeekCopy, _data)
       if (result.data && result.data.code === 200) {}
+    },
+    markUpTask (task) {
+      this.operatingTask = task
+    },
+    async sureButtonClicked () {
+      if (this.operatingTask) {
+        this.operatingResult = await this.closeTask(this.operatingTask)
+        this.operatingTask = {}
+      }
+    },
+    cancelButtonClicked () {
+      this.operatingTask = {}
+    },
+    confirmButtonClicked () {
+      this.operatingResult = {}
     }
   }
 }

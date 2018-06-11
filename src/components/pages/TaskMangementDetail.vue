@@ -43,7 +43,7 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource" required="">
+              <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource">
                 <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
@@ -58,19 +58,19 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">贡献值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore">
+              <input data-parsley-type="number" type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore" @input="inspectFormart(task.task.planScore, task.parentScore)">
             </div>
-            <div class="remind col-sm-3" v-if="task.parentScore != '' && (!task.task.planScore || task.parentScore < task.task.planScore)">
+            <div class="remind col-sm-3" v-if="task.parentScore != '' && (!this.task.task.planScore || this.task.parentScore < this.task.task.planScore)">
               <span>贡献值不得超过{{task.parentScore}}</span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际值</label>
             <div class="col-sm-6">
               <input data-parsley-type="number" type="number" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">当期状态</label>
             <div class="col-sm-6">
               <select class="form-control input-sm" v-model="task.task.currentStatus">
@@ -99,13 +99,13 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">预估工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model.number="task.task.planHours">
+              <input data-parsley-type="number" type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model.number="task.task.planHours" @input="inspectFormart(task.task.planHours, task.parentHours)">
             </div>
             <div class="remind col-sm-3" v-if="task.parentHours != '' && (!task.task.planHours || task.parentHours < task.task.planHours)">
               <span>工时不得超过{{task.parentHours}}小时</span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际工时</label>
             <div class="col-sm-6">
               <input data-parsley-type="number" type="number" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
@@ -176,7 +176,8 @@ export default {
       operatingResult: {
         message: '',
         code: ''
-      }
+      },
+      isTrue: false
     }
   },
   components: {
@@ -190,6 +191,7 @@ export default {
     })
   },
   mounted () {
+    console.log(this.$route.params.flag)
     window.$(document).ready(function () {
       window.App.init()
       window.App.formElements()
@@ -197,9 +199,13 @@ export default {
     this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
-    this.$nextTick()
   },
   methods: {
+    inspectFormart (a, b) {
+      if (!a || b < a) {
+        a = ''
+      }
+    },
     buttonClicked (index) {
       if (this.task.selectedType.indexOf(index) >= 0) {
         this.task.selectedType.splice(this.task.selectedType.indexOf(index), 1)
@@ -256,28 +262,32 @@ export default {
       } else {
         t.task.task.isParent = null
       }
-      var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
-      const result = await t.$api(api, t.task.task)
-      if (result.data && result.data.code === 200) {
-        this.operatingResult = result.data
-        t.task.task = {
-          title: '',
-          project: 0,
-          tags: '',
-          description: '',
-          planScore: '',
-          actualScore: '',
-          currentStatus: 0,
-          planStatus: 0,
-          parentId: 0,
-          isParent: null,
-          endTime: '',
-          planHours: '',
-          actualHours: '',
-          percent: 0,
-          level: '',
-          userId: '',
-          userName: ''
+      if (t.task.task.title && t.task.task.project && t.task.task.tags && t.task.task.description && t.task.task.planScore && t.task.task.planStatus && t.task.task.endTime && t.task.task.planHours) {
+        var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
+        const result = await t.$api(api, t.task.task)
+        if (result.data && result.data.code === 200) {
+          t.$refs.inputTimer.value = ''
+          t.isParentFlag = 'false'
+          this.operatingResult = result.data
+          t.task.task = {
+            title: '',
+            project: '',
+            tags: '',
+            description: '',
+            planScore: '',
+            actualScore: '',
+            currentStatus: '',
+            planStatus: '',
+            parentId: '',
+            isParent: null,
+            endTime: '',
+            planHours: '',
+            actualHours: '',
+            percent: '',
+            level: '',
+            userId: '',
+            userName: ''
+          }
         }
       }
     },

@@ -200,7 +200,7 @@ export default {
       this.$store.commit('GetPersonMsg', data)
     },
     editTask (data) {
-      this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId}})
+      this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId, 'flag': 'flag'}})
     },
     async closeTask (data, i) {
       var t = this

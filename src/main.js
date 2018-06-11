@@ -23,9 +23,7 @@ Vue.http.interceptors.push((request, next) => {
   }
 
   next((response) => {
-    console.log(response)
     if (response.body.code === 500) {
-      console.log(response.body)
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}
@@ -67,8 +65,6 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  console.log(response)
-  console.log(response.data)
   switch (response.data.code) {
     case 500:
       router.push({
@@ -79,7 +75,6 @@ axios.interceptors.response.use(response => {
   }
   return response
 }, error => {
-  console.log(error)
   if (error.response) {
     switch (error.response.status) {
       case 500:

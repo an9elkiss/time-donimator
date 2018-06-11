@@ -190,7 +190,6 @@ export default {
     })
   },
   mounted () {
-    console.log(this.$route.params.flag)
     window.$(document).ready(function () {
       window.App.init()
       window.App.formElements()

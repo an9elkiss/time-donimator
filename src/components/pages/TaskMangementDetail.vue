@@ -27,17 +27,17 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-if="!taskWeekId">
+              <p class="disabledP" v-if="taskWeekId && task.task.parentId">{{task.task.parentTitle}}</p>
+              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
                 <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
-              <p class="disabledP" v-else>{{task.task.parentTitle}}</p>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId != ''">
+              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId">
                 <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
@@ -59,7 +59,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">贡献值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore" @input="inspectNum('planScore')">
+              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')">
             </div>
             <div class="remind" v-if="this.task.task.parentId && isParentScore">
               <span>贡献值不得超过{{task.parentScore}}</span>
@@ -68,7 +68,10 @@
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
+              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore">
+            </div>
+            <div class="remind" v-if="isNaN(Number(this.task.task.actualScore)) || Number(this.task.task.actualScore) < 0">
+              <span>实际值不得小于0小时</span>
             </div>
           </div>
           <div class="form-group" v-if="$route.params.flag">
@@ -93,23 +96,26 @@
             <label class="col-sm-3 control-label">计划日期</label>
             <div class="col-md-6">
               <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm">
+                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0">
               </div>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">预估工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model.number="task.task.planHours" @input="inspectNum('planHours')">
+              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')">
             </div>
             <div class="remind" v-if="task.task.parentId && isParentHours">
-              <span>工时不得超过{{task.parentHours}}小时</span>
+              <span>预估工时不得超过{{task.parentHours}}小时</span>
             </div>
           </div>
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
+              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours">
+            </div>
+            <div class="remind" v-if="isNaN(Number(this.task.task.actualHours)) || Number(this.task.task.actualHours) < 0">
+              <span>实际工时不得小于0小时</span>
             </div>
           </div>
           <div class="form-group">

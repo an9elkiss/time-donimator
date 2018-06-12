@@ -28,11 +28,11 @@
           <div id="accordion1" class="panel-group accordion">
             <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
               <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
-                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+number[index_1]" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
+                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
               </div>
-              <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:15px;">
+              <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
-                  <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
+                  <div class="task-block" v-for="(task, index_2) in item.taskLists.taskCommands" :key="index_2">
                     <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="closeTask(task, index_2)"></i></h2>
                     <div class="task-ul-list">
                       <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
@@ -50,7 +50,7 @@
                       <p class="cfix"><span class="fLeft">实际工时：</span><span>{{task.actualScore}}小时</span></p>
                     </div>
                     <div class="btn-center">
-                      <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(item)">延后</button>
+                      <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
                       <button class="btn btn-space btn-primary btn-sm" @click="editTask(task)">编辑</button>
                     </div>
                   </div>
@@ -195,20 +195,17 @@ export default {
         t.$set(t.tabLists, i, t.tabLists[i])
       }
     },
-    addTask (data) {
+    addTask (task) {
       this.$router.push({name: 'TaskMangementDetail'})
-      this.$store.commit('GetPersonMsg', data)
+      this.$store.commit('GetPersonMsg', task)
     },
-    editTask (data) {
-      this.$router.push({name: 'TaskMangementDetail', params: {'id': data.taskWeekId, 'flag': 'flag'}})
+    editTask (task) {
+      this.$router.push({name: 'TaskMangementDetail', params: {'id': task.taskWeekId, 'flag': 'flag'}})
     },
-    async closeTask (data, i) {
+    async closeTask (task, i) {
       var t = this
       t.taskIndex = i
-      const result = await t.$api(Global.url.apiTaskDelete + '/' + data.taskWeekId, '', 'DELETE')
-      // if (result.data && result.data.code === 200) {
-      //   t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
-      // }
+      const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
       return result.data
     },
     async initialWeekFromYearAndMonth () {
@@ -223,18 +220,9 @@ export default {
         this.timeFilter.week = result.data.data.week
       }
     },
-    async getTaskCopy (data) {
+    async getTaskCopy (task) {
       var t = this
-      var _data = {}
-      _data.year = t.timeFilter.year
-      _data.month = t.timeFilter.month
-      _data.week = t.timeFilter.week
-      _data.memberIds = data.userId
-      // t.tabLists.forEach(function (ele) {
-      //   _data.memberIds.push(ele.userId)
-      // })
-      // _data.memberIds.toString()
-      var result = await t.$api(Global.url.apiTaskWeekCopy, _data)
+      var result = await t.$api(Global.url.apiTaskWeekCopy + '?year=' + t.timeFilter.year + '&month=' + t.timeFilter.month + '&week=' + t.timeFilter.week + '&taskWeekId=' + task.taskWeekId, '', 'GET')
       if (result.data && result.data.code === 200) {
         t.operatingResult = result.data
       }

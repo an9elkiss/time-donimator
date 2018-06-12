@@ -27,7 +27,7 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.parentId" @click="initialProjectResource" required="" @change="initialChildProject">
+              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource">
                 <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
@@ -44,8 +44,9 @@
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">任务类型</label>
-            <div class="col-sm-6">
+            <div class="col-sm-6 cfix">
               <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
+              <input v-model="task.task.tags" required="" class="placeholder">
             </div>
           </div>
           <div class="form-group">
@@ -57,16 +58,16 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">贡献值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore" @input="inspectFormart(task.task.planScore, task.parentScore)">
+              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model.number="task.task.planScore" @input="inspectNum('planScore')">
             </div>
-            <div class="remind col-sm-3" v-if="task.parentScore != '' && (!this.task.task.planScore || this.task.parentScore < this.task.task.planScore)">
+            <div class="remind" v-if="this.task.task.parentId && isParentScore">
               <span>贡献值不得超过{{task.parentScore}}</span>
             </div>
           </div>
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
+              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model.number="task.task.actualScore">
             </div>
           </div>
           <div class="form-group" v-if="$route.params.flag">
@@ -98,16 +99,16 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">预估工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model.number="task.task.planHours" @input="inspectFormart(task.task.planHours, task.parentHours)">
+              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model.number="task.task.planHours" @input="inspectNum('planHours')">
             </div>
-            <div class="remind col-sm-3" v-if="task.parentHours != '' && (!task.task.planHours || task.parentHours < task.task.planHours)">
+            <div class="remind" v-if="task.task.parentId && isParentHours">
               <span>工时不得超过{{task.parentHours}}小时</span>
             </div>
           </div>
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" type="number" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
+              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model.number="task.task.actualHours">
             </div>
           </div>
           <div class="form-group">
@@ -130,7 +131,6 @@ import {
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import ResultModal from '../comModals/ResultModal'
-// import { MessageBox } from 'mint-ui'
 export default {
   data () {
     return {
@@ -146,7 +146,7 @@ export default {
           project: '',
           tags: '',
           description: '',
-          planScore: '',
+          planScore: 0,
           actualScore: '',
           currentStatus: '',
           planStatus: '',
@@ -176,7 +176,9 @@ export default {
         message: '',
         code: ''
       },
-      isTrue: false
+      isTrue: false,
+      isParentHours: false,
+      isParentScore: false
     }
   },
   components: {
@@ -199,9 +201,21 @@ export default {
     this.initialParentProjectList()
   },
   methods: {
-    inspectFormart (a, b) {
-      if (!a || b < a) {
-        a = ''
+    inspectNum (flag) {
+      if (flag === 'planHours') {
+        if (this.task.task.parentId && this.task.parentHours < this.task.task.planHours) {
+          this.isParentHours = true
+          this.task.task.planHours = ''
+        } else {
+          this.isParentHours = false
+        }
+      } else {
+        if (this.task.task.parentId && this.task.parentScore < this.task.task.planScore) {
+          this.isParentScore = true
+          this.task.task.planScore = ''
+        } else {
+          this.isParentScore = false
+        }
       }
     },
     buttonClicked (index) {
@@ -260,19 +274,20 @@ export default {
       } else {
         t.task.task.isParent = null
       }
-      if (t.task.task.title && t.task.task.project && t.task.task.tags && t.task.task.description && t.task.task.planScore && t.task.task.planStatus && t.task.task.endTime && t.task.task.planHours) {
+      if (t.task.task.title && t.task.task.project && t.task.task.tags && t.task.task.description && parseInt(t.task.task.planScore) >= 0 && t.task.task.planStatus && t.task.task.endTime && parseInt(t.task.task.planHours) >= 0) {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
           t.$refs.inputTimer.value = ''
           t.isParentFlag = 'false'
           this.operatingResult = result.data
+          this.task.selectedType = []
           t.task.task = {
             title: '',
             project: '',
             tags: '',
             description: '',
-            planScore: '',
+            planScore: 0,
             actualScore: '',
             currentStatus: '',
             planStatus: '',
@@ -281,10 +296,10 @@ export default {
             endTime: '',
             planHours: '',
             actualHours: '',
-            percent: '',
-            level: '',
-            userId: '',
-            userName: ''
+            percent: t.personMsg.percent,
+            level: t.personMsg.level,
+            userId: t.personMsg.userId,
+            userName: t.personMsg.name
           }
         }
       }
@@ -304,35 +319,38 @@ export default {
       }
     },
     async initialProjectResource () {
-      if (this.task.task.parentId) {
-        var result = await this.$api(Global.url.apiGetParentResource + this.task.task.parentId, '', 'GET')
+      var t = this
+      t.task.task.planScore = ''
+      t.task.task.planHours = ''
+      if (t.task.task.parentId) {
+        var result = await this.$api(Global.url.apiGetParentResource + t.task.task.parentId, '', 'GET')
         if (result.data && result.data.code === 200) {
-          this.task.parentHours = result.data.data.surplusHours
-          this.task.parentScore = result.data.data.surplusScore
+          t.task.parentHours = result.data.data.surplusHours
+          t.task.parentScore = result.data.data.surplusScore
+          t.isParentHours = true
+          t.isParentScore = true
+          for (var index in t.task.parentProject) {
+            if (t.task.task.parentId === t.task.parentProject[index].id) {
+              t.task.task.project = t.task.parentProject[index].project
+            }
+          }
         }
       }
     },
     confirmButtonClicked () {
       this.operatingResult = {}
-    },
-    initialChildProject () {
-      var targetParentId = this.task.task.parentId
-      if (targetParentId) {
-        var target = null
-        for (var index in this.task.parentProject) {
-          if (targetParentId === this.task.parentProject[index].id) {
-            target = this.task.parentProject[index]
-          }
-        }
-        this.task.task.project = target.project
-      }
     }
   },
   watch: {
     isParentFlag: function (newValue) {
       if (newValue === 'true') {
-        this.task.task.parentId = null
+        this.task.task.parentId = ''
+        this.isParentHours = false
+        this.isParentScore = false
+        this.task.task.project = ''
       }
+    },
+    'task.task.planHours': function () {
     }
   }
 }
@@ -344,11 +362,19 @@ export default {
   }
   div.remind{
     color: red;
-    text-align: center;
     font-size: 12px;
-    padding-top: 5px;
+    padding: 5px 15px 0;
   }
   .datetimepicker table thead tr th.switch{
     text-align: center;
+  }
+  .placeholder{
+    height: 0;
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    opacity: 0;
+    left: 0;
+    display: block;
   }
 </style>

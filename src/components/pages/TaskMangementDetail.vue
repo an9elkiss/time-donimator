@@ -280,28 +280,30 @@ export default {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
-          t.$refs.inputTimer.value = ''
-          t.isParentFlag = 'false'
           this.operatingResult = result.data
-          this.task.selectedType = []
-          t.task.task = {
-            title: '',
-            project: '',
-            tags: '',
-            description: '',
-            planScore: 0,
-            actualScore: '',
-            currentStatus: '',
-            planStatus: '',
-            parentId: '',
-            isParent: null,
-            endTime: '',
-            planHours: '',
-            actualHours: '',
-            percent: t.personMsg.percent,
-            level: t.personMsg.level,
-            userId: t.personMsg.userId,
-            userName: t.personMsg.name
+          if (!t.taskWeekId) {
+            t.$refs.inputTimer.value = ''
+            t.isParentFlag = 'false'
+            this.task.selectedType = []
+            t.task.task = {
+              title: '',
+              project: '',
+              tags: '',
+              description: '',
+              planScore: 0,
+              actualScore: '',
+              currentStatus: '',
+              planStatus: '',
+              parentId: '',
+              isParent: null,
+              endTime: '',
+              planHours: '',
+              actualHours: '',
+              percent: t.personMsg.percent,
+              level: t.personMsg.level,
+              userId: t.personMsg.userId,
+              userName: t.personMsg.name
+            }
           }
         }
       }

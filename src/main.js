@@ -14,16 +14,14 @@ Vue.use(MintUI)
 Vue.prototype.$api = http
 Vue.prototype.$global = Globals
 Vue.config.productionTip = false
-
 Vue.http.interceptors.push((request, next) => {
   if (request.method === 'POST') {
     request.body.token = store.state.user.token
   } else if (request.method === 'GET' || request.method === 'DELETE') {
     request.params.token = store.state.user.token
   }
-
   next((response) => {
-    if (response.body.code === 500) {
+    if (!store.state.user.token || response.body.code === 500) {
       router.replace({
         path: '/login',
         query: {redirect: router.currentRoute.fullPath}

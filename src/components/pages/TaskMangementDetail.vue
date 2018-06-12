@@ -36,7 +36,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="">
+              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isParentFlag==='false'">
                 <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
@@ -340,6 +340,20 @@ export default {
     confirmButtonClicked () {
       this.operatingResult = {}
     }
+    // initialChildProject () {
+    //   var targetParentId = this.task.task.parentId
+    //   if (targetParentId) {
+    //     var target = null
+    //     for (var index in this.task.parentProject) {
+    //       if (targetParentId === this.task.parentProject[index].id) {
+    //         target = this.task.parentProject[index]
+    //       }
+    //     }
+    //     this.task.task.project = target.project
+    //   }
+    //   this.task.task.planScore = ''
+    //   this.task.task.planHours = ''
+    // }
   },
   watch: {
     isParentFlag: function (newValue) {

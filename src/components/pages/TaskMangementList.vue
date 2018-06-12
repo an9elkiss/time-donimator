@@ -32,8 +32,8 @@
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
-                  <div class="task-block" v-for="(task, index_2) in item.taskLists.taskCommands" :key="index_2">
-                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="closeTask(task, index_2)"></i></h2>
+                  <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
+                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></h2>
                     <div class="task-ul-list">
                       <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
@@ -47,7 +47,7 @@
                       <p class="cfix"><span class="fLeft">计划日期：</span><span>{{task.endTime}}</span></p>
                       <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
                       <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                      <p class="cfix"><span class="fLeft">实际工时：</span><span>{{task.actualScore}}小时</span></p>
+                      <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
                     </div>
                     <div class="btn-center">
                       <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
@@ -227,14 +227,16 @@ export default {
         t.operatingResult = result.data
       }
     },
-    markUpTask (task) {
+    markUpTask (task, index) {
       this.operatingTask = task
+      this.taskIndex = index
     },
     async sureButtonClicked () {
       var t = this
       if (t.operatingTask) {
-        t.operatingResult = await t.closeTask(t.operatingTask)
+        t.operatingResult = await t.closeTask(t.operatingTask, t.taskIndex)
         t.operatingTask = {}
+        t.taskIndex = ''
         if (t.operatingResult.code === 200) {
           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
         }

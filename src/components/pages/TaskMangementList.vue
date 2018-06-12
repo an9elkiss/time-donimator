@@ -33,7 +33,7 @@
               <div v-if="item.taskLists" :id="'collapse'+number[index_1]" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
                   <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
-                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="closeTask(task, index_2)"></i></h2>
+                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></h2>
                     <div class="task-ul-list">
                       <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
@@ -239,14 +239,16 @@ export default {
         t.operatingResult = result.data
       }
     },
-    markUpTask (task) {
+    markUpTask (task, index) {
       this.operatingTask = task
+      this.taskIndex = index
     },
     async sureButtonClicked () {
       var t = this
       if (t.operatingTask) {
-        t.operatingResult = await t.closeTask(t.operatingTask)
+        t.operatingResult = await t.closeTask(t.operatingTask, t.taskIndex)
         t.operatingTask = {}
+        t.taskIndex = ''
         if (t.operatingResult.code === 200) {
           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
         }

@@ -36,7 +36,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isParentFlag==='false'">
+              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId != ''">
                 <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
@@ -203,14 +203,14 @@ export default {
   methods: {
     inspectNum (flag) {
       if (flag === 'planHours') {
-        if (this.task.task.parentId && this.task.parentHours < this.task.task.planHours) {
+        if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) < 0) {
           this.isParentHours = true
           this.task.task.planHours = ''
         } else {
           this.isParentHours = false
         }
       } else {
-        if (this.task.task.parentId && this.task.parentScore < this.task.task.planScore) {
+        if ((this.task.task.parentId && this.task.parentScore < this.task.task.planScore) || isNaN(Number(this.task.task.planScore)) || Number(this.task.task.planScore) < 0) {
           this.isParentScore = true
           this.task.task.planScore = ''
         } else {
@@ -254,7 +254,7 @@ export default {
     async getTask () {
       var t = this
       const result = await t.$api(Global.url.apiGetTask + '/' + t.taskWeekId, '', 'GET')
-      if (result) {
+      if (result.data && result.data.code === 200) {
         var res = result.data.data
         if (res.isParent != null) {
           t.isParentFlag = 'true'
@@ -264,6 +264,7 @@ export default {
         t.task.task = res
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
+        this.initialProjectResource()
       }
     },
     async submitTask () {
@@ -320,13 +321,15 @@ export default {
     },
     async initialProjectResource () {
       var t = this
-      t.task.task.planScore = ''
-      t.task.task.planHours = ''
+      if (!t.taskWeekId) {
+        t.task.task.planScore = 0
+        t.task.task.planHours = ''
+      }
       if (t.task.task.parentId) {
         var result = await this.$api(Global.url.apiGetParentResource + t.task.task.parentId, '', 'GET')
         if (result.data && result.data.code === 200) {
-          t.task.parentHours = result.data.data.surplusHours
-          t.task.parentScore = result.data.data.surplusScore
+          t.task.parentHours = result.data.data.surplusHours + Number(t.task.task.planHours)
+          t.task.parentScore = result.data.data.surplusScore + Number(t.task.task.planScore)
           t.isParentHours = true
           t.isParentScore = true
           for (var index in t.task.parentProject) {

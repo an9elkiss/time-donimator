@@ -27,10 +27,11 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource">
+              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-if="!taskWeekId">
                 <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
+              <p class="disabledP" v-else>{{task.task.parentTitle}}</p>
             </div>
           </div>
           <div class="form-group">
@@ -393,5 +394,12 @@ export default {
     opacity: 0;
     left: 0;
     display: block;
+  }
+  .disabledP{
+    margin: 0;
+    font-size: 14px;
+    border: 1px solid #bdc0c7;
+    padding: 8px 8px 8px 12px;
+    background: #eee;
   }
 </style>

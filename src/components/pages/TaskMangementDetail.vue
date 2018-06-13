@@ -15,11 +15,11 @@
             <label class="col-sm-3 control-label">父任务</label>
             <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
               <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1"/>
+                <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1" @change="parentChange"/>
                 <label for="radio1">是</label>
               </div>
               <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" checked/>
+                <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" @change="parentChange" checked/>
                 <label for="radio2">否</label>
               </div>
             </div>
@@ -27,9 +27,9 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <p class="disabledP" v-if="taskWeekId && task.task.parentId">{{task.task.parentTitle}}</p>
+              <p class="disabledP" v-if="isDisabled">{{task.task.parentTitle}}</p>
               <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
-                <option value="null">未选择</option>
+                <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
             </div>
@@ -37,7 +37,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId != null">
+              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isDisabled">
                 <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
@@ -157,7 +157,7 @@ export default {
           actualScore: '',
           currentStatus: '',
           planStatus: '',
-          parentId: null,
+          parentId: '',
           isParent: null,
           endTime: '',
           planHours: '',
@@ -185,7 +185,8 @@ export default {
       },
       isTrue: false,
       isParentHours: false,
-      isParentScore: false
+      isParentScore: false,
+      isDisabled: false
     }
   },
   components: {
@@ -206,9 +207,21 @@ export default {
     this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
-    console.log(this.task.task.parentId)
   },
   methods: {
+    parentChange () {
+      var t = this
+      if (t.isParentFlag === 'false') {
+        if (t.task.task.parentId) {
+          t.isDisabled = true
+        } else {
+          t.isDisabled = false
+        }
+      } else {
+        t.isDisabled = false
+      }
+      console.log(t.isDisabled)
+    },
     inspectNum (flag) {
       if (flag === 'planHours') {
         if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) < 0) {
@@ -273,6 +286,10 @@ export default {
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()
+        console.log(t.task.task)
+        console.log(res)
+        console.log(0)
+        this.parentChange()
       }
     },
     async submitTask () {
@@ -357,10 +374,8 @@ export default {
   watch: {
     isParentFlag: function (newValue) {
       if (newValue === 'true') {
-        this.task.task.parentId = ''
         this.isParentHours = false
         this.isParentScore = false
-        this.task.task.project = ''
       }
     },
     'task.task.planHours': function () {

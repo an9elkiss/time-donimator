@@ -70,7 +70,7 @@ export default {
 
     weiXinLogin (code) {
       if (code) {
-        console.info(code)
+        this.loginName = code
         return
       }
 

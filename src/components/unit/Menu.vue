@@ -9,15 +9,18 @@
                 <li v-show="menuBtn.m1">
                   <a href="#"><i class="icon mdi mdi-home"></i><span>首页</span></a>
                 </li>
-                <li v-show="menuBtn.m101" class="parent active open">
+                <li v-show="menuBtn.m101" class="parent">
                   <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
                   <ul class="sub-menu">
                       <sub-menu v-show="menuBtn.m102" id="sm_1" path="/time-entry" name="日程记录" />
                       <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
                   </ul>
                 </li>
-                <li class="parent active open">
-                  <router-link :to="{name:'TaskMangementList'}"><i class="icon mdi mdi-hourglass-alt"></i><span>任务管理</span></router-link>
+                <li v-show="menuBtn.m201" class="parent">
+                  <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
+                  <ul class="sub-menu">
+                    <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
+                  </ul>
                 </li>
             </ul>
           </div>
@@ -43,7 +46,9 @@ export default {
         m1: false,
         m101: false,
         m102: false,
-        m103: false
+        m103: false,
+        m201: false,
+        m202: false
       }
     }
   },
@@ -71,6 +76,8 @@ export default {
           this.menuBtn.m101 = false
           this.menuBtn.m102 = false
           this.menuBtn.m103 = false
+          this.menuBtn.m201 = false
+          this.menuBtn.m202 = false
 
           this.menus.forEach(item => {
             if (item.menuId === 1) {
@@ -81,6 +88,10 @@ export default {
               this.menuBtn.m102 = true
             } else if (item.menuId === 103) {
               this.menuBtn.m103 = true
+            } else if (item.menuId === 201) {
+              this.menuBtn.m201 = true
+            } else if (item.menuId === 202) {
+              this.menuBtn.m202 = true
             }
           })
         }

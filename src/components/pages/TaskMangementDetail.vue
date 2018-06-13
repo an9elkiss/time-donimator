@@ -29,7 +29,7 @@
             <div class="col-sm-6">
               <p class="disabledP" v-if="taskWeekId && task.task.parentId">{{task.task.parentTitle}}</p>
               <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
-                <option value="">未选择</option>
+                <option value="null">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
               </select>
             </div>
@@ -37,7 +37,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">项目名称</label>
             <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId">
+              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="task.task.parentId != null">
                 <option value="">未选择</option>
                 <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
               </select>
@@ -157,7 +157,7 @@ export default {
           actualScore: '',
           currentStatus: '',
           planStatus: '',
-          parentId: '',
+          parentId: null,
           isParent: null,
           endTime: '',
           planHours: '',
@@ -206,6 +206,7 @@ export default {
     this.init()
     this.initialProjectStatusAndTag()
     this.initialParentProjectList()
+    console.log(this.task.task.parentId)
   },
   methods: {
     inspectNum (flag) {
@@ -352,20 +353,6 @@ export default {
     confirmButtonClicked () {
       this.operatingResult = {}
     }
-    // initialChildProject () {
-    //   var targetParentId = this.task.task.parentId
-    //   if (targetParentId) {
-    //     var target = null
-    //     for (var index in this.task.parentProject) {
-    //       if (targetParentId === this.task.parentProject[index].id) {
-    //         target = this.task.parentProject[index]
-    //       }
-    //     }
-    //     this.task.task.project = target.project
-    //   }
-    //   this.task.task.planScore = ''
-    //   this.task.task.planHours = ''
-    // }
   },
   watch: {
     isParentFlag: function (newValue) {

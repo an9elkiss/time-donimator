@@ -26,7 +26,8 @@ const url = {
   apiGetTaskParents: managerApiBase + '/api-super-manager/1.0.0/task/parents',
   apiGetParentResource: managerApiBase + '/api-super-manager/1.0.0/task/parent/resource/',
   apiGetWeekFromYearAndMonth: managerApiBase + '/api-super-manager/1.0.0/common/week/count',
-  apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week'
+  apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week',
+  apiPutTag: managerApiBase + '/api-super-manager/1.0.0/savetag'
 }
 
 const event = {

@@ -27,7 +27,7 @@
           <div class="form-group" v-if="isParentFlag === 'false'">
             <label class="col-sm-3 control-label">选择父任务</label>
             <div class="col-sm-6">
-              <p class="disabledP" v-if="isDisabled">{{task.task.parentTitle}}</p>
+              <p class="disabledP" v-if="isDisabled && task.task.parentTitle">{{task.task.parentTitle}}</p>
               <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
                 <option value="">未选择</option>
                 <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
@@ -53,7 +53,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">任务内容</label>
             <div class="col-sm-6">
-              <textarea class="form-control input-sm" v-model="task.task.description" required=""></textarea>
+              <textarea class="form-control input-sm" v-model="task.task.description"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -220,7 +220,9 @@ export default {
       } else {
         t.isDisabled = false
       }
-      console.log(t.isDisabled)
+      if (t.task.tadk.parentTitle === null) {
+        t.isDisabled = false
+      }
     },
     inspectNum (flag) {
       if (flag === 'planHours') {
@@ -283,6 +285,7 @@ export default {
           t.isParentFlag = 'false'
         }
         t.task.task = res
+        t.task.task.percent = t.personMsg.percent
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()

@@ -35,19 +35,27 @@
                   <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
                     <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></h2>
                     <div class="task-ul-list">
-                      <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
-                      <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
+                      <div>
+                        <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
+                        <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
+                      </div>
                       <p class="cfix"><span class="fLeft">任务描述：</span><span>{{task.description}}</span></p>
-                      <p class="cfix"><span class="fLeft">项目名称：</span><span>{{task.project}}</span></p>
                       <p class="cfix"><span class="fLeft">任务类型：</span><span>{{task.tags}}</span></p>
-                      <p class="cfix"><span class="fLeft">贡献值：</span><span>{{task.planScore}}</span></p>
-                      <p class="cfix"><span class="fLeft">实际值：</span><span>{{task.actualScore}}</span></p>
-                      <p class="cfix"><span class="fLeft">当期状态：</span><span>{{task.currentStatus}}</span></p>
-                      <p class="cfix"><span class="fLeft">计划状态：</span><span>{{task.planStatus}}</span></p>
-                      <p class="cfix"><span class="fLeft">计划日期：</span><span>{{task.endTime}}</span></p>
-                      <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
-                      <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                      <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
+                      <div>
+                        <p><span>项目名称：</span><span>{{task.project}}</span></p>
+                        <p><span>贡献值：</span><span>{{task.planScore}}</span></p>
+                        <p><span>实际值：</span><span>{{task.actualScore}}</span></p>
+                      </div>
+                      <div>
+                        <p class="cfix"><span class="fLeft">当期状态：</span><span>{{task.currentStatus}}</span></p>
+                        <p class="cfix"><span class="fLeft">计划状态：</span><span>{{task.planStatus}}</span></p>
+                        <p class="cfix"><span class="fLeft">计划日期：</span><span>{{task.endTime}}</span></p>
+                      </div>
+                      <div>
+                        <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
+                      </div>
                     </div>
                     <div class="btn-center">
                       <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
@@ -282,13 +290,24 @@ export default {
     margin-bottom: 5px;
     font-size: 12px;
   }
-  .task-ul-list p span{
+  .task-ul-list > div {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-start
+  }
+  .task-ul-list > div p {
+    flex-grow: 0;
+    flex-basis: 33%;
+    min-width: 155px;
+  }
+  .task-ul-list > p span{
     display: block;
   }
   .task-ul-list p span:first-child{
     width: 68px;
+    display: inline-block;
   }
-  .task-ul-list p span:last-child{
+  .task-ul-list > p span:last-child{
     overflow: hidden;
   }
   .task-lists .accordion .panel .panel-collapse .panel-body{

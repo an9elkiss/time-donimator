@@ -142,6 +142,8 @@ export default {
   data () {
     return {
       task: {
+        parentIdCopy: '',
+        projectCopy: '',
         project: {},
         status: {},
         tag: {},
@@ -212,15 +214,14 @@ export default {
     parentChange () {
       var t = this
       if (t.isParentFlag === 'false') {
-        if (t.task.task.parentId) {
+        if (t.task.task.parentId && t.task.task.parentTitle) {
           t.isDisabled = true
         } else {
           t.isDisabled = false
         }
+        t.task.task.parentId = t.task.parentIdCopy
+        t.task.task.project = t.task.projectCopy
       } else {
-        t.isDisabled = false
-      }
-      if (t.task.tadk.parentTitle === null) {
         t.isDisabled = false
       }
     },
@@ -284,14 +285,13 @@ export default {
         } else {
           t.isParentFlag = 'false'
         }
+        t.task.parentIdCopy = res.parentId
+        t.task.projectCopy = res.project
         t.task.task = res
         t.task.task.percent = t.personMsg.percent
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()
-        console.log(t.task.task)
-        console.log(res)
-        console.log(0)
         this.parentChange()
       }
     },

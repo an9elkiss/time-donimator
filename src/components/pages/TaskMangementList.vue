@@ -33,7 +33,17 @@
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
                   <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
-                    <h2 class="cfix"><span class="fLeft">任务{{index_2 + 1}}</span><i class="icon mdi mdi-close fRight" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></h2>
+                    <h2 class="cfix">
+                      <span class="fLeft">任务{{index_2 + 1}}</span>
+                      <div class="btn-group fRight">
+                        <button class="btn btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
+                        <button class="btn btn-primary btn-sm" @click="editTask(task)">编辑</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)">删除</button>
+                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-time-restore" @click="getTaskCopy(task)"></i></button>-->
+                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-edit" @click="editTask(task)"></i></button>-->
+                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-delete" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></button>-->
+                      </div>
+                    </h2>
                     <div class="task-ul-list">
                       <div>
                         <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
@@ -56,10 +66,6 @@
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
                       </div>
-                    </div>
-                    <div class="btn-center">
-                      <button class="btn btn-space btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
-                      <button class="btn btn-space btn-primary btn-sm" @click="editTask(task)">编辑</button>
                     </div>
                   </div>
                 </div>
@@ -285,6 +291,7 @@ export default {
     font-size: 14px;
     margin-top: 0px;
     font-weight: bold;
+    line-height: 30px;
   }
   .task-ul-list p{
     margin-bottom: 5px;

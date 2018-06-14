@@ -16,10 +16,11 @@
                       <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
                   </ul>
                 </li>
-                <li v-show="menuBtn.m201" class="parent">
+              <!--v-show="menuBtn.m201" v-show="menuBtn.m202"-->
+                <li class="parent">
                   <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
                   <ul class="sub-menu">
-                    <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
+                    <sub-menu id="sm_3" path="/task-mangement-list" name="一周任务" />
                   </ul>
                 </li>
             </ul>
@@ -71,7 +72,6 @@ export default {
       this.$http.get(Global.url.apiMenus).then(response => {
         if (response.body.code === 200) {
           this.menus = response.body.data.menus
-
           this.menuBtn.m1 = false
           this.menuBtn.m101 = false
           this.menuBtn.m102 = false

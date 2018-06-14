@@ -16,10 +16,12 @@
                       <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
                   </ul>
                 </li>
-                <li v-show="menuBtn.m201" class="parent">
+                <!--<li v-show="menuBtn.m201" class="parent">-->
+                <li class="parent">
                   <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
                   <ul class="sub-menu">
-                    <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
+                    <!--<sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />-->
+                    <sub-menu id="sm_3" path="/task-mangement-list" name="一周任务" />
                   </ul>
                 </li>
             </ul>

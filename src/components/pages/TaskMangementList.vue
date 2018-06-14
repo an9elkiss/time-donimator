@@ -206,9 +206,11 @@ export default {
     addTask (task) {
       this.$router.push({name: 'TaskMangementDetail'})
       this.$store.commit('GetPersonMsg', task)
+      this.$store.commit('setSelectedDate', this.selectedDate)
     },
     editTask (task) {
       this.$router.push({name: 'TaskMangementDetail', params: {'id': task.taskWeekId, 'flag': 'flag'}})
+      this.$store.commit('setSelectedDate', this.selectedDate)
     },
     async closeTask (task, i) {
       var t = this
@@ -255,6 +257,19 @@ export default {
     },
     confirmButtonClicked () {
       this.operatingResult = {}
+    },
+    getValueFromId (objectArray, id) {
+      for (var index in objectArray) {
+        if (objectArray[index].id === id) {
+          return objectArray[index].value
+        }
+      }
+      return ''
+    }
+  },
+  computed: {
+    selectedDate: function () {
+      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
     }
   }
 }

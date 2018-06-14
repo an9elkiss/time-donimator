@@ -2,13 +2,13 @@
   <div class="be-content">
     <div class="main-content container-fluid">
     <div class="panel">
-      <div class="panel-heading panel-heading-divider">{{task.task.userName}}</div>
+      <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{task.task.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
       <div class="panel-body">
         <form action="#" class="form-horizontal group-border-dashed">
           <div class="form-group">
             <label class="col-sm-3 control-label">任务名称</label>
             <div class="col-sm-6">
-              <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title">
+              <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title" @keydown.enter.prevent>
             </div>
           </div>
           <div class="form-group">
@@ -47,6 +47,11 @@
             <label class="col-sm-3 control-label">任务类型</label>
             <div class="col-sm-6 cfix">
               <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
+              <br/>
+              <div class="oneline">
+                <input v-model="newTag" placeholder="没有找到类型，请添加" @keydown.enter.prevent/>
+                <a class="btn btn-primary btn-circle" @click="addNewTag"><i class="mdi mdi-plus"></i></a>
+              </div>
               <input v-model="task.task.tags" required="" class="placeholder">
             </div>
           </div>
@@ -59,7 +64,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label">贡献值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')">
+              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')" @keydown.enter.prevent>
             </div>
             <div class="remind" v-if="this.task.task.parentId && isParentScore">
               <span>贡献值不得超过{{task.parentScore}}</span>
@@ -68,7 +73,7 @@
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际值</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore">
+              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore" @keydown.enter.prevent>
             </div>
             <div class="remind" v-if="isNaN(Number(this.task.task.actualScore)) || Number(this.task.task.actualScore) < 0">
               <span>实际值不得小于0小时</span>
@@ -96,14 +101,14 @@
             <label class="col-sm-3 control-label">计划日期</label>
             <div class="col-md-6">
               <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0">
+                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
               </div>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-3 control-label">预估工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')">
+              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')" @keydown.enter.prevent>
             </div>
             <div class="remind" v-if="task.task.parentId && isParentHours">
               <span>预估工时不得超过{{task.parentHours}}小时</span>
@@ -112,7 +117,7 @@
           <div class="form-group" v-if="$route.params.flag">
             <label class="col-sm-3 control-label">实际工时</label>
             <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours">
+              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours" @keydown.enter.prevent>
             </div>
             <div class="remind" v-if="isNaN(Number(this.task.task.actualHours)) || Number(this.task.task.actualHours) < 0">
               <span>实际工时不得小于0小时</span>
@@ -120,8 +125,8 @@
           </div>
           <div class="form-group">
             <div class="center">
-              <button type="submit" class="btn btn-space btn-primary" @click="submitTask">提交</button>
-              <button type="submit" class="btn btn-space btn-primary" @click="goBack">返回</button>
+              <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
+              <button class="btn btn-space btn-primary" @click="goBack">返回</button>
             </div>
           </div>
         </form>
@@ -183,6 +188,7 @@ export default {
         message: '',
         code: ''
       },
+      newTag: '',
       isTrue: false,
       isParentHours: false,
       isParentScore: false,
@@ -196,7 +202,8 @@ export default {
   computed: {
     ...mapState({
       personMsg: 'person',
-      taskMsg: 'task'
+      taskMsg: 'task',
+      nowDateString: 'selectedDate'
     })
   },
   mounted () {
@@ -220,7 +227,7 @@ export default {
       } else {
         t.isDisabled = false
       }
-      if (t.task.tadk.parentTitle === null) {
+      if (t.task.task.parentTitle === null) {
         t.isDisabled = false
       }
     },
@@ -289,9 +296,6 @@ export default {
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()
-        console.log(t.task.task)
-        console.log(res)
-        console.log(0)
         this.parentChange()
       }
     },
@@ -372,6 +376,16 @@ export default {
     },
     confirmButtonClicked () {
       this.operatingResult = {}
+    },
+    async addNewTag () {
+      var params = {
+        name: this.newTag
+      }
+      var result = await this.$api(Global.url.apiPutTag, params, 'POST')
+      if (result.data && result.data.code === 200) {
+        this.initialProjectStatusAndTag()
+        this.newTag = ''
+      }
     }
   },
   watch: {
@@ -414,5 +428,11 @@ export default {
     border: 1px solid #bdc0c7;
     padding: 8px 8px 8px 12px;
     background: #eee;
+  }
+  div.panel-heading.panel-heading-divider > span{
+    text-align: right;
+  }
+  a.btn-circle{
+    border-radius: 50%;
   }
 </style>

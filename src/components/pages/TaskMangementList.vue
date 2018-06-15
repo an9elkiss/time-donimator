@@ -221,7 +221,8 @@ export default {
     async closeTask (task, i) {
       var t = this
       t.taskIndex = i
-      const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+      var result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+      console.log(result)
       return result.data
     },
     async initialWeekFromYearAndMonth () {

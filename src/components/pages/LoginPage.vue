@@ -22,7 +22,7 @@
                   <div class="col-xs-6 login-forgot-password"><a href="#">忘记密码?</a></div>
                 </div>
                 <div class="form-group login-submit">
-                  <button data-dismiss="modal" class="btn btn-primary btn-xl" @click="login">登 录</button>
+                  <button class="btn btn-primary btn-xl" @click="login">登 录</button>
                 </div>
             </div>
           </div>

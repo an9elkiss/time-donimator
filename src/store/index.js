@@ -10,7 +10,8 @@ export default new Vuex.Store({
       name: null,
       token: null
     },
-    person: {}
+    person: {},
+    selectedDate: ''
   },
   mutations: {
     login (state, data) {
@@ -25,12 +26,20 @@ export default new Vuex.Store({
 
     GetPersonMsg (state, data) {
       state.person = data
+    },
+
+    setSelectedDate (state, dateString) {
+      state.selectedDate = dateString
     }
   },
 
   getters: {
     userName (state) {
       return state.user.name
+    },
+
+    getSelectedDate (state) {
+      return state.selectedDate
     }
   },
 

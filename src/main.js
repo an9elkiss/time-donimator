@@ -69,7 +69,10 @@ axios.interceptors.response.use(response => {
         path: '/login'
       })
       break
-    default: return response
+    default:
+      if (response.data.data.parentId !== undefined && response.data.data.parentId === null) {
+        response.data.data.parentId = ''
+      }
   }
   return response
 }, error => {

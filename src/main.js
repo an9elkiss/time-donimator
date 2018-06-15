@@ -63,7 +63,6 @@ axios.interceptors.request.use(config => {
 })
 
 axios.interceptors.response.use(response => {
-  console.log(response)
   switch (response.data.code) {
     case 500:
       router.push({

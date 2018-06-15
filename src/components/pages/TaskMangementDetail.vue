@@ -47,11 +47,11 @@
             <label class="col-sm-3 control-label">任务类型</label>
             <div class="col-sm-6 cfix">
               <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
-              <br/>
-              <div class="oneline">
-                <input v-model="newTag" placeholder="没有找到类型，请添加" @keydown.enter.prevent/>
-                <a class="btn btn-primary btn-circle" @click="addNewTag"><i class="mdi mdi-plus"></i></a>
-              </div>
+              <!--<br/>-->
+              <!--<div class="oneline">-->
+                <!--<input v-model="newTag" placeholder="没有找到类型，请添加" @keydown.enter.prevent @input="validateNewTag"/>-->
+                <!--<a class="btn btn-primary btn-circle" @click="addNewTag"><i class="mdi mdi-plus"></i></a>-->
+              <!--</div>-->
               <input v-model="task.task.tags" required="" class="placeholder">
             </div>
           </div>
@@ -234,7 +234,7 @@ export default {
     },
     inspectNum (flag) {
       if (flag === 'planHours') {
-        if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) < 0) {
+        if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) <= 0) {
           this.isParentHours = true
           this.task.task.planHours = ''
         } else {
@@ -310,7 +310,7 @@ export default {
       } else {
         t.task.task.isParent = null
       }
-      if (t.task.task.title && t.task.task.project && t.task.task.tags && t.task.task.description && parseInt(t.task.task.planScore) >= 0 && t.task.task.planStatus && t.task.task.endTime && parseInt(t.task.task.planHours) >= 0) {
+      if (t.task.task.title && t.task.task.project && t.task.task.tags && parseInt(t.task.task.planScore) >= 0 && t.task.task.planStatus && t.task.task.endTime && parseInt(t.task.task.planHours) >= 0) {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
@@ -387,6 +387,11 @@ export default {
       var result = await this.$api(Global.url.apiPutTag, params, 'POST')
       if (result.data && result.data.code === 200) {
         this.initialProjectStatusAndTag()
+        this.newTag = ''
+      }
+    },
+    validateNewTag () {
+      if (this.newTag.length > 5) {
         this.newTag = ''
       }
     }

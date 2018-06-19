@@ -64,7 +64,7 @@
                       <div>
                         <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
                       </div>
                     </div>
                   </div>
@@ -161,6 +161,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this._week)
     this.$nextTick(function () {
       this.loadPersons()
     })
@@ -247,6 +248,8 @@ export default {
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       this.timeFilter.week = result.data.data.week
+      this.timeFilter.month = result.data.data.month
+      this.timeFilter.year = result.data.data.year
     },
     async getTaskCopy (task) {
       var t = this

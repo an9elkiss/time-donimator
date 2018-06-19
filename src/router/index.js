@@ -6,7 +6,8 @@ import EntryChartPage from '@/components/pages/EntryChartPage'
 import LoginPage from '@/components/pages/LoginPage'
 import TaskMangementList from '@/components/pages/TaskMangementList'
 import TaskMangementDetail from '@/components/pages/TaskMangementDetail'
-import CodeReviewList from '@/components/pages/CodeReviewList'
+import CodeReviewDetail from '@/components/pages/codeReview/CodeReviewDetail'
+import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
 import App from '@/APP'
 
 Vue.use(VueResource)
@@ -58,6 +59,14 @@ export default new Router({
             requireAuth: true
           },
           component: TaskMangementDetail
+        },
+        {
+          path: 'code-review-detail',
+          name: 'CodeReviewDetail',
+          meta: {
+            requireAuth: true
+          },
+          component: CodeReviewDetail
         },
         {
           path: 'code-review-list',

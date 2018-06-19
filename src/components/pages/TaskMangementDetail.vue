@@ -129,7 +129,7 @@
       </div>
     </div>
     </div>
-    <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
+    <!--<result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>-->
   </div>
 </template>
 <script>
@@ -140,6 +140,7 @@ import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import NewButton from '@/components/unit/NewButton'
 import ResultModal from '../comModals/ResultModal'
+import { Toast } from 'vant'
 
 export default {
   data () {
@@ -313,7 +314,8 @@ export default {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
-          this.operatingResult = result.data
+          this.showResult(result.data)
+          // this.operatingResult = result.data
           if (!t.taskWeekId) {
             t.$refs.inputTimer.value = ''
             t.isParentFlag = 'false'
@@ -376,17 +378,40 @@ export default {
         }
       }
     },
+    showResult (result) {
+      var title = false
+      var message = ''
+      if (!result || !result.hasOwnProperty('code') || result.code === '') {
+        title = false
+        message = '连接后台API失败'
+      } else if (result.code === 200) {
+        title = true
+        message = '操作成功'
+      } else {
+        title = false
+        message = result.message
+      }
+      if (title) {
+        Toast.success(message)
+      } else {
+        Toast.fail(message)
+      }
+    },
     confirmButtonClicked () {
       this.operatingResult = {}
     },
     async addNewTag (tag) {
-      if (tag.length <= 5 && tag.length > 0 && !this.existNewTag(tag)) {
-        var params = {
-          name: tag
-        }
-        var result = await this.$api(Global.url.apiPutTag, params, 'POST')
-        if (result.data && result.data.code === 200) {
-          this.initialProjectStatusAndTag()
+      if (tag.length <= 5 && tag.length > 0) {
+        if (!this.existNewTag(tag)) {
+          var params = {
+            name: tag
+          }
+          var result = await this.$api(Global.url.apiPutTag, params, 'POST')
+          if (result.data && result.data.code === 200) {
+            this.initialProjectStatusAndTag()
+          }
+        } else {
+          Toast('输入的新标签名称重复，不给提交')
         }
       }
       this.isClicked = false

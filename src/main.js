@@ -7,10 +7,7 @@ import axios from 'axios'
 import store from './store'
 import Globals from '@/assets/js/global'
 import {http} from '@/assets/js/http'
-import MintUI from 'mint-ui'
-import 'mint-ui/lib/style.css'
 
-Vue.use(MintUI)
 Vue.prototype.$api = http
 Vue.prototype.$global = Globals
 Vue.config.productionTip = false

@@ -64,7 +64,7 @@
                       <div>
                         <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
                       </div>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export default {
     async closeTask (task, i) {
       var t = this
       t.taskIndex = i
-      const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+      var result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
       return result.data
     },
     async initialWeekFromYearAndMonth () {

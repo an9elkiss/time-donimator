@@ -70,7 +70,7 @@ axios.interceptors.response.use(response => {
       })
       break
     default:
-      if (response.data.data.parentId !== undefined && response.data.data.parentId === null) {
+      if (response.data.data !== null && response.data.data.parentId !== undefined && response.data.data.parentId === null) {
         response.data.data.parentId = ''
       }
   }

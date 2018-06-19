@@ -42,3 +42,6 @@
   -o-box-pack:center;
   box-pack:center;
 }
+.van-dialog {
+  max-width: 350px;
+}

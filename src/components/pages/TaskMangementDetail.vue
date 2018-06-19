@@ -380,7 +380,7 @@ export default {
       this.operatingResult = {}
     },
     async addNewTag (tag) {
-      if (!this.existNewTag(tag)) {
+      if (tag.length <= 5 && tag.length > 0 && !this.existNewTag(tag)) {
         var params = {
           name: tag
         }

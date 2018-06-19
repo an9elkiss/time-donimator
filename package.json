@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "mint-ui": "^1.0.2",
     "muse-ui": "^3.0.0-beta.3",
     "vant": "^1.1.8",
     "vue": "^2.5.2",

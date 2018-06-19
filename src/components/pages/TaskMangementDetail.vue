@@ -352,6 +352,7 @@ export default {
     async initialParentProjectList () {
       var result = await this.$api(Global.url.apiGetTaskParents, '', 'GET')
       if (result.data && result.data.code === 200) {
+        console.log(result.data.data)
         this.task.parentProject = result.data.data
       }
     },

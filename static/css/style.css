@@ -93,6 +93,9 @@ html {
 body {
   margin: 0;
 }
+.van-dialog {
+  max-width: 350px;
+}
 .cfix:after,
 .optionBox:after {
     content: ".";

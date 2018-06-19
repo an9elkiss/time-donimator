@@ -11,7 +11,9 @@ export default new Vuex.Store({
       token: null
     },
     person: {},
-    selectedDate: ''
+    selectedDate: '',
+    selectedMonth: null,
+    selectedWeek: null
   },
   mutations: {
     login (state, data) {
@@ -30,6 +32,12 @@ export default new Vuex.Store({
 
     setSelectedDate (state, dateString) {
       state.selectedDate = dateString
+    },
+    setSelectedMonth (state, month) {
+      state.selectedMonth = month
+    },
+    setSelectedWeek (state, week) {
+      state.selectedWeek = week
     }
   },
 
@@ -40,6 +48,12 @@ export default new Vuex.Store({
 
     getSelectedDate (state) {
       return state.selectedDate
+    },
+    getSelectedMonth (state) {
+      return state.selectedMonth
+    },
+    getSelectedWeek (state) {
+      return state.selectedWeek
     }
   },
 

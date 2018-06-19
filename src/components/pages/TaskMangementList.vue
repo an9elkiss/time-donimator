@@ -38,7 +38,7 @@
                       <div class="btn-group fRight">
                         <button class="btn btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
                         <button class="btn btn-primary btn-sm" @click="editTask(task)">编辑</button>
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)">删除</button>
+                        <button class="btn btn-primary btn-sm" @click="confirmTask(task, index_2)">删除</button>
                         <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-time-restore" @click="getTaskCopy(task)"></i></button>-->
                         <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-edit" @click="editTask(task)"></i></button>-->
                         <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-delete" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></button>-->
@@ -76,15 +76,13 @@
         </div>
       </div>
     </div>
-    <v-warn id="mod-warning" @handleSureButtonClicked="sureButtonClicked" @handleCancelButtonClicked="cancelButtonClicked" :taskIndex="taskIndex"></v-warn>
-    <result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>
   </div>
 </template>
 <script>
-// import { MessageBox } from 'mint-ui'
+import { mapState } from 'vuex'
 import Global from '@/components/Global'
-import Warning from '../comModals/warning'
-import ResultModal from '../comModals/ResultModal'
+import { Dialog, Toast } from 'vant'
+
 export default {
   data: function () {
     return {
@@ -162,20 +160,22 @@ export default {
       }
     }
   },
-  components: {
-    ResultModal,
-    'v-warn': Warning
-  },
   mounted () {
     this.$nextTick(function () {
       this.loadPersons()
     })
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
   created: function () {
     var now = new Date()
     this.timeFilter.year = now.getFullYear()
-    this.timeFilter.month = now.getMonth() + 1
-    this.initialWeek()
+    this.getSelectedDateFromStore()
+    if (this.timeFilter.month == null) {
+      this.timeFilter.month = now.getMonth() + 1
+    }
+    if (this.timeFilter.week == null) {
+      this.initialWeek()
+    }
     this.initialWeekFromYearAndMonth()
   },
   methods: {
@@ -191,12 +191,23 @@ export default {
     },
     changeSelect () {
       var t = this
+      this.selectedDateCommitStore()
       if (t.userId) {
         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
       }
     },
     changeYearOrMonth () {
       this.initialWeekFromYearAndMonth()
+      this.selectedDateCommitStore()
+      this.getTasks(this.userId, this.timeFilter.year, this.timeFilter.month, this.timeFilter.week, this.num)
+    },
+    selectedDateCommitStore () {
+      this.$store.commit('setSelectedMonth', this.timeFilter.month)
+      this.$store.commit('setSelectedWeek', this.timeFilter.week)
+    },
+    getSelectedDateFromStore () {
+      this.timeFilter.month = this.selectedMonth
+      this.timeFilter.week = this.selectedWeek
     },
     async getTasks (id, y, m, w, i) {
       var t = this
@@ -243,23 +254,37 @@ export default {
         t.operatingResult = result.data
       }
     },
-    markUpTask (task, index) {
-      this.operatingTask = task
-      this.taskIndex = index
-    },
-    async sureButtonClicked () {
+    confirmTask (task, index) {
       var t = this
-      if (t.operatingTask) {
-        t.operatingResult = await t.closeTask(t.operatingTask, t.taskIndex)
-        t.operatingTask = {}
-        t.taskIndex = ''
-        if (t.operatingResult.code === 200) {
+      Dialog.confirm({
+        title: '警告',
+        message: '确定要删除此任务' + (index + 1) + '吗？'
+      }).then(async () => {
+        var operatingResult = await t.closeTask(task, index)
+        this.showResult(operatingResult)
+        if (operatingResult.code === 200) {
           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
         }
-      }
+      })
     },
-    cancelButtonClicked () {
-      this.operatingTask = {}
+    showResult (result) {
+      var title = false
+      var message = ''
+      if (!result || !result.hasOwnProperty('code') || result.code === '') {
+        title = false
+        message = '获取数据失败'
+      } else if (result.code === 200) {
+        title = true
+        message = '操作成功'
+      } else {
+        title = false
+        message = result.message
+      }
+      if (title) {
+        Toast.success(message)
+      } else {
+        Toast.fail(message)
+      }
     },
     confirmButtonClicked () {
       this.operatingResult = {}
@@ -271,12 +296,24 @@ export default {
         }
       }
       return ''
+    },
+    beforeunloadHandler (e) {
+      this.timeFilter.month = null
+      this.timeFilter.week = null
+      this.selectedDateCommitStore()
     }
   },
   computed: {
+    ...mapState({
+      selectedMonth: 'selectedMonth',
+      selectedWeek: 'selectedWeek'
+    }),
     selectedDate: function () {
       return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
     }
+  },
+  destroyed: function () {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   }
 }
 

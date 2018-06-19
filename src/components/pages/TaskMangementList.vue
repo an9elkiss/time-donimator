@@ -81,7 +81,6 @@
   </div>
 </template>
 <script>
-// import { MessageBox } from 'mint-ui'
 import Global from '@/components/Global'
 import Warning from '../comModals/warning'
 import ResultModal from '../comModals/ResultModal'
@@ -166,6 +165,11 @@ export default {
     ResultModal,
     'v-warn': Warning
   },
+  computed: {
+    selectedDate: function () {
+      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
+    }
+  },
   mounted () {
     this.$nextTick(function () {
       this.loadPersons()
@@ -235,8 +239,7 @@ export default {
     },
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
-        this.timeFilter.week = result.data.data.week
-      }
+      this.timeFilter.week = result.data.data.week
     },
     async getTaskCopy (task) {
       var t = this
@@ -273,11 +276,6 @@ export default {
         }
       }
       return ''
-    }
-  },
-  computed: {
-    selectedDate: function () {
-      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
     }
   }
 }

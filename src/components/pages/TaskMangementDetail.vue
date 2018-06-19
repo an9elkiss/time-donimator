@@ -47,11 +47,7 @@
             <label class="col-sm-3 control-label">任务类型</label>
             <div class="col-sm-6 cfix">
               <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
-              <!--<br/>-->
-              <!--<div class="oneline">-->
-                <!--<input v-model="newTag" placeholder="没有找到类型，请添加" @keydown.enter.prevent @input="validateNewTag"/>-->
-                <!--<a class="btn btn-primary btn-circle" @click="addNewTag"><i class="mdi mdi-plus"></i></a>-->
-              <!--</div>-->
+              <new-button id="newButton" :isClicked="isClicked" @addNewTag="addNewTag" @buttonClicked="isClicked = !isClicked">标签</new-button>
               <input v-model="task.task.tags" required="" class="placeholder">
             </div>
           </div>
@@ -142,7 +138,9 @@ import {
 } from 'vuex'
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
+import NewButton from '@/components/unit/NewButton'
 import ResultModal from '../comModals/ResultModal'
+
 export default {
   data () {
     return {
@@ -190,7 +188,7 @@ export default {
         message: '',
         code: ''
       },
-      newTag: '',
+      isClicked: false,
       isTrue: false,
       isParentHours: false,
       isParentScore: false,
@@ -199,7 +197,8 @@ export default {
   },
   components: {
     ClickableButton,
-    ResultModal
+    ResultModal,
+    NewButton
   },
   computed: {
     ...mapState({
@@ -380,20 +379,25 @@ export default {
     confirmButtonClicked () {
       this.operatingResult = {}
     },
-    async addNewTag () {
-      var params = {
-        name: this.newTag
+    async addNewTag (tag) {
+      if (!this.existNewTag(tag)) {
+        var params = {
+          name: tag
+        }
+        var result = await this.$api(Global.url.apiPutTag, params, 'POST')
+        if (result.data && result.data.code === 200) {
+          this.initialProjectStatusAndTag()
+        }
       }
-      var result = await this.$api(Global.url.apiPutTag, params, 'POST')
-      if (result.data && result.data.code === 200) {
-        this.initialProjectStatusAndTag()
-        this.newTag = ''
-      }
+      this.isClicked = false
     },
-    validateNewTag () {
-      if (this.newTag.length > 5) {
-        this.newTag = ''
+    existNewTag (tag) {
+      for (var index in this.task.tag) {
+        if (this.task.tag[index] === tag) {
+          return true
+        }
       }
+      return false
     }
   },
   watch: {
@@ -439,8 +443,5 @@ export default {
   }
   div.panel-heading.panel-heading-divider > span{
     text-align: right;
-  }
-  a.btn-circle{
-    border-radius: 50%;
   }
 </style>

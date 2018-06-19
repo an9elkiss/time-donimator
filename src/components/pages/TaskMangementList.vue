@@ -26,7 +26,7 @@
         <div class="panel-heading panel-heading-divider">人员列表</div>
         <div class="panel-body">
           <div id="accordion1" class="panel-group accordion">
-            <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
+            <div class="panel panel-default cfix" v-for="(item,index_1) in tabLists" :key="index_1">
               <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
                 <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
               </div>
@@ -49,7 +49,7 @@
                         <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
                         <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       </div>
-                      <p class="cfix"><span class="fLeft">任务描述：</span><span>{{task.description}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务描述：</span><span v-html="task.description"></span></p>
                       <p class="cfix"><span class="fLeft">任务类型：</span><span>{{task.tags}}</span></p>
                       <div>
                         <p><span>项目名称：</span><span>{{task.project}}</span></p>
@@ -204,8 +204,11 @@ export default {
       t.num = i
       const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
       if (result.data && result.data.code === 200) {
-        var res = result.data
-        t.tabLists[i].taskLists = res.data
+        var res = result.data.data
+        res.taskCommands.forEach(function (ele) {
+          ele.description = t.$global.format(ele.description)
+        })
+        t.tabLists[i].taskLists = res
         t.$set(t.tabLists, i, t.tabLists[i])
       }
     },
@@ -232,7 +235,6 @@ export default {
     },
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
-      if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
       }
     },
@@ -300,7 +302,11 @@ export default {
     background: rgba(245, 245, 245, 0.4);
     color: #454545;
     padding: 10px 20px;
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1)
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
+  }
+  .task-block:last-child{
+    border-bottom: none;
   }
   .task-block h2{
     font-size: 14px;

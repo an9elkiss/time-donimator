@@ -11,7 +11,11 @@ export default new Vuex.Store({
       token: null
     },
     person: {},
-    selectedDate: ''
+    selectedDate: '',
+    timeFilter: {
+      month: 0,
+      week: 0
+    }
   },
   mutations: {
     login (state, data) {

@@ -81,6 +81,9 @@
   </div>
 </template>
 <script>
+import {
+  mapState
+} from 'vuex'
 import Global from '@/components/Global'
 import Warning from '../comModals/warning'
 import ResultModal from '../comModals/ResultModal'
@@ -166,20 +169,26 @@ export default {
     'v-warn': Warning
   },
   computed: {
+    ...mapState({
+      _month: 'month',
+      _week: 'week'
+    }),
     selectedDate: function () {
       return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
     }
   },
   mounted () {
+    console.log(this._week)
     this.$nextTick(function () {
       this.loadPersons()
     })
   },
   created: function () {
-    var now = new Date()
-    this.timeFilter.year = now.getFullYear()
-    this.timeFilter.month = now.getMonth() + 1
-    this.initialWeek()
+    if (!this._week) {
+      this.initialWeek()
+    }
+    this.timeFilter.month = this._month
+    this.timeFilter.week = this._week
     this.initialWeekFromYearAndMonth()
   },
   methods: {
@@ -195,12 +204,14 @@ export default {
     },
     changeSelect () {
       var t = this
+      this.$store.commit('GetTimeFilter', this.timeFilter)
       if (t.userId) {
         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
       }
     },
     changeYearOrMonth () {
       this.initialWeekFromYearAndMonth()
+      this.$store.commit('GetTimeFilter', this.timeFilter)
     },
     async getTasks (id, y, m, w, i) {
       var t = this
@@ -240,6 +251,8 @@ export default {
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       this.timeFilter.week = result.data.data.week
+      this.timeFilter.month = result.data.data.month
+      this.timeFilter.year = result.data.data.year
     },
     async getTaskCopy (task) {
       var t = this

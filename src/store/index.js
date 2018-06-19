@@ -12,10 +12,8 @@ export default new Vuex.Store({
     },
     person: {},
     selectedDate: '',
-    timeFilter: {
-      month: 0,
-      week: 0
-    }
+    month: 0,
+    week: 0
   },
   mutations: {
     login (state, data) {
@@ -34,6 +32,11 @@ export default new Vuex.Store({
 
     setSelectedDate (state, dateString) {
       state.selectedDate = dateString
+    },
+
+    GetTimeFilter (state, timeFilter) {
+      state.month = timeFilter.month
+      state.week = timeFilter.week
     }
   },
 

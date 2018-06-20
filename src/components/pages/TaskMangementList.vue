@@ -213,14 +213,19 @@ export default {
     changeSelect () {
       var t = this
       this.selectedDateCommitStore()
+      t.loadTaskParentResource(t.memberIds, t.tabLists)
       if (t.userId) {
         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
       }
     },
     changeYearOrMonth () {
-      this.initialWeekFromYearAndMonth()
-      this.selectedDateCommitStore()
-      this.getTasks(this.userId, this.timeFilter.year, this.timeFilter.month, this.timeFilter.week, this.num)
+      var t = this
+      t.initialWeekFromYearAndMonth()
+      t.selectedDateCommitStore()
+      t.loadTaskParentResource(t.memberIds, t.tabLists)
+      if (t.userId) {
+        t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+      }
     },
     selectedDateCommitStore () {
       this.$store.commit('setSelectedMonth', this.timeFilter.month)
@@ -239,7 +244,6 @@ export default {
         var res = result.data
         t.tabLists[i].taskLists = res.data
         t.$set(t.tabLists, i, t.tabLists[i])
-        t.loadTaskParentResource(t.memberIds, t.tabLists)
       }
     },
     addTask (task) {

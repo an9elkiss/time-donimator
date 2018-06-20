@@ -242,6 +242,7 @@ export default {
         })
         t.tabLists[i].taskLists = res
         t.$set(t.tabLists, i, t.tabLists[i])
+        t.loadTaskParentResource(t.memberIds, t.tabLists)
       }
     },
     addTask (task) {
@@ -267,9 +268,9 @@ export default {
     },
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
-      this.timeFilter.week = result.data.data.week
-      this.timeFilter.month = result.data.data.month
-      this.timeFilter.year = result.data.data.year
+      if (result.data && result.data.code === 200) {
+        this.timeFilter.week = result.data.data.week
+      }
     },
     async getTaskCopy (task) {
       var t = this

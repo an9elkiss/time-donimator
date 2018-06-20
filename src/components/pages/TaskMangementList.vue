@@ -161,7 +161,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this._week)
     this.$nextTick(function () {
       this.loadPersons()
     })

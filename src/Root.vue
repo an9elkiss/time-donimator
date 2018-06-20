@@ -10,6 +10,6 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+  @import "./assets/css/base.css";
 </style>

@@ -1,135 +1,134 @@
 <template>
   <div class="be-content">
     <div class="main-content container-fluid">
-    <div class="panel">
-      <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{task.task.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
-      <div class="panel-body">
-        <form action="#" class="form-horizontal group-border-dashed">
-          <div class="form-group">
-            <label class="col-sm-3 control-label">任务名称</label>
-            <div class="col-sm-6">
-              <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title" @keydown.enter.prevent>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">父任务</label>
-            <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
-              <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1" @change="parentChange"/>
-                <label for="radio1">是</label>
-              </div>
-              <div class="be-radio inline">
-                <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" @change="parentChange" checked/>
-                <label for="radio2">否</label>
+      <div class="panel">
+        <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{task.task.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
+        <div class="panel-body">
+          <form action="#" class="form-horizontal group-border-dashed">
+            <div class="form-group">
+              <label class="col-sm-3 control-label">任务名称</label>
+              <div class="col-sm-6">
+                <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title" @keydown.enter.prevent>
               </div>
             </div>
-          </div>
-          <div class="form-group" v-if="isParentFlag === 'false'">
-            <label class="col-sm-3 control-label">选择父任务</label>
-            <div class="col-sm-6">
-              <p class="disabledP" v-if="isDisabled && task.task.parentTitle">{{task.task.parentTitle}}</p>
-              <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
-                <option value="">未选择</option>
-                <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">项目名称</label>
-            <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isDisabled">
-                <option value="">未选择</option>
-                <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">任务类型</label>
-            <div class="col-sm-6 cfix">
-              <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
-              <new-button id="newButton" :isClicked="isClicked" @addNewTag="addNewTag" @buttonClicked="isClicked = !isClicked">标签</new-button>
-              <input v-model="task.task.tags" required="" class="placeholder">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">任务内容</label>
-            <div class="col-sm-6">
-              <textarea class="form-control input-sm" v-model="task.task.description"></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">贡献值</label>
-            <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')" @keydown.enter.prevent>
-            </div>
-            <div class="remind" v-if="this.task.task.parentId && isParentScore">
-              <span>贡献值不得超过{{task.parentScore}}</span>
-            </div>
-          </div>
-          <div class="form-group" v-if="$route.params.flag">
-            <label class="col-sm-3 control-label">实际值</label>
-            <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore" @keydown.enter.prevent>
-            </div>
-            <div class="remind" v-if="isNaN(Number(this.task.task.actualScore)) || Number(this.task.task.actualScore) < 0">
-              <span>实际值不得小于0小时</span>
-            </div>
-          </div>
-          <div class="form-group" v-if="$route.params.flag">
-            <label class="col-sm-3 control-label">当期状态</label>
-            <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.currentStatus">
-                <option value="">未选择</option>
-                <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">计划状态</label>
-            <div class="col-sm-6">
-              <select class="form-control input-sm" v-model="task.task.planStatus" required="">
-                <option value="">未选择</option>
-                <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">计划日期</label>
-            <div class="col-md-6">
-              <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">父任务</label>
+              <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
+                <div class="be-radio inline">
+                  <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1" @change="parentChange"/>
+                  <label for="radio1">是</label>
+                </div>
+                <div class="be-radio inline">
+                  <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" @change="parentChange" checked/>
+                  <label for="radio2">否</label>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-3 control-label">预估工时</label>
-            <div class="col-sm-6">
-              <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')" @keydown.enter.prevent>
+            <div class="form-group" v-if="isParentFlag === 'false'">
+              <label class="col-sm-3 control-label">选择父任务</label>
+              <div class="col-sm-6">
+                <p class="disabledP" v-if="isDisabled && task.task.parentTitle">{{task.task.parentTitle}}</p>
+                <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
+                  <option value="">未选择</option>
+                  <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
+                </select>
+              </div>
             </div>
-            <div class="remind" v-if="task.task.parentId && isParentHours">
-              <span>预估工时不得超过{{task.parentHours}}小时</span>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">项目名称</label>
+              <div class="col-sm-6">
+                <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isDisabled">
+                  <option value="">未选择</option>
+                  <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="form-group" v-if="$route.params.flag">
-            <label class="col-sm-3 control-label">实际工时</label>
-            <div class="col-sm-6">
-              <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours" @keydown.enter.prevent>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">任务类型</label>
+              <div class="col-sm-6 cfix">
+                <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
+                <new-button id="newButton" :isClicked="isClicked" @addNewTag="addNewTag" @buttonClicked="isClicked = !isClicked">标签</new-button>
+                <input v-model="task.task.tags" required="" class="placeholder">
+              </div>
             </div>
-            <div class="remind" v-if="isNaN(Number(this.task.task.actualHours)) || Number(this.task.task.actualHours) < 0">
-              <span>实际工时不得小于0小时</span>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">任务内容</label>
+              <div class="col-sm-6">
+                <textarea class="form-control input-sm" v-model="task.task.description"></textarea>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="center">
-              <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
-              <button class="btn btn-space btn-primary" @click="goBack">返回</button>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">贡献值</label>
+              <div class="col-sm-6">
+                <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')" @keydown.enter.prevent>
+              </div>
+              <div class="remind" v-if="this.task.task.parentId && isParentScore">
+                <span>贡献值不得超过{{task.parentScore}}</span>
+              </div>
             </div>
-          </div>
-        </form>
+            <div class="form-group" v-if="$route.params.flag">
+              <label class="col-sm-3 control-label">实际值</label>
+              <div class="col-sm-6">
+                <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore" @keydown.enter.prevent>
+              </div>
+              <div class="remind" v-if="isNaN(Number(this.task.task.actualScore)) || Number(this.task.task.actualScore) < 0">
+                <span>实际值不得小于0小时</span>
+              </div>
+            </div>
+            <div class="form-group" v-if="$route.params.flag">
+              <label class="col-sm-3 control-label">当期状态</label>
+              <div class="col-sm-6">
+                <select class="form-control input-sm" v-model="task.task.currentStatus">
+                  <option value="">未选择</option>
+                  <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">计划状态</label>
+              <div class="col-sm-6">
+                <select class="form-control input-sm" v-model="task.task.planStatus" required="">
+                  <option value="">未选择</option>
+                  <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">计划日期</label>
+              <div class="col-md-6">
+                <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
+                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">预估工时</label>
+              <div class="col-sm-6">
+                <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')" @keydown.enter.prevent>
+              </div>
+              <div class="remind" v-if="task.task.parentId && isParentHours">
+                <span>预估工时不得超过{{task.parentHours}}小时</span>
+              </div>
+            </div>
+            <div class="form-group" v-if="$route.params.flag">
+              <label class="col-sm-3 control-label">实际工时</label>
+              <div class="col-sm-6">
+                <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours" @keydown.enter.prevent>
+              </div>
+              <div class="remind" v-if="isNaN(Number(this.task.task.actualHours)) || Number(this.task.task.actualHours) < 0">
+                <span>实际工时不得小于0小时</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="center">
+                <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
+                <button class="btn btn-space btn-primary" @click="goBack">返回</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    </div>
-    <!--<result-modal :result="operatingResult" @handleConfirmButtonClicked="confirmButtonClicked()"></result-modal>-->
   </div>
 </template>
 <script>
@@ -139,7 +138,6 @@ import {
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import NewButton from '@/components/unit/NewButton'
-import ResultModal from '../comModals/ResultModal'
 import { Toast } from 'vant'
 
 export default {
@@ -198,7 +196,6 @@ export default {
   },
   components: {
     ClickableButton,
-    ResultModal,
     NewButton
   },
   computed: {
@@ -315,7 +312,6 @@ export default {
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
           this.showResult(result.data)
-          // this.operatingResult = result.data
           if (!t.taskWeekId) {
             t.$refs.inputTimer.value = ''
             t.isParentFlag = 'false'

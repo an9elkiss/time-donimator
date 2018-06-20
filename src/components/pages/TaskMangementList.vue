@@ -192,7 +192,6 @@ export default {
         })
       }
       t.memberIds = t.memberIds.toString()
-
       t.loadTaskParentResource(t.memberIds, t.tabLists)
     },
     async loadTaskParentResource (ids, lists) {
@@ -208,7 +207,6 @@ export default {
         lists.forEach(function (ele, i) {
           ele.taskResource = res[ele.userId]
           t.$set(lists, i, lists[i])
-          
         })
       }
     },

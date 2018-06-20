@@ -333,6 +333,14 @@ export default {
     background-color: #f5f5f5;
     color: #000;
   }
+  .task-lists h4 a{
+    font-size: 16px;
+  }
+  .task-lists h4 span{
+    font-size: 12px;
+    line-height: 28px;
+    margin-left: 8px;
+  }
   .task-block{
     background: rgba(245, 245, 245, 0.4);
     color: #454545;
@@ -371,6 +379,9 @@ export default {
   }
   .task-lists .accordion .panel .panel-collapse .panel-body{
     padding: 0px;
+  }
+  .task-lists .accordion .panel .panel-heading a .icon{
+    margin-right: 5px;
   }
   .btn-center{
     text-align: center;

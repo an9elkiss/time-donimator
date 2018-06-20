@@ -252,7 +252,7 @@ export default {
       this.$store.commit('setSelectedDate', this.selectedDate)
     },
     editTask (task) {
-      this.$router.push({name: 'TaskMangementDetail', params: {'id': task.taskWeekId, 'flag': 'flag'}})
+      this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'flag': 0}})
       this.$store.commit('setSelectedDate', this.selectedDate)
     },
     async closeTask (task, i) {

@@ -157,7 +157,8 @@ export default {
       operatingResult: {
         message: '',
         code: ''
-      }
+      },
+      memberIds: []
     }
   },
   mounted () {
@@ -186,6 +187,27 @@ export default {
         t.tabLists = result.data.data
         t.tabLists.forEach(function (ele) {
           ele.taskLists = {}
+          ele.taskResource = {}
+          t.memberIds.push(ele.userId)
+        })
+      }
+      t.memberIds = t.memberIds.toString()
+
+      t.loadTaskParentResource(t.memberIds, t.tabLists)
+    },
+    async loadTaskParentResource (ids, lists) {
+      var t = this
+      var obj = {}
+      obj.year = t.timeFilter.year
+      obj.month = t.timeFilter.month
+      obj.week = t.timeFilter.week
+      obj.userIds = ids
+      const result = await t.$api(Global.url.apiGetTaskParentResource, obj)
+      if (result.data && result.data.code === 200) {
+        var res = result.data.data
+        lists.forEach(function (ele, i) {
+          ele.taskResource = res[ele.userId]
+          t.$set(lists, i, lists[i])
         })
       }
     },
@@ -218,6 +240,7 @@ export default {
         var res = result.data
         t.tabLists[i].taskLists = res.data
         t.$set(t.tabLists, i, t.tabLists[i])
+        t.loadTaskParentResource(t.memberIds, t.tabLists)
       }
     },
     addTask (task) {

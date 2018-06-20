@@ -360,7 +360,7 @@ export default {
   .task-lists h4 span{
     font-size: 12px;
     line-height: 28px;
-    margin-left: 10px;
+    margin-left: 8px;
   }
   .task-block{
     background: rgba(245, 245, 245, 0.4);

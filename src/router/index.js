@@ -7,6 +7,7 @@ import LoginPage from '@/components/pages/LoginPage'
 import TaskMangementList from '@/components/pages/TaskMangementList'
 import TaskMangementDetail from '@/components/pages/TaskMangementDetail'
 import CodeReviewDetail from '@/components/pages/codeReview/CodeReviewDetail'
+import CodeReviewForm from '@/components/pages/codeReview/CodeReviewForm'
 import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
 import App from '@/APP'
 
@@ -61,12 +62,20 @@ export default new Router({
           component: TaskMangementDetail
         },
         {
-          path: 'code-review-detail',
+          path: 'code-review-detail/:id',
           name: 'CodeReviewDetail',
           meta: {
             requireAuth: true
           },
           component: CodeReviewDetail
+        },
+        {
+          path: 'code-review-form',
+          name: 'CodeReviewForm',
+          meta: {
+            requireAuth: true
+          },
+          component: CodeReviewForm
         },
         {
           path: 'code-review-list',

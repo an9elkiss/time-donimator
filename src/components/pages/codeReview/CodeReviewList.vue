@@ -5,34 +5,24 @@
         <div class="panel-heading panel-heading-divider">人员筛选</div>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
-            <select class="form-control input-sm">
-              <option>小明1</option>
-              <option>小明2</option>
-              <option>小明3</option>
-              <option>小明4</option>
+            <select class="form-control input-sm" v-model="selectedPersonId" @change="handleSelectedPersonChange">
+              <option v-for="person of persons" :key="person.userId" :value="person.userId">{{ person.name }}</option>
             </select>
           </div>
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-body">
+        <div v-for="review of reviews" :key="review.id" class="panel-body">
           <div class="code-review-brief">
-            <a class="cfix" href="#">
-              <span class="fLeft heading">Code Review标题</span>
+            <a class="cfix" @click="reviewClicked(review.id)">
+              <span class="fLeft heading">{{ review.userLabel }}</span>
               <i class="mdi mdi-chevron-right fRight detail"></i>
-              <span class="fRight date">2018-06-19</span>
-            </a>
-          </div>
-          <div class="code-review-brief">
-            <a class="cfix" href="#">
-              <span class="fLeft heading">Code Review标题</span>
-              <i class="mdi mdi-chevron-right fRight detail"></i>
-              <span class="fRight date">2018-06-18</span>
+              <span class="fRight date">{{ review.codeReviewTime }}</span>
             </a>
           </div>
         </div>
         <div class="panel-body text-center">
-          <a class="btn btn-default">创建</a>
+          <a class="btn btn-primary" @click="addNewCodeReview">创建</a>
         </div>
       </div>
     </div>
@@ -40,8 +30,81 @@
 </template>
 
 <script>
+import Global from '@/components/Global'
+import { mapState } from 'vuex'
 export default {
-  name: 'CodeReviewList'
+  name: 'CodeReviewList',
+  data: function () {
+    return {
+      persons: [],
+      selectedPersonId: '',
+      reviews: []
+    }
+  },
+  mounted: function () {
+    this.getPersons()
+    this.selectedPersonId = this.personMsg.userId
+    this.getReviewsBySelectedPerson()
+  },
+  computed: {
+    ...mapState({
+      personMsg: 'person'
+    }),
+    selectedPerson: function () {
+      if (!this.selectedPersonId) {
+        return null
+      }
+      for (var index in this.persons) {
+        if (this.persons[index].userId === Number(this.selectedPersonId)) {
+          return this.persons[index]
+        }
+      }
+      return null
+    }
+  },
+  methods: {
+    async getPersons () {
+      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.persons = result.data.data
+      }
+    },
+    async getReviewsBySelectedPerson () {
+      let result = await this.$api(Global.url.apiCodeReview + '/' + this.selectedPersonId, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.reviews = result.data.data
+      }
+    },
+    handleSelectedPersonChange () {
+      this.getReviewsBySelectedPerson()
+    },
+    reviewClicked (id) {
+      if (!id) {
+        return
+      }
+      this.$router.push({
+        name: 'CodeReviewDetail',
+        params: {
+          'id': id
+        }
+      })
+    },
+    addNewCodeReview () {
+      if (!this.selectedPerson) {
+        return
+      }
+      this.$router.push({
+        name: 'CodeReviewForm',
+        // params: {
+        //   'selectedPerson': this.selectedPerson
+        // },
+        query: {
+          id: this.selectedPerson.userId,
+          name: encodeURI(this.selectedPerson.name)
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -56,7 +119,7 @@ export default {
     vertical-align: middle;
   }
   .code-review-brief > a {
-    color: black;
+    color: #333333;
   }
   .code-review-brief .heading {
     font-size: 16px;

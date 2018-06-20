@@ -26,9 +26,9 @@
         <div class="panel-heading panel-heading-divider">人员列表</div>
         <div class="panel-body">
           <div id="accordion1" class="panel-group accordion">
-            <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
+            <div class="panel panel-default cfix" v-for="(item,index_1) in tabLists" :key="index_1">
               <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
-                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
+                <h4 class="panel-title cfix"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}<span class="fRight">折算工时：{{item.taskResource.percentHoursTotal}}小时</span><span class="fRight">贡献值：{{item.taskResource.planScoreTotal}}</span></a></h4>
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
@@ -49,7 +49,7 @@
                         <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
                         <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       </div>
-                      <p class="cfix"><span class="fLeft">任务描述：</span><span>{{task.description}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务描述：</span><span v-html="task.description"></span></p>
                       <p class="cfix"><span class="fLeft">任务类型：</span><span>{{task.tags}}</span></p>
                       <div>
                         <p><span>项目名称：</span><span>{{task.project}}</span></p>
@@ -157,7 +157,8 @@ export default {
       operatingResult: {
         message: '',
         code: ''
-      }
+      },
+      memberIds: []
     }
   },
   mounted () {
@@ -186,6 +187,26 @@ export default {
         t.tabLists = result.data.data
         t.tabLists.forEach(function (ele) {
           ele.taskLists = {}
+          ele.taskResource = {}
+          t.memberIds.push(ele.userId)
+        })
+      }
+      t.memberIds = t.memberIds.toString()
+      t.loadTaskParentResource(t.memberIds, t.tabLists)
+    },
+    async loadTaskParentResource (ids, lists) {
+      var t = this
+      var obj = {}
+      obj.year = t.timeFilter.year
+      obj.month = t.timeFilter.month
+      obj.week = t.timeFilter.week
+      obj.userIds = ids
+      const result = await t.$api(Global.url.apiGetTaskParentResource, obj)
+      if (result.data && result.data.code === 200) {
+        var res = result.data.data
+        lists.forEach(function (ele, i) {
+          ele.taskResource = res[ele.userId]
+          t.$set(lists, i, lists[i])
         })
       }
     },
@@ -215,8 +236,11 @@ export default {
       t.num = i
       const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
       if (result.data && result.data.code === 200) {
-        var res = result.data
-        t.tabLists[i].taskLists = res.data
+        var res = result.data.data
+        res.taskCommands.forEach(function (ele) {
+          ele.description = t.$global.format(ele.description)
+        })
+        t.tabLists[i].taskLists = res
         t.$set(t.tabLists, i, t.tabLists[i])
       }
     },
@@ -232,7 +256,7 @@ export default {
     async closeTask (task, i) {
       var t = this
       t.taskIndex = i
-      const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+      var result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
       return result.data
     },
     async initialWeekFromYearAndMonth () {
@@ -243,9 +267,9 @@ export default {
     },
     async initialWeek () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
-      if (result.data && result.data.code === 200) {
-        this.timeFilter.week = result.data.data.week
-      }
+      this.timeFilter.week = result.data.data.week
+      this.timeFilter.month = result.data.data.month
+      this.timeFilter.year = result.data.data.year
     },
     async getTaskCopy (task) {
       var t = this
@@ -333,11 +357,20 @@ export default {
     background-color: #f5f5f5;
     color: #000;
   }
+  .task-lists h4 span{
+    font-size: 12px;
+    line-height: 28px;
+    margin-left: 8px;
+  }
   .task-block{
     background: rgba(245, 245, 245, 0.4);
     color: #454545;
     padding: 10px 20px;
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1)
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
+  }
+  .task-block:last-child{
+    border-bottom: none;
   }
   .task-block h2{
     font-size: 14px;

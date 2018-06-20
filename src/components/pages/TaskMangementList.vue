@@ -28,7 +28,7 @@
           <div id="accordion1" class="panel-group accordion">
             <div class="panel panel-default cfix" v-for="(item,index_1) in tabLists" :key="index_1">
               <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
-                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}</a></h4>
+                <h4 class="panel-title cfix"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}<span class="fRight">折算工时：{{item.taskResource.percentHoursTotal}}小时</span><span class="fRight">贡献值：{{item.taskResource.planScoreTotal}}</span></a></h4>
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
@@ -157,11 +157,11 @@ export default {
       operatingResult: {
         message: '',
         code: ''
-      }
+      },
+      memberIds: []
     }
   },
   mounted () {
-    console.log(this._week)
     this.$nextTick(function () {
       this.loadPersons()
     })
@@ -187,6 +187,26 @@ export default {
         t.tabLists = result.data.data
         t.tabLists.forEach(function (ele) {
           ele.taskLists = {}
+          ele.taskResource = {}
+          t.memberIds.push(ele.userId)
+        })
+      }
+      t.memberIds = t.memberIds.toString()
+      t.loadTaskParentResource(t.memberIds, t.tabLists)
+    },
+    async loadTaskParentResource (ids, lists) {
+      var t = this
+      var obj = {}
+      obj.year = t.timeFilter.year
+      obj.month = t.timeFilter.month
+      obj.week = t.timeFilter.week
+      obj.userIds = ids
+      const result = await t.$api(Global.url.apiGetTaskParentResource, obj)
+      if (result.data && result.data.code === 200) {
+        var res = result.data.data
+        lists.forEach(function (ele, i) {
+          ele.taskResource = res[ele.userId]
+          t.$set(lists, i, lists[i])
         })
       }
     },
@@ -336,6 +356,11 @@ export default {
   .task-lists .panel-full{
     background-color: #f5f5f5;
     color: #000;
+  }
+  .task-lists h4 span{
+    font-size: 12px;
+    line-height: 28px;
+    margin-left: 10px;
   }
   .task-block{
     background: rgba(245, 245, 245, 0.4);

@@ -21,6 +21,7 @@
                   <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
                   <ul class="sub-menu">
                     <sub-menu id="sm_3" path="/task-mangement-list" name="一周任务" />
+                    <sub-menu id="sm_4" path="/code-review-list" name="Code Review" />
                   </ul>
                 </li>
             </ul>

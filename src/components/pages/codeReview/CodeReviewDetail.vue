@@ -98,6 +98,7 @@ export default {
       var result = await this.$api(Global.url.apiGetCodeReviewInfo + '/' + this.$route.params.id, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.codeReviewDetailModules = result.data.data
+        this.$store.commit('setCodeReviewDetail', result.data.data)
       }
     },
     async codeReviewPut () {
@@ -117,9 +118,13 @@ export default {
         }
       }
     },
-    codeReviewDelete () {
-      Toast.success('成功文案')
-      this.goBack()
+    async codeReviewDelete () {
+      var result = await this.$api(Global.url.apiGetCodeReviewDelete + '/' + this.codeReview.id, '', 'DELETE')
+      if (result.data && result.data.code === 200) {
+        console.log(result.data)
+        Toast.success('删除成功！')
+        this.goBack()
+      }
     },
     codeReviewValidator () {
       for (var index in this.codeReviewDetailModules) {
@@ -163,6 +168,7 @@ export default {
       this.codeReviewCommand.totalScore = this.totalScore
     },
     updateCodeReviewDetailModules (result) {
+      result.data.codeReviewInfos = result.data.codeReviewInfos.replace(/'/g, '"')
       this.codeReviewDetailModules = JSON.parse(result.data.codeReviewInfos)
     },
     showResult (result) {
@@ -183,6 +189,9 @@ export default {
       } else {
         Toast.fail(message)
       }
+    },
+    codeReviewEdit () {
+      this.$router.push({name: 'CodeReviewForm', query: {'id': this.codeReview.id}})
     },
     goBack () {
       this.$router.push({name: 'CodeReviewList'})

@@ -34,8 +34,8 @@
           </div>
         </div>
         <div class="text-center">
-          <a class="btn btn-primary btn-add operationButton" @click="cancelCodeReviewForm()">返回</a>
-          <button class="btn btn-primary btn-add operationButton" @click="submitCodeReviewForm()">提交</button>
+          <button class="btn btn-primary operationButton" @click="submitCodeReviewForm()">提交</button>
+          <a class="btn btn-primary operationButton" @click="cancelCodeReviewForm()">返回</a>
         </div>
       </form>
     </div>
@@ -84,7 +84,9 @@ export default {
   },
   computed: {
     ...mapState({
-      selectedPerson: 'codeReviewPerson'
+      selectedPerson: 'codeReviewPerson',
+      codeReview: 'codeReview',
+      codeReviewDetail: 'codeReviewDetail'
     })
   },
   created: function () {
@@ -95,6 +97,13 @@ export default {
       window.App.init()
       window.App.formElements()
     })
+    // edit codeReview
+    if (this.$route.query.id) {
+      this.codeReviewInfoList = this.codeReviewDetail
+      this.codeReviewCommand.userLabel = this.codeReview.userLabel
+      this.codeReviewCommand.id = this.codeReview.id
+      this.$refs.inputDateRef.value = this.codeReview.codeReviewTime
+    }
   },
   methods: {
     handleRouterParams () {
@@ -131,8 +140,18 @@ export default {
       if (!this.validateCodeReview()) {
         return
       }
-      var result = await this.$api(Global.url.apiCodeReview, this.codeReviewCommand, 'POST')
-      this.showResult(result.data)
+      if (this.$route.query.id) {
+        console.log(this.codeReviewCommand)
+        var resultEdit = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
+        this.codeReview.userLabel = resultEdit.data.data.userLabel
+        this.codeReview.codeReviewTime = resultEdit.data.data.codeReviewTime
+        this.$store.commit('setCodeReview', this.codeReview)
+        this.showResult(resultEdit.data)
+        this.cancelCodeReviewForm()
+      } else {
+        var resultCreate = await this.$api(Global.url.apiCodeReview, this.codeReviewCommand, 'POST')
+        this.showResult(resultCreate.data)
+      }
     },
     validateCodeReview () {
       if (!this.codeReviewCommand.userLabel || !this.codeReviewCommand.codeReviewTime) {

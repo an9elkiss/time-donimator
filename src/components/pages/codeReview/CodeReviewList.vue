@@ -138,7 +138,7 @@ export default {
   padding: 2px 20px;
 }
 .code-review-brief {
-  padding: 20px;
+  padding: 15px 5px 8px;
   border-bottom: 1px solid #d9d9d9;
   vertical-align: middle;
 }

@@ -16,7 +16,8 @@ export default new Vuex.Store({
     selectedMonth: null,
     selectedWeek: null,
     codeReviewPerson: {},
-    codeReview: {}
+    codeReview: {},
+    codeReviewDetail: {}
   },
   mutations: {
     login (state, data) {
@@ -49,6 +50,9 @@ export default new Vuex.Store({
     },
     setCodeReview (state, codeReview) {
       state.codeReview = codeReview
+    },
+    setCodeReviewDetail (state, codeReviewDetail) {
+      state.codeReviewDetail = codeReviewDetail
     }
   },
 

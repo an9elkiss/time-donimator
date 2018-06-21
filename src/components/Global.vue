@@ -30,7 +30,8 @@ const url = {
   apiGetWeekFromYearAndMonth: managerApiBase + '/api-super-manager/1.0.0/common/week/count',
   apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week',
   apiPutTag: managerApiBase + '/api-super-manager/1.0.0/savetag',
-  apiCodeReview: 'http://10.88.91.16:9006' + '/api-super-manager/1.0.0/codeReview'
+  apiCodeReview: 'http://10.88.91.16:9006' + '/api-super-manager/1.0.0/codeReview',
+  apiUpdateCodeReview: 'http://10.88.91.16:9006' + '/api-super-manager/1.0.0/codeReview/codeReviewInfo/update'
 }
 
 const event = {

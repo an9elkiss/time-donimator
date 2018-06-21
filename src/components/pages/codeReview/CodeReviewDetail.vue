@@ -41,7 +41,7 @@
       </div>
       <div class="center code-btn">
         <button class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</button>
-        <button class="btn btn-space btn-primary btn-add">编辑</button>
+        <button class="btn btn-space btn-primary btn-add" @click="codeReviewEdit">编辑</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewPut">提交</button>
         <button class="btn btn-space btn-primary btn-add" @click="goBack">返回</button>
@@ -98,7 +98,7 @@ export default {
       var result = await this.$api(Global.url.apiGetCodeReviewInfo + '/' + this.$route.params.id, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.codeReviewDetailModules = result.data.data
-        console.log(this.codeReviewDetailModules)
+        this.$store.commit('setCodeReviewDetail', result.data.data)
       }
     },
     async codeReviewPut () {
@@ -114,19 +114,17 @@ export default {
       }
     },
     async codeReviewDelete () {
-      var result = await this.$api(Global.url.apiGetCodeReviewDelete + '/' + this.$route.params.id, '', 'GET')
+      var result = await this.$api(Global.url.apiGetCodeReviewDelete + '/' + this.codeReview.id, '', 'DELETE')
       if (result.data && result.data.code === 200) {
         console.log(result.data)
-        this.codeReviewDetailModules = result.data.data
+        Toast.success('删除成功！')
+        this.goBack()
       }
-      Toast.success('成功文案')
-      this.goBack()
     },
     codeReviewValidator () {
       for (var index in this.codeReviewDetailModules) {
         var codeReviewDetailModule = this.codeReviewDetailModules[index]
         var fraction = Number(codeReviewDetailModule.modularFraction)
-        // var remarks = codeReviewDetailModule.modularRemarks
         if (fraction < 5 || fraction > 20) {
           Toast('得分不可以小于5分或者大于20分！')
           return false
@@ -156,8 +154,6 @@ export default {
       this.codeReviewCommand.totalScore = this.totalScore
     },
     updateCodeReviewDetailModules (result) {
-      console.log(this.codeReviewDetailModules)
-      console.log(result)
       result.data.codeReviewInfos = result.data.codeReviewInfos.replace(/'/g, '"')
       this.codeReviewDetailModules = JSON.parse(result.data.codeReviewInfos)
     },
@@ -179,6 +175,9 @@ export default {
       } else {
         Toast.fail(message)
       }
+    },
+    codeReviewEdit () {
+      this.$router.push({name: 'CodeReviewForm', query: {'id': this.codeReview.id}})
     },
     goBack () {
       this.$router.push({name: 'CodeReviewList'})

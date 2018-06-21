@@ -21,10 +21,18 @@
             </a>
           </div>
         </div>
-        <div class="panel-body text-center">
-          <a class="btn btn-primary" @click="addNewCodeReview">创建</a>
-        </div>
       </div>
+      <div class="panel-body text-center">
+        <button class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</button>
+        <!--<a class="btn btn-primary" @click="addNewCodeReview">创建</a>-->
+      </div>
+      <!--<div class="center code-btn">-->
+        <!--<button class="btn btn-space btn-primary btn-add">评分</button>-->
+        <!--<button class="btn btn-space btn-primary btn-add">编辑</button>-->
+        <!--<button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>-->
+        <!--<button class="btn btn-space btn-primary btn-add">提交</button>-->
+        <!--<button class="btn btn-space btn-primary btn-add" @click="goBack">返回</button>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -101,9 +109,6 @@ export default {
       }
       this.$router.push({
         name: 'CodeReviewForm',
-        // params: {
-        //   'selectedPerson': this.selectedPerson
-        // },
         query: {
           id: this.selectedPerson.userId,
           name: encodeURI(this.selectedPerson.name)

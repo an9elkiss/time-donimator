@@ -49,7 +49,7 @@ export default {
     console.log(this.codeReviewPerson)
     this.selectedPersonId = this.codeReviewPerson && this.codeReviewPerson.hasOwnProperty('userId') ? this.codeReviewPerson.userId : null
     if (!this.selectedPersonId) {
-      this.selectedPersonId = this.personMsg.userId
+      this.selectedPersonId = this.personMsg.id
     }
     console.log(this.selectedPersonId)
     this.getReviewsBySelectedPerson()
@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     ...mapState({
-      personMsg: 'person',
+      personMsg: 'user',
       codeReviewPerson: 'codeReviewPerson'
     }),
     selectedPerson: function () {

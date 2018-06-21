@@ -33,9 +33,9 @@
             </div>
           </div>
         </div>
-        <div class="text-center">
-          <button class="btn btn-primary operationButton" @click="submitCodeReviewForm()">提交</button>
-          <a class="btn btn-primary operationButton" @click="cancelCodeReviewForm()">返回</a>
+        <div class="btn-fixed center">
+          <button class="btn btn-space btn-primary btn-add" @click="submitCodeReviewForm">提交</button>
+          <button class="btn btn-space btn-primary btn-add" @click="cancelCodeReviewForm">返回</button>
         </div>
       </form>
     </div>

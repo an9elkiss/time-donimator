@@ -39,7 +39,7 @@
           </div>
         </div>
       </div>
-      <div class="center code-btn">
+      <div class="center btn-fixed">
         <button class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewEdit">编辑</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>
@@ -237,15 +237,5 @@ export default {
   .code-review-block .form-horizontal .form-group label{
     text-align: left;
     width: 56px;
-  }
-  .code-btn{
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-  }
-  .code-btn button{
-    opacity: 0.9;
   }
 </style>

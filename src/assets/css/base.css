@@ -28,3 +28,15 @@
 .dis-block{
   display: block;
 }
+
+/*btn-fixed*/
+.btn-fixed{
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+.btn-fixed button{
+  opacity: 0.9;
+}

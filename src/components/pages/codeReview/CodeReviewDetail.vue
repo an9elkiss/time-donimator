@@ -163,12 +163,21 @@
 </template>
 <script>
 import { Toast } from 'vant'
+import Global from '@/components/Global'
 export default {
   data: function () {
     return {}
   },
-  mounted () {},
+  mounted () {
+    this.codeReviewInfo()
+  },
   methods: {
+    async codeReviewInfo () {
+      var result = await this.$api(Global.url.apiGetCodeReviewInfo + '/' + this.$route.params.id, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        console.log(result.data)
+      }
+    },
     codeReviewDelete () {
       Toast.success('成功文案')
       this.goBack()

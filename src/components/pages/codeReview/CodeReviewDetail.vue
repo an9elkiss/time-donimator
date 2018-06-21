@@ -1,28 +1,28 @@
 <template>
   <div class="be-content codeReviewDetail">
     <div class="main-content container-fluid">
-      <div class="panel panel-default code-review-header">
-        <div class="panel-heading center">{{ codeReview.userLabel }}<span class="panel-subtitle">{{ codeReview.codeReviewTime }}</span></div>
-        <div class="panel-body">
-          <div v-if="isFlagScore">
-            <p>评委：{{ this.codeReview.codeReviewJudges }}</p>
-            <p>得分：{{ this.codeReview.totalScore }}</p>
+      <form class="form-horizontal">
+        <div class="panel panel-default code-review-header">
+          <div class="panel-heading center">{{ codeReview.userLabel }}<span class="panel-subtitle">{{ codeReview.codeReviewTime }}</span></div>
+          <div class="panel-body">
+            <div v-if="isFlagScore">
+              <p>评委：{{ this.codeReview.codeReviewJudges }}</p>
+              <p>得分：{{ this.codeReview.totalScore }}</p>
+            </div>
+            <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">*得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>**表示重点整治的问题，请加强重视，不要重犯；</span></p>
           </div>
-          <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">*得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>**表示重点整治的问题，请加强重视，不要重犯；</span></p>
         </div>
-      </div>
-      <div v-for="(modular, index) of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
-        <div class="panel-heading panel-heading-divider">{{ modular.modularType }}</div>
-        <div class="panel-body">
-          <h2>内容</h2>
-          <p>{{ modular.modularContent }}</p>
-          <div v-if="!isEditable && isFlagScore">
-            <h2>得分：<span>{{ modular.modularFraction }} 分</span></h2>
-            <h2>备注</h2>
-            <p>{{ modular.modularRemarks }}</p>
-          </div>
-          <div v-if="isEditable">
-            <form class="form-horizontal">
+        <div v-for="(modular, index) of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
+          <div class="panel-heading panel-heading-divider">{{ modular.modularType }}</div>
+          <div class="panel-body">
+            <h2>内容</h2>
+            <p>{{ modular.modularContent }}</p>
+            <div v-if="!isEditable && isFlagScore">
+              <h2>得分：<span>{{ modular.modularFraction }} 分</span></h2>
+              <h2>备注</h2>
+              <p>{{ modular.modularRemarks }}</p>
+            </div>
+            <div v-if="isEditable">
               <div class="form-group xs-mt-10">
                 <label class="col-sm-1 control-label bold">得分</label>
                 <div class="col-sm-11">
@@ -32,20 +32,20 @@
               <div class="form-group">
                 <label class="col-sm-1 control-label bold">备注</label>
                 <div class="col-sm-11">
-                  <textarea v-model="modular.modularRemarks" class="form-control" required=""></textarea>
+                  <textarea v-model="modular.modularRemarks" class="form-control"></textarea>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="center code-btn">
-        <button class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</button>
-        <button class="btn btn-space btn-primary btn-add">编辑</button>
-        <button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>
-        <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
-        <button class="btn btn-space btn-primary btn-add" @click="goBack">返回</button>
-      </div>
+        <div class="center code-btn">
+          <a class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</a>
+          <a class="btn btn-space btn-primary btn-add">编辑</a>
+          <a class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</a>
+          <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
+          <a class="btn btn-space btn-primary btn-add" @click="goBack">返回</a>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -125,13 +125,21 @@ export default {
       for (var index in this.codeReviewDetailModules) {
         var codeReviewDetailModule = this.codeReviewDetailModules[index]
         var fraction = Number(codeReviewDetailModule.modularFraction)
+        var result = true
         // var remarks = codeReviewDetailModule.modularRemarks
+        if (fraction === 0) {
+          result = false
+          return result
+        }
         if (fraction < 5 || fraction > 20) {
-          Toast('得分不可以小于5分或者大于20分！')
-          return false
+          result = false
+          break
         }
       }
-      return true
+      if (!result) {
+        Toast('得分不可以小于5分或者大于20分！')
+      }
+      return result
     },
     scoreInputValidator (index) {
       var value = this.codeReviewDetailModules[index].modularFraction

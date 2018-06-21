@@ -34,8 +34,8 @@
           </div>
         </div>
         <div class="text-center">
-          <a class="btn btn-primary operationButton" @click="cancelCodeReviewForm()">返回</a>
-          <button class="btn btn-primary operationButton" @click="submitCodeReviewForm()">提交</button>
+          <a class="btn btn-primary btn-add operationButton" @click="cancelCodeReviewForm()">返回</a>
+          <button class="btn btn-primary btn-add operationButton" @click="submitCodeReviewForm()">提交</button>
         </div>
       </form>
     </div>

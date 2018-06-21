@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: {
+      id: null,
       name: null,
       token: null
     },
@@ -19,11 +20,13 @@ export default new Vuex.Store({
   },
   mutations: {
     login (state, data) {
+      state.user.id = data.id
       state.user.name = data.userName
       state.user.token = data.token
     },
 
     logout (state) {
+      state.user.id = null
       state.user.name = null
       state.user.token = null
     },
@@ -53,7 +56,9 @@ export default new Vuex.Store({
     userName (state) {
       return state.user.name
     },
-
+    getUser (state) {
+      return state.user
+    },
     getSelectedDate (state) {
       return state.selectedDate
     },

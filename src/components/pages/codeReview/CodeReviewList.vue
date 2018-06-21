@@ -57,10 +57,12 @@ export default {
   },
   mounted: async function () {
     await this.getPersons()
-    this.selectedPersonId = this.codeReviewPerson ? this.codeReviewPerson.userId : null
+    console.log(this.codeReviewPerson)
+    this.selectedPersonId = this.codeReviewPerson && this.codeReviewPerson.hasOwnProperty('userId') ? this.codeReviewPerson.userId : null
     if (!this.selectedPersonId) {
       this.selectedPersonId = this.personMsg.userId
     }
+    console.log(this.selectedPersonId)
     this.getReviewsBySelectedPerson()
     this.$store.commit('setCodeReviewPerson', this.selectedPerson)
     window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))

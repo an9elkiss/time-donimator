@@ -66,7 +66,7 @@
                 <span>贡献值不得超过{{task.parentScore}}</span>
               </div>
             </div>
-            <div class="form-group" v-if="$route.params.flag">
+            <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">实际值</label>
               <div class="col-sm-6">
                 <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore" @keydown.enter.prevent>
@@ -75,7 +75,7 @@
                 <span>实际值不得小于0小时</span>
               </div>
             </div>
-            <div class="form-group" v-if="$route.params.flag">
+            <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">当期状态</label>
               <div class="col-sm-6">
                 <select class="form-control input-sm" v-model="task.task.currentStatus">
@@ -110,7 +110,7 @@
                 <span>预估工时不得超过{{task.parentHours}}小时</span>
               </div>
             </div>
-            <div class="form-group" v-if="$route.params.flag">
+            <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">实际工时</label>
               <div class="col-sm-6">
                 <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours" @keydown.enter.prevent>
@@ -264,9 +264,7 @@ export default {
       return this.task.selectedType.toString()
     },
     goBack () {
-      this.$router.push({
-        name: 'TaskMangementList'
-      })
+      this.$router.push({name: 'TaskMangementList'})
     },
     init () {
       var t = this
@@ -274,7 +272,7 @@ export default {
       t.task.task.userId = t.personMsg.userId
       t.task.task.level = t.personMsg.level
       t.task.task.percent = t.personMsg.percent
-      t.taskWeekId = t.$route.params.id
+      t.taskWeekId = t.$route.query.id
       if (t.taskWeekId) {
         t.getTask()
       }

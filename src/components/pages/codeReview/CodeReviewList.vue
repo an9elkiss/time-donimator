@@ -14,7 +14,7 @@
       <div class="panel panel-default">
         <div v-for="review of reviews" :key="review.id" class="panel-body">
           <div class="code-review-brief">
-            <a class="cfix" @click="reviewClicked(review.id)">
+            <a class="cfix" @click="reviewClicked(review)">
               <span class="fLeft heading">{{ review.userLabel }}</span>
               <i class="mdi mdi-chevron-right fRight detail"></i>
               <span class="fRight date">{{ review.codeReviewTime }}</span>
@@ -41,10 +41,12 @@ export default {
       reviews: []
     }
   },
-  mounted: function () {
-    this.getPersons()
+  mounted: async function () {
+    await this.getPersons()
     this.selectedPersonId = this.personMsg.userId
     this.getReviewsBySelectedPerson()
+    console.log('setCodeReviewPerson--', this.selectedPerson)
+    this.$store.commit('setCodeReviewPerson', this.selectedPerson)
   },
   computed: {
     ...mapState({
@@ -76,16 +78,20 @@ export default {
       }
     },
     handleSelectedPersonChange () {
+      console.log('setCodeReviewPerson--', this.selectedPerson)
+      this.$store.commit('setCodeReviewPerson', this.selectedPerson)
       this.getReviewsBySelectedPerson()
     },
-    reviewClicked (id) {
-      if (!id) {
+    reviewClicked (review) {
+      if (!review.id) {
         return
       }
+      console.log('setCodeReview--', review)
+      this.$store.commit('setCodeReview', review)
       this.$router.push({
         name: 'CodeReviewDetail',
         params: {
-          'id': id
+          'id': review.id
         }
       })
     },

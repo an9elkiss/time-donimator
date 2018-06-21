@@ -12,8 +12,8 @@
         </div>
       </div>
       <div class="panel panel-default">
-        <div v-for="review of reviews" :key="review.id" class="panel-body">
-          <div class="code-review-brief">
+        <div v-if="reviews.length > 0" class="panel-body">
+          <div v-for="review of reviews" :key="review.id" class="code-review-brief">
             <a class="cfix" @click="reviewClicked(review)">
               <span class="fLeft heading">{{ review.userLabel }}</span>
               <i class="mdi mdi-chevron-right fRight detail"></i>
@@ -21,11 +21,17 @@
             </a>
           </div>
         </div>
+        <div v-else class="text-center noneReviewRemind">
+          你还没有 Code Review，赶快新建一个吧
+        </div>
+        <div class="panel-body text-center">
+          <a class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</a>
+        </div>
       </div>
-      <div class="panel-body text-center">
-        <button class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</button>
+      <!--<div class="panel-body text-center">-->
+        <!--<button class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</button>-->
         <!--<a class="btn btn-primary" @click="addNewCodeReview">创建</a>-->
-      </div>
+      <!--</div>-->
       <!--<div class="center code-btn">-->
         <!--<button class="btn btn-space btn-primary btn-add">评分</button>-->
         <!--<button class="btn btn-space btn-primary btn-add">编辑</button>-->
@@ -108,11 +114,7 @@ export default {
         return
       }
       this.$router.push({
-        name: 'CodeReviewForm',
-        query: {
-          id: this.selectedPerson.userId,
-          name: encodeURI(this.selectedPerson.name)
-        }
+        name: 'CodeReviewForm'
       })
     }
   }
@@ -120,25 +122,30 @@ export default {
 </script>
 
 <style scoped>
-  .btn {
-    border-radius: 5px;
-    padding: 2px 20px;
-  }
-  .code-review-brief {
-    padding: 10px;
-    border-bottom: 1px solid #d9d9d9;
-    vertical-align: middle;
-  }
-  .code-review-brief > a {
-    color: #333333;
-  }
-  .code-review-brief .heading {
-    font-size: 16px;
-  }
-  .code-review-brief .date {
-    font-size: 14px;
-  }
-  .code-review-brief .detail {
-    margin: 3px 0px 0px 5px;
-  }
+.btn {
+  border-radius: 5px;
+  padding: 2px 20px;
+}
+.code-review-brief {
+  padding: 20px;
+  border-bottom: 1px solid #d9d9d9;
+  vertical-align: middle;
+}
+.code-review-brief > a {
+  color: #333333;
+  cursor: pointer;
+}
+.code-review-brief .heading {
+  font-size: 16px;
+}
+.code-review-brief .date {
+  font-size: 14px;
+}
+.code-review-brief .detail {
+  margin: 3px 0px 0px 5px;
+}
+.noneReviewRemind {
+  color: #d9d9d9;
+  padding: 20px;
+}
 </style>

@@ -44,13 +44,13 @@
 
 <script>
 import Global from '@/components/Global'
+import { mapState } from 'vuex'
 import { Toast } from 'vant'
 
 export default {
   name: 'CodeReviewForm',
   data: function () {
     return {
-      selectedPerson: {},
       codeReviewCommand: {
         userId: '',
         codeReviewTime: '',
@@ -82,6 +82,11 @@ export default {
       inputDate: ''
     }
   },
+  computed: {
+    ...mapState({
+      selectedPerson: 'codeReviewPerson'
+    })
+  },
   created: function () {
     this.handleRouterParams()
   },
@@ -90,13 +95,10 @@ export default {
       window.App.init()
       window.App.formElements()
     })
-    // this.handleRouterParams()
   },
   methods: {
     handleRouterParams () {
-      if (this.$route.query.id && this.$route.query.name) {
-        this.selectedPerson.userId = this.$route.query.id
-        this.selectedPerson.name = decodeURI(this.$route.query.name)
+      if (this.selectedPerson) {
         this.codeReviewCommand.userId = this.selectedPerson.userId
       } else {
         this.$router.push({name: 'CodeReviewList'})

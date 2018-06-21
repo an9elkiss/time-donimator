@@ -57,14 +57,21 @@ export default {
   },
   mounted: async function () {
     await this.getPersons()
-    this.selectedPersonId = this.personMsg.userId
+    this.selectedPersonId = this.codeReviewPerson ? this.codeReviewPerson.userId : null
+    if (!this.selectedPersonId) {
+      this.selectedPersonId = this.personMsg.userId
+    }
     this.getReviewsBySelectedPerson()
-    console.log('setCodeReviewPerson--', this.selectedPerson)
     this.$store.commit('setCodeReviewPerson', this.selectedPerson)
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+  },
+  destroyed: function () {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
   computed: {
     ...mapState({
-      personMsg: 'person'
+      personMsg: 'person',
+      codeReviewPerson: 'codeReviewPerson'
     }),
     selectedPerson: function () {
       if (!this.selectedPersonId) {
@@ -92,7 +99,6 @@ export default {
       }
     },
     handleSelectedPersonChange () {
-      console.log('setCodeReviewPerson--', this.selectedPerson)
       this.$store.commit('setCodeReviewPerson', this.selectedPerson)
       this.getReviewsBySelectedPerson()
     },
@@ -100,7 +106,6 @@ export default {
       if (!review.id) {
         return
       }
-      console.log('setCodeReview--', review)
       this.$store.commit('setCodeReview', review)
       this.$router.push({
         name: 'CodeReviewDetail',
@@ -116,6 +121,10 @@ export default {
       this.$router.push({
         name: 'CodeReviewForm'
       })
+    },
+    beforeunloadHandler (e) {
+      this.selectedPersonId = null
+      this.handleSelectedPersonChange()
     }
   }
 }

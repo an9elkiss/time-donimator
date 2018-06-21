@@ -39,123 +39,11 @@
           </div>
         </div>
       </div>
-      <!--<div class="panel panel-default code-review-block">-->
-        <!--<div class="panel-heading panel-heading-divider">业务完成度</div>-->
-        <!--<div class="panel-body">-->
-          <!--<h2>内容</h2>-->
-          <!--<p>编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容</p>-->
-          <!--<div v-if="isFlagScore">-->
-            <!--<h2>得分：<span>50分</span></h2>-->
-            <!--<h2>备注</h2>-->
-            <!--<p>备注备注备注备注备注备注备注备注备注备注备注备<br>注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注</p>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<form class="form-horizontal">-->
-              <!--<div class="form-group xs-mt-10">-->
-                <!--<label class="col-sm-1 control-label bold">得分</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<input data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm" onkeyup="value=value.replace(/[^\d]/g,'')" required="">-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="form-group">-->
-                <!--<label class="col-sm-1 control-label bold">备注</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<textarea class="form-control" required=""></textarea>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</form>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="panel panel-default code-review-block">-->
-        <!--<div class="panel-heading panel-heading-divider">性能</div>-->
-        <!--<div class="panel-body">-->
-          <!--<h2>内容</h2>-->
-          <!--<p>编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容</p>-->
-          <!--<div>-->
-            <!--<h2>得分：<span>50分</span></h2>-->
-            <!--<h2>备注</h2>-->
-            <!--<p>备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注</p>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<form class="form-horizontal">-->
-              <!--<div class="form-group xs-mt-10">-->
-                <!--<label class="col-sm-1 control-label bold">得分</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<input data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm" onkeyup="value=value.replace(/[^\d]/g,'')" required="">-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="form-group">-->
-                <!--<label class="col-sm-1 control-label bold">备注</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<textarea class="form-control" required=""></textarea>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</form>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="panel panel-default code-review-block">-->
-        <!--<div class="panel-heading panel-heading-divider">日志及监控</div>-->
-        <!--<div class="panel-body">-->
-          <!--<h2>内容</h2>-->
-          <!--<p>编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容</p>-->
-          <!--<div>-->
-            <!--<h2>得分：<span>50分</span></h2>-->
-            <!--<h2>备注</h2>-->
-            <!--<p>备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注</p>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<form class="form-horizontal">-->
-              <!--<div class="form-group xs-mt-10">-->
-                <!--<label class="col-sm-1 control-label bold">得分</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<input data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm" onkeyup="value=value.replace(/[^\d]/g,'')" required="">-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="form-group">-->
-                <!--<label class="col-sm-1 control-label bold">备注</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<textarea class="form-control" required=""></textarea>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</form>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="panel panel-default code-review-block">-->
-        <!--<div class="panel-heading panel-heading-divider">业务抽象</div>-->
-        <!--<div class="panel-body">-->
-          <!--<h2>内容</h2>-->
-          <!--<p>编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容编码规范内容</p>-->
-          <!--<div>-->
-            <!--<h2>得分：<span>50分</span></h2>-->
-            <!--<h2>备注</h2>-->
-            <!--<p>备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注</p>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<form class="form-horizontal">-->
-              <!--<div class="form-group xs-mt-10">-->
-                <!--<label class="col-sm-1 control-label bold">得分</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<input data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm" onkeyup="value=value.replace(/[^\d]/g,'')" required="">-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<div class="form-group">-->
-                <!--<label class="col-sm-1 control-label bold">备注</label>-->
-                <!--<div class="col-sm-11">-->
-                  <!--<textarea class="form-control" required=""></textarea>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</form>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
       <div class="center code-btn">
         <button class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</button>
         <button class="btn btn-space btn-primary btn-add">编辑</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>
-        <button class="btn btn-space btn-primary btn-add" @click="codeReviewPut">提交</button>
+        <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
         <button class="btn btn-space btn-primary btn-add" @click="goBack">返回</button>
       </div>
     </div>
@@ -210,7 +98,6 @@ export default {
       var result = await this.$api(Global.url.apiGetCodeReviewInfo + '/' + this.$route.params.id, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.codeReviewDetailModules = result.data.data
-        console.log(this.codeReviewDetailModules)
       }
     },
     async codeReviewPut () {
@@ -219,7 +106,12 @@ export default {
         var result = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
         if (result.data && result.data.code === 200) {
           this.showResult(result.data)
+          this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
+          this.codeReview.totalScore = result.data.data.totalScore
+          this.$store.commit('setCodeReview', this.codeReview)
           this.updateCodeReviewDetailModules(result.data)
+          this.isFlagScore = true
+          this.isEditable = false
         } else {
           Toast.fail('数据更新失败！')
         }
@@ -263,9 +155,6 @@ export default {
       this.codeReviewCommand.totalScore = this.totalScore
     },
     updateCodeReviewDetailModules (result) {
-      console.log(this.codeReviewDetailModules)
-      console.log(result)
-      result.data.codeReviewInfos = result.data.codeReviewInfos.replace(/'/g, '"')
       this.codeReviewDetailModules = JSON.parse(result.data.codeReviewInfos)
     },
     showResult (result) {

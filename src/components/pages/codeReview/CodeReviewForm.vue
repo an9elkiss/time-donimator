@@ -107,7 +107,8 @@ export default {
   },
   methods: {
     handleRouterParams () {
-      if (this.selectedPerson) {
+      console.log(this.selectedPerson)
+      if (this.selectedPerson && this.selectedPerson.hasOwnProperty('userId')) {
         this.codeReviewCommand.userId = this.selectedPerson.userId
       } else {
         this.$router.push({name: 'CodeReviewList'})

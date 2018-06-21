@@ -43,7 +43,7 @@
         <button class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewEdit">编辑</button>
         <button class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</button>
-        <button class="btn btn-space btn-primary btn-add" @click="codeReviewPut">提交</button>
+        <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
         <button class="btn btn-space btn-primary btn-add" @click="goBack">返回</button>
       </div>
     </div>
@@ -107,7 +107,12 @@ export default {
         var result = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
         if (result.data && result.data.code === 200) {
           this.showResult(result.data)
+          this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
+          this.codeReview.totalScore = result.data.data.totalScore
+          this.$store.commit('setCodeReview', this.codeReview)
           this.updateCodeReviewDetailModules(result.data)
+          this.isFlagScore = true
+          this.isEditable = false
         } else {
           Toast.fail('数据更新失败！')
         }

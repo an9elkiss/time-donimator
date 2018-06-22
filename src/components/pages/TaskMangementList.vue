@@ -49,7 +49,7 @@
                         <p class="cfix"><span class="fLeft">任务编号：</span><span>{{task.code}}</span></p>
                         <p class="cfix"><span class="fLeft">任务名称：</span><span>{{task.title}}</span></p>
                       </div>
-                      <p class="cfix"><span class="fLeft">任务描述：</span><span>{{task.description}}</span></p>
+                      <p class="cfix"><span class="fLeft">任务描述：</span><span v-html="$global.format(task.description)"></span></p>
                       <p class="cfix"><span class="fLeft">任务类型：</span><span>{{task.tags}}</span></p>
                       <div>
                         <p><span>项目名称：</span><span>{{task.project}}</span></p>
@@ -161,23 +161,26 @@ export default {
       memberIds: []
     }
   },
-  mounted () {
-    this.$nextTick(function () {
-      this.loadPersons()
-    })
-    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+  computed: {
+    ...mapState({
+      selectedMonth: 'selectedMonth',
+      selectedWeek: 'selectedWeek'
+    }),
+    selectedDate: function () {
+      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
+    }
   },
   created: function () {
     var now = new Date()
     this.timeFilter.year = now.getFullYear()
-    this.getSelectedDateFromStore()
-    if (this.timeFilter.month == null) {
-      this.timeFilter.month = now.getMonth() + 1
-    }
-    if (this.timeFilter.week == null) {
-      this.initialWeek()
-    }
-    this.initialWeekFromYearAndMonth()
+    this.initialWeek()
+    this.timeFilter.month = this.selectedMonth
+    this.timeFilter.week = this.selectedWeek
+  },
+  mounted () {
+    this.$nextTick(function () {
+      this.loadPersons()
+    })
   },
   methods: {
     async loadPersons () {
@@ -231,10 +234,6 @@ export default {
       this.$store.commit('setSelectedMonth', this.timeFilter.month)
       this.$store.commit('setSelectedWeek', this.timeFilter.week)
     },
-    getSelectedDateFromStore () {
-      this.timeFilter.month = this.selectedMonth
-      this.timeFilter.week = this.selectedWeek
-    },
     async getTasks (id, y, m, w, i) {
       var t = this
       t.userId = id
@@ -252,7 +251,7 @@ export default {
       this.$store.commit('setSelectedDate', this.selectedDate)
     },
     editTask (task) {
-      this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'flag': 0}})
+      this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'flag': '0'}})
       this.$store.commit('setSelectedDate', this.selectedDate)
     },
     async closeTask (task, i) {
@@ -271,6 +270,9 @@ export default {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
+        this.timeFilter.month = result.data.data.month
+        this.selectedDateCommitStore()
+        this.initialWeekFromYearAndMonth()
       }
     },
     async getTaskCopy (task) {
@@ -322,24 +324,7 @@ export default {
         }
       }
       return ''
-    },
-    beforeunloadHandler (e) {
-      this.timeFilter.month = null
-      this.timeFilter.week = null
-      this.selectedDateCommitStore()
     }
-  },
-  computed: {
-    ...mapState({
-      selectedMonth: 'selectedMonth',
-      selectedWeek: 'selectedWeek'
-    }),
-    selectedDate: function () {
-      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
-    }
-  },
-  destroyed: function () {
-    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   }
 }
 

@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     handleRouterParams () {
-      console.log(this.selectedPerson)
       if (this.selectedPerson && this.selectedPerson.hasOwnProperty('userId')) {
         this.codeReviewCommand.userId = this.selectedPerson.userId
       } else {
@@ -141,13 +140,12 @@ export default {
         return
       }
       if (this.$route.query.id) {
-        console.log(this.codeReviewCommand)
         var resultEdit = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
         this.codeReview.userLabel = resultEdit.data.data.userLabel
         this.codeReview.codeReviewTime = resultEdit.data.data.codeReviewTime
         this.$store.commit('setCodeReview', this.codeReview)
         this.showResult(resultEdit.data)
-        this.cancelCodeReviewForm()
+        this.$router.push({name: 'CodeReviewDetail'})
       } else {
         var resultCreate = await this.$api(Global.url.apiCodeReview, this.codeReviewCommand, 'POST')
         this.showResult(resultCreate.data)
@@ -173,7 +171,7 @@ export default {
       }
     },
     cancelCodeReviewForm () {
-      this.$router.go(-1)
+      this.$router.push({name: 'CodeReviewList'})
     }
   }
 }

@@ -33,7 +33,8 @@ export default new Router({
           path: 'time-entry',
           name: 'TimeEntryPage',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: false
           },
           component: TimeEntryPage
         },
@@ -41,7 +42,8 @@ export default new Router({
           path: 'time-chart',
           name: 'EntryChartPage',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: false
           },
           component: EntryChartPage
         },
@@ -49,7 +51,8 @@ export default new Router({
           path: 'task-mangement-list',
           name: 'TaskMangementList',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: true
           },
           component: TaskMangementList
         },
@@ -57,7 +60,8 @@ export default new Router({
           path: 'task-mangement-detail',
           name: 'TaskMangementDetail',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: false
           },
           component: TaskMangementDetail
         },
@@ -65,7 +69,8 @@ export default new Router({
           path: 'code-review-detail/:id',
           name: 'CodeReviewDetail',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: false
           },
           component: CodeReviewDetail
         },
@@ -73,7 +78,8 @@ export default new Router({
           path: 'code-review-form',
           name: 'CodeReviewForm',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: false
           },
           component: CodeReviewForm
         },
@@ -81,7 +87,8 @@ export default new Router({
           path: 'code-review-list',
           name: 'CodeReviewList',
           meta: {
-            requireAuth: true
+            requireAuth: true,
+            keepAlive: true
           },
           component: CodeReviewList
         }

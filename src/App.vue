@@ -118,7 +118,10 @@
     <left-menu></left-menu>
 
     <div>
-      <router-view />
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
 
     <nav class="be-right-sidebar">

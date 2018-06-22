@@ -11,14 +11,15 @@
           </div>
         </div>
       </div>
-      <div class="panel panel-default">
-        <div v-if="reviews.length > 0" class="panel-body">
+      <div class="panel panel-default m-b-0">
+        <div v-if="reviews.length > 0" class="panel-body p-b-0">
           <div v-for="review of reviews" :key="review.id" class="code-review-brief">
-            <a class="cfix" @click="reviewClicked(review)">
-              <span class="fLeft heading">{{ review.userLabel }}</span>
-              <i class="mdi mdi-chevron-right fRight detail"></i>
-              <span class="fRight date">{{ review.codeReviewTime }}</span>
-            </a>
+            <p class="flexBox boxPackJustify" @click="reviewClicked(review)">
+              <span class="heading boxFlex_1">{{ review.userLabel }}</span>
+              <span class="boxFlex_0 date">
+                {{ review.codeReviewTime }}<i class="mdi mdi-chevron-right detail"></i>
+              </span>
+            </p>
           </div>
         </div>
         <div v-else class="text-center noneReviewRemind">
@@ -44,20 +45,12 @@ export default {
       reviews: []
     }
   },
-  mounted: async function () {
-    await this.getPersons()
-    console.log(this.codeReviewPerson)
-    this.selectedPersonId = this.codeReviewPerson && this.codeReviewPerson.hasOwnProperty('userId') ? this.codeReviewPerson.userId : null
-    if (!this.selectedPersonId) {
-      this.selectedPersonId = this.personMsg.id
-    }
-    console.log(this.selectedPersonId)
-    this.getReviewsBySelectedPerson()
-    this.$store.commit('setCodeReviewPerson', this.selectedPerson)
-    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
+  created () {
+    this.codeReviewInit()
+    this.handleSelectedPersonChange()
   },
-  destroyed: function () {
-    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
+  activated () {
+    this.codeReviewInit()
   },
   computed: {
     ...mapState({
@@ -77,6 +70,15 @@ export default {
     }
   },
   methods: {
+    async codeReviewInit () {
+      await this.getPersons()
+      this.selectedPersonId = this.codeReviewPerson && this.codeReviewPerson.hasOwnProperty('userId') ? this.codeReviewPerson.userId : null
+      if (!this.selectedPersonId) {
+        this.selectedPersonId = this.personMsg.id
+      }
+      this.getReviewsBySelectedPerson()
+      this.$store.commit('setCodeReviewPerson', this.selectedPerson)
+    },
     async getPersons () {
       let result = await this.$api(Global.url.apiPersons, '', 'GET')
       if (result.data && result.data.code === 200) {
@@ -84,9 +86,11 @@ export default {
       }
     },
     async getReviewsBySelectedPerson () {
-      let result = await this.$api(Global.url.apiCodeReview + '/' + this.selectedPersonId, '', 'GET')
-      if (result.data && result.data.code === 200) {
-        this.reviews = result.data.data
+      if (this.selectedPersonId) {
+        let result = await this.$api(Global.url.apiCodeReview + '/' + this.selectedPersonId, '', 'GET')
+        if (result.data && result.data.code === 200) {
+          this.reviews = result.data.data
+        }
       }
     },
     handleSelectedPersonChange () {
@@ -112,31 +116,33 @@ export default {
       this.$router.push({
         name: 'CodeReviewForm'
       })
-    },
-    beforeunloadHandler (e) {
-      this.selectedPersonId = null
-      this.handleSelectedPersonChange()
     }
   }
 }
 </script>
 
 <style scoped>
-.btn {
-  border-radius: 5px;
-  padding: 2px 20px;
-}
 .code-review-brief {
   padding: 15px 5px 8px;
   border-bottom: 1px solid #d9d9d9;
   vertical-align: middle;
 }
-.code-review-brief > a {
+.code-review-brief:last-child{
+  border-bottom: none;
+}
+.code-review-brief > p {
   color: #333333;
   cursor: pointer;
+  margin: 0;
+}
+.code-review-brief > p span{
+  display: block;
 }
 .code-review-brief .heading {
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .code-review-brief .date {
   font-size: 14px;
@@ -147,5 +153,11 @@ export default {
 .noneReviewRemind {
   color: #d9d9d9;
   padding: 20px;
+}
+.p-b-0{
+  padding-bottom: 0;
+}
+.m-b-0{
+  margin-bottom: 0;
 }
 </style>

@@ -16,11 +16,11 @@
           <div class="panel-heading panel-heading-divider">{{ modular.modularType }}</div>
           <div class="panel-body">
             <h2>内容</h2>
-            <p>{{ modular.modularContent }}</p>
+            <p v-html="$global.format(modular.modularContent)"></p>
             <div v-if="!isEditable && isFlagScore">
               <h2>得分：<span>{{ modular.modularFraction }} 分</span></h2>
               <h2>备注</h2>
-              <p>{{ modular.modularRemarks }}</p>
+              <p v-html="$global.format(modular.modularRemarks)"></p>
             </div>
             <div v-if="isEditable">
               <div class="form-group xs-mt-10">
@@ -121,7 +121,6 @@ export default {
     async codeReviewDelete () {
       var result = await this.$api(Global.url.apiGetCodeReviewDelete + '/' + this.codeReview.id, '', 'DELETE')
       if (result.data && result.data.code === 200) {
-        console.log(result.data)
         Toast.success('删除成功！')
         this.goBack()
       }

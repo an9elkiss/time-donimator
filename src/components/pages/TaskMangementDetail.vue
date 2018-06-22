@@ -230,19 +230,21 @@ export default {
       }
     },
     inspectNum (flag) {
-      if (flag === 'planHours') {
-        if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) <= 0) {
-          this.isParentHours = true
-          this.task.task.planHours = ''
+      if (this.isParentFlag === 'false') {
+        if (flag === 'planHours') {
+          if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) <= 0) {
+            this.isParentHours = true
+            this.task.task.planHours = ''
+          } else {
+            this.isParentHours = false
+          }
         } else {
-          this.isParentHours = false
-        }
-      } else {
-        if ((this.task.task.parentId && this.task.parentScore < this.task.task.planScore) || isNaN(Number(this.task.task.planScore)) || Number(this.task.task.planScore) < 0) {
-          this.isParentScore = true
-          this.task.task.planScore = ''
-        } else {
-          this.isParentScore = false
+          if ((this.task.task.parentId && this.task.parentScore < this.task.task.planScore) || isNaN(Number(this.task.task.planScore)) || Number(this.task.task.planScore) < 0) {
+            this.isParentScore = true
+            this.task.task.planScore = ''
+          } else {
+            this.isParentScore = false
+          }
         }
       }
     },
@@ -309,11 +311,11 @@ export default {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.task.task)
         if (result.data && result.data.code === 200) {
-          this.showResult(result.data)
+          t.showResult(result.data)
           if (!t.taskWeekId) {
             t.$refs.inputTimer.value = ''
             t.isParentFlag = 'false'
-            this.task.selectedType = []
+            t.task.selectedType = []
             t.task.task = {
               title: '',
               project: '',
@@ -333,6 +335,8 @@ export default {
               userId: t.personMsg.userId,
               userName: t.personMsg.name
             }
+          } else {
+            t.goBack()
           }
         }
       }

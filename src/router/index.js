@@ -52,7 +52,7 @@ export default new Router({
           name: 'TaskMangementList',
           meta: {
             requireAuth: true,
-            keepAlive: true
+            keepAlive: false
           },
           component: TaskMangementList
         },

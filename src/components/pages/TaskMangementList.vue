@@ -83,6 +83,159 @@ import { mapState } from 'vuex'
 import Global from '@/components/Global'
 import { Dialog, Toast } from 'vant'
 
+// export default {
+//   created: function () {
+//     var now = new Date()
+//     this.timeFilter.year = now.getFullYear()
+//     this.initialWeek()
+//     this.timeFilter.month = this.selectedMonth
+//     this.timeFilter.week = this.selectedWeek
+//   },
+//   methods: {
+//     async loadPersons () {
+//       var t = this
+//       const result = await t.$api(Global.url.apiPersons, '', 'GET')
+//       if (result.data && result.data.code === 200) {
+//         t.tabLists = result.data.data
+//         t.tabLists.forEach(function (ele) {
+//           ele.taskLists = {}
+//           ele.taskResource = {}
+//           t.memberIds.push(ele.userId)
+//         })
+//       }
+//       t.memberIds = t.memberIds.toString()
+//       t.loadTaskParentResource(t.memberIds, t.tabLists)
+//     },
+//     async loadTaskParentResource (ids, lists) {
+//       var t = this
+//       var obj = {}
+//       obj.year = t.timeFilter.year
+//       obj.month = t.timeFilter.month
+//       obj.week = t.timeFilter.week
+//       obj.userIds = ids
+//       const result = await t.$api(Global.url.apiGetTaskParentResource, obj)
+//       if (result.data && result.data.code === 200) {
+//         var res = result.data.data
+//         lists.forEach(function (ele, i) {
+//           ele.taskResource = res[ele.userId]
+//           t.$set(lists, i, lists[i])
+//         })
+//       }
+//     },
+//     changeSelect () {
+//       var t = this
+//       this.selectedDateCommitStore()
+//       t.loadTaskParentResource(t.memberIds, t.tabLists)
+//       if (t.userId) {
+//         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+//       }
+//     },
+//     changeYearOrMonth () {
+//       var t = this
+//       t.initialWeekFromYearAndMonth()
+//       t.selectedDateCommitStore()
+//       t.loadTaskParentResource(t.memberIds, t.tabLists)
+//       if (t.userId) {
+//         t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+//       }
+//     },
+//     selectedDateCommitStore () {
+//       this.$store.commit('setSelectedMonth', this.timeFilter.month)
+//       this.$store.commit('setSelectedWeek', this.timeFilter.week)
+//     },
+//     async getTasks (id, y, m, w, i) {
+//       var t = this
+//       t.userId = id
+//       t.num = i
+//       const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
+//       if (result.data && result.data.code === 200) {
+//         var res = result.data
+//         t.tabLists[i].taskLists = res.data
+//         t.$set(t.tabLists, i, t.tabLists[i])
+//       }
+//     },
+//     addTask (task) {
+//       this.$router.push({name: 'TaskMangementDetail'})
+//       this.$store.commit('GetPersonMsg', task)
+//       this.$store.commit('setSelectedDate', this.selectedDate)
+//     },
+//     editTask (task) {
+//       this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'flag': '0'}})
+//       this.$store.commit('setSelectedDate', this.selectedDate)
+//     },
+//     async closeTask (task, i) {
+//       var t = this
+//       t.taskIndex = i
+//       const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+//       return result.data
+//     },
+//     async initialWeekFromYearAndMonth () {
+//       var result = await this.$api(Global.url.apiGetWeekFromYearAndMonth + '?year=' + this.timeFilter.year + '&month=' + this.timeFilter.month, '', 'GET')
+//       if (result.data && result.data.code === 200) {
+//         this.timeFilter.maxWeek = result.data.data
+//       }
+//     },
+//     async initialWeek () {
+//       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
+//       if (result.data && result.data.code === 200) {
+//         this.timeFilter.week = result.data.data.week
+//         this.timeFilter.month = result.data.data.month
+//         this.selectedDateCommitStore()
+//         this.initialWeekFromYearAndMonth()
+//       }
+//     },
+//     async getTaskCopy (task) {
+//       var t = this
+//       var result = await t.$api(Global.url.apiTaskWeekCopy + '?year=' + t.timeFilter.year + '&month=' + t.timeFilter.month + '&week=' + t.timeFilter.week + '&taskWeekId=' + task.taskWeekId, '', 'GET')
+//       if (result.data && result.data.code === 200) {
+//         t.operatingResult = result.data
+//       }
+//     },
+//     confirmTask (task, index) {
+//       var t = this
+//       Dialog.confirm({
+//         title: '警告',
+//         message: '确定要删除此任务' + (index + 1) + '吗？'
+//       }).then(async () => {
+//         var operatingResult = await t.closeTask(task, index)
+//         this.showResult(operatingResult)
+//         if (operatingResult.code === 200) {
+//           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+//         }
+//       })
+//     },
+//     showResult (result) {
+//       var title = false
+//       var message = ''
+//       if (!result || !result.hasOwnProperty('code') || result.code === '') {
+//         title = false
+//         message = '获取数据失败'
+//       } else if (result.code === 200) {
+//         title = true
+//         message = '操作成功'
+//       } else {
+//         title = false
+//         message = result.message
+//       }
+//       if (title) {
+//         Toast.success(message)
+//       } else {
+//         Toast.fail(message)
+//       }
+//     },
+//     confirmButtonClicked () {
+//       this.operatingResult = {}
+//     },
+//     getValueFromId (objectArray, id) {
+//       for (var index in objectArray) {
+//         if (objectArray[index].id === id) {
+//           return objectArray[index].value
+//         }
+//       }
+//       return ''
+//     }
+//   }
+// }
 export default {
   data: function () {
     return {
@@ -161,26 +314,21 @@ export default {
       memberIds: []
     }
   },
-  computed: {
-    ...mapState({
-      selectedMonth: 'selectedMonth',
-      selectedWeek: 'selectedWeek'
-    }),
-    selectedDate: function () {
-      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
-    }
+  mounted () {
+    window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
-  created: function () {
+  created () {
     var now = new Date()
     this.timeFilter.year = now.getFullYear()
-    this.initialWeek()
-    this.timeFilter.month = this.selectedMonth
-    this.timeFilter.week = this.selectedWeek
-  },
-  mounted () {
-    this.$nextTick(function () {
-      this.loadPersons()
-    })
+    this.getSelectedDateFromStore()
+    if (this.timeFilter.month == null) {
+      this.timeFilter.month = now.getMonth() + 1
+    }
+    if (this.timeFilter.week == null) {
+      this.initialWeek()
+    }
+    this.initialWeekFromYearAndMonth()
+    this.loadPersons()
   },
   methods: {
     async loadPersons () {
@@ -234,14 +382,21 @@ export default {
       this.$store.commit('setSelectedMonth', this.timeFilter.month)
       this.$store.commit('setSelectedWeek', this.timeFilter.week)
     },
+    getSelectedDateFromStore () {
+      this.timeFilter.month = this.selectedMonth
+      this.timeFilter.week = this.selectedWeek
+    },
     async getTasks (id, y, m, w, i) {
       var t = this
       t.userId = id
       t.num = i
       const result = await t.$api(Global.url.apiGetTasks + '?year=' + y + '&month=' + m + '&week=' + w + '&memberId=' + id, '', 'GET')
       if (result.data && result.data.code === 200) {
-        var res = result.data
-        t.tabLists[i].taskLists = res.data
+        var res = result.data.data
+        res.taskCommands.forEach(function (ele) {
+          ele.description = t.$global.format(ele.description)
+        })
+        t.tabLists[i].taskLists = res
         t.$set(t.tabLists, i, t.tabLists[i])
       }
     },
@@ -257,7 +412,7 @@ export default {
     async closeTask (task, i) {
       var t = this
       t.taskIndex = i
-      const result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
+      var result = await t.$api(Global.url.apiTaskDelete + '/' + task.taskWeekId, '', 'DELETE')
       return result.data
     },
     async initialWeekFromYearAndMonth () {
@@ -270,9 +425,6 @@ export default {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
-        this.timeFilter.month = result.data.data.month
-        this.selectedDateCommitStore()
-        this.initialWeekFromYearAndMonth()
       }
     },
     async getTaskCopy (task) {
@@ -324,7 +476,24 @@ export default {
         }
       }
       return ''
+    },
+    beforeunloadHandler (e) {
+      this.timeFilter.month = null
+      this.timeFilter.week = null
+      this.selectedDateCommitStore()
     }
+  },
+  computed: {
+    ...mapState({
+      selectedMonth: 'selectedMonth',
+      selectedWeek: 'selectedWeek'
+    }),
+    selectedDate: function () {
+      return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
+    }
+  },
+  destroyed: function () {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   }
 }
 
@@ -376,7 +545,7 @@ export default {
   .task-ul-list > div p {
     flex-grow: 0;
     flex-basis: 33%;
-    min-width: 155px;
+    min-width: 220px;
   }
   .task-ul-list > p span{
     display: block;

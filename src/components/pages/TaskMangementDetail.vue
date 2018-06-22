@@ -335,6 +335,8 @@ export default {
               userId: t.personMsg.userId,
               userName: t.personMsg.name
             }
+          } else {
+            t.goBack()
           }
         }
       }

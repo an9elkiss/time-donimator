@@ -8,7 +8,7 @@
             <div class="form-group clearfix">
               <label for="code-review-name" class="col-xs-2 control-label">名称：</label>
               <div class="col-xs-10">
-                <input v-model="codeReviewCommand.userLabel" required="required" id="code-review-name" class="form-control input-sm" placeholder="输入名称"/>
+                <input v-model="codeReviewCommand.userLabel" id="code-review-name" class="form-control input-sm" placeholder="输入名称"/>
               </div>
             </div>
             <div class="form-group clearfix">
@@ -16,7 +16,7 @@
               <div class="col-xs-10">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
                   <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span>
-                  <input class="form-control input-sm" required="required" ref="inputDateRef"/>
+                  <input class="form-control input-sm" ref="inputDateRef"/>
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
             <div class="form-group">
               <label class="col-sm-2 lines-middle">内容</label>
               <div class="col-sm-10">
-                <textarea v-model="modular.modularContent" required="required" class="form-control" rows="3"></textarea>
+                <textarea v-model="modular.modularContent" class="form-control" rows="3"></textarea>
               </div>
             </div>
           </div>
@@ -59,23 +59,23 @@ export default {
       },
       codeReviewInfoList: [
         {
-          modularType: '编码规范',
+          modularType: '编码规范(20分)',
           modularContent: ''
         },
         {
-          modularType: '业务完成度',
+          modularType: '业务完成度(50分)',
           modularContent: ''
         },
         {
-          modularType: '性能',
+          modularType: '性能(20分)',
           modularContent: ''
         },
         {
-          modularType: '日志及监控',
+          modularType: '日志及监控(10分)',
           modularContent: ''
         },
         {
-          modularType: '业务抽象',
+          modularType: '业务抽象(加分项)',
           modularContent: ''
         }
       ],

@@ -9,16 +9,16 @@
               <p>评委：{{ this.codeReview.codeReviewJudges }}</p>
               <p>得分：{{ this.codeReview.totalScore }}</p>
             </div>
-            <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">*得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>**表示重点整治的问题，请加强重视，不要重犯；</span></p>
+            <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>*表示重点整治的问题，请加强重视，不要重犯；</span></p>
           </div>
         </div>
-        <div v-for="(modular, index) of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
+        <div v-for="modular of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
           <div class="panel-heading panel-heading-divider">{{ modular.modularType }}</div>
           <div class="panel-body">
             <h2>内容</h2>
             <p v-html="$global.format(modular.modularContent)"></p>
             <div v-if="!isEditable && isFlagScore">
-              <h2>得分：<span>{{ modular.modularFraction }} 分</span></h2>
+              <h2>得分：<span v-if="modular.modularFraction">{{ modular.modularFraction }} 分</span></h2>
               <h2>备注</h2>
               <p v-html="$global.format(modular.modularRemarks)"></p>
             </div>
@@ -26,7 +26,7 @@
               <div class="form-group xs-mt-10">
                 <label class="col-sm-1 control-label bold">得分</label>
                 <div class="col-sm-11">
-                  <input v-model="modular.modularFraction" data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm" @keyup="scoreInputValidator(index)" required="">
+                  <input v-model="modular.modularFraction" data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm">
                 </div>
               </div>
               <div class="form-group">
@@ -39,10 +39,10 @@
           </div>
         </div>
         <div class="center btn-fixed">
-          <a class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</a>
-          <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
-          <a class="btn btn-space btn-primary btn-add" @click="codeReviewEdit">编辑</a>
-          <a class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="isEditable = !isEditable">评分</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="codeReviewEdit">编辑</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="codeReviewDelete">删除</a>
           <a class="btn btn-space btn-primary btn-add" @click="goBack">返回</a>
         </div>
       </form>
@@ -102,20 +102,18 @@ export default {
       }
     },
     async codeReviewPut () {
-      if (this.codeReviewValidator()) {
-        this.prepareCodeReviewCommand()
-        var result = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
-        if (result.data && result.data.code === 200) {
-          this.showResult(result.data)
-          this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
-          this.codeReview.totalScore = result.data.data.totalScore
-          this.$store.commit('setCodeReview', this.codeReview)
-          this.updateCodeReviewDetailModules(result.data)
-          this.isFlagScore = true
-          this.isEditable = false
-        } else {
-          Toast.fail('数据更新失败！')
-        }
+      this.prepareCodeReviewCommand()
+      var result = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
+      if (result.data && result.data.code === 200) {
+        this.showResult(result.data)
+        this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
+        this.codeReview.totalScore = result.data.data.totalScore
+        this.$store.commit('setCodeReview', this.codeReview)
+        this.updateCodeReviewDetailModules(result.data)
+        this.isFlagScore = true
+        this.isEditable = false
+      } else {
+        Toast.fail('数据更新失败！')
       }
     },
     async codeReviewDelete () {
@@ -125,31 +123,29 @@ export default {
         this.goBack()
       }
     },
-    codeReviewValidator () {
-      for (var index in this.codeReviewDetailModules) {
-        var codeReviewDetailModule = this.codeReviewDetailModules[index]
-        var fraction = Number(codeReviewDetailModule.modularFraction)
-        var result = true
-        // var remarks = codeReviewDetailModule.modularRemarks
-        if (fraction === 0) {
-          result = false
-          return result
-        }
-      }
-      return result
-    },
-    scoreInputValidator (index) {
-      var value = this.codeReviewDetailModules[index].modularFraction
-      value = value.replace(/[^\d]/g, '')
-      if (value.length > 2) {
-        value = value.substr(0, 2)
-      }
-      var fraction = Number(value)
-      if (fraction > 20 || fraction < 0) {
-        value = ''
-      }
-      this.codeReviewDetailModules[index].modularFraction = value
-    },
+    // codeReviewValidator () {
+    //   for (var index in this.codeReviewDetailModules) {
+    //     var codeReviewDetailModule = this.codeReviewDetailModules[index]
+    //     console.log(codeReviewDetailModule)
+    //     var fraction = Number(codeReviewDetailModule.modularFraction)
+    //     var result = true
+    //     // var remarks = codeReviewDetailModule.modularRemarks
+    //     console.log(fraction)
+    //     if (fraction === 0) {
+    //       result = false
+    //       return result
+    //     }
+    //   }
+    //   return result
+    // },
+    // scoreInputValidator (index) {
+    //   var value = this.codeReviewDetailModules[index].modularFraction
+    //   value = value.replace(/[^\d]/g, '')
+    //   if (value.length > 2) {
+    //     value = value.substr(0, 2)
+    //   }
+    //   this.codeReviewDetailModules[index].modularFraction = value
+    // },
     prepareCodeReviewCommand () {
       this.codeReviewCommand.id = this.codeReview.id
       this.codeReviewCommand.userId = this.codeReviewPerson.userId

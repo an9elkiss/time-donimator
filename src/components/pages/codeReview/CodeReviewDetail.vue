@@ -135,13 +135,6 @@ export default {
           result = false
           return result
         }
-        if (fraction < 5 || fraction > 20) {
-          result = false
-          break
-        }
-      }
-      if (!result) {
-        Toast('得分不可以小于5分或者大于20分！')
       }
       return result
     },

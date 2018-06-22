@@ -40,9 +40,9 @@
         </div>
         <div class="center btn-fixed">
           <a class="btn btn-space btn-primary btn-add" @click="isEditable = !isEditable">评分</a>
+          <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
           <a class="btn btn-space btn-primary btn-add" @click="codeReviewEdit">编辑</a>
           <a class="btn btn-space btn-primary btn-add" @click="codeReviewDelete">删除</a>
-          <button class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</button>
           <a class="btn btn-space btn-primary btn-add" @click="goBack">返回</a>
         </div>
       </form>

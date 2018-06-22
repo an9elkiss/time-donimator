@@ -234,14 +234,12 @@ export default {
         if (flag === 'planHours') {
           if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) <= 0) {
             this.isParentHours = true
-            this.task.task.planHours = ''
           } else {
             this.isParentHours = false
           }
         } else {
           if ((this.task.task.parentId && this.task.parentScore < this.task.task.planScore) || isNaN(Number(this.task.task.planScore)) || Number(this.task.task.planScore) < 0) {
             this.isParentScore = true
-            this.task.task.planScore = ''
           } else {
             this.isParentScore = false
           }
@@ -335,8 +333,6 @@ export default {
               userId: t.personMsg.userId,
               userName: t.personMsg.name
             }
-          } else {
-            t.goBack()
           }
         }
       }

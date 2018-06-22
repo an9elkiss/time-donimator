@@ -145,7 +145,7 @@ export default {
         this.codeReview.codeReviewTime = resultEdit.data.data.codeReviewTime
         this.$store.commit('setCodeReview', this.codeReview)
         this.showResult(resultEdit.data)
-        this.$router.push({name: 'CodeReviewDetail'})
+        this.$router.push({name: 'CodeReviewDetail', params: {'id': this.$route.query.id}})
       } else {
         var resultCreate = await this.$api(Global.url.apiCodeReview, this.codeReviewCommand, 'POST')
         this.showResult(resultCreate.data)

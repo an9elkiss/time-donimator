@@ -291,6 +291,8 @@ export default {
         t.task.projectCopy = res.project
         t.task.task = res
         t.task.task.percent = t.personMsg.percent
+        console.log(t.personMsg)
+        console.log(t.personMsg.percent)
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()

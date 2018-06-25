@@ -28,7 +28,7 @@
           <div id="accordion1" class="panel-group accordion">
             <div class="panel panel-default" v-for="(item,index_1) in tabLists" :key="index_1">
               <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
-                <h4 class="panel-title cfix"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}<span class="fRight">折算工时：{{item.taskResource.percentHoursTotal}}小时</span><span class="fRight">贡献值：{{item.taskResource.planScoreTotal}}</span></a></h4>
+                <h4 class="panel-title cfix" @click="infoSave(item)"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}<span class="fRight">折算工时：{{item.taskResource.percentHoursTotal}}小时</span><span class="fRight">贡献值：{{item.taskResource.planScoreTotal}}</span></a></h4>
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
@@ -39,9 +39,6 @@
                         <button class="btn btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
                         <button class="btn btn-primary btn-sm" @click="editTask(task)">编辑</button>
                         <button class="btn btn-primary btn-sm" @click="confirmTask(task, index_2)">删除</button>
-                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-time-restore" @click="getTaskCopy(task)"></i></button>-->
-                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-edit" @click="editTask(task)"></i></button>-->
-                        <!--<button type="button" class="btn btn-default"><i class="icon mdi mdi-delete" data-toggle="modal" data-target="#mod-warning" @click="markUpTask(task, index_2)"></i></button>-->
                       </div>
                     </h2>
                     <div class="task-ul-list">
@@ -64,12 +61,12 @@
                       <div>
                         <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-space btn-primary btn-add" @click="addTask(item)">新增任务</button>
+                <button class="btn btn-space btn-primary btn-add" @click="addTask">新增任务</button>
               </div>
             </div>
           </div>
@@ -244,9 +241,11 @@ export default {
         t.$set(t.tabLists, i, t.tabLists[i])
       }
     },
-    addTask (task) {
+    infoSave (person) {
+      this.$store.commit('GetPersonMsg', person)
+    },
+    addTask () {
       this.$router.push({name: 'TaskMangementDetail'})
-      this.$store.commit('GetPersonMsg', task)
       this.$store.commit('setSelectedDate', this.selectedDate)
     },
     editTask (task) {

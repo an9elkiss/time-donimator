@@ -64,7 +64,7 @@
                       <div>
                         <p class="cfix"><span class="fLeft">预估工时：</span><span>{{task.planHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
-                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualScore">{{task.actualScore}}小时</span></p>
+                        <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
                       </div>
                     </div>
                   </div>
@@ -179,7 +179,12 @@ export default {
     this.loadPersons()
   },
   activated () {
-    console.log(1)
+    if (this.userId) {
+      this.getTasks(this.userId, this.timeFilter.year, this.timeFilter.month, this.timeFilter.week, this.num)
+    }
+    if (this.memberIds.toString()) {
+      this.loadTaskParentResource(this.memberIds.toString(), this.tabLists)
+    }
   },
   methods: {
     async loadPersons () {

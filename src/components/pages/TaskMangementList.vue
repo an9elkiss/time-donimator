@@ -176,7 +176,12 @@ export default {
     this.loadPersons()
   },
   activated () {
-    console.log(1)
+    if (this.userId) {
+      this.getTasks(this.userId, this.timeFilter.year, this.timeFilter.month, this.timeFilter.week, this.num)
+    }
+    if (this.memberIds.toString()) {
+      this.loadTaskParentResource(this.memberIds.toString(), this.tabLists)
+    }
   },
   methods: {
     async loadPersons () {

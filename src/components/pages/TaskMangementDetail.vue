@@ -119,7 +119,7 @@
                 <span>实际工时不得小于0小时</span>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group btn-fixed">
               <div class="center">
                 <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
                 <button class="btn btn-space btn-primary" @click="goBack">返回</button>
@@ -335,6 +335,8 @@ export default {
               userId: t.personMsg.userId,
               userName: t.personMsg.name
             }
+          } else {
+            this.goBack()
           }
         }
       }

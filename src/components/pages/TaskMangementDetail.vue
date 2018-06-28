@@ -97,7 +97,7 @@
               <label class="col-sm-3 control-label">计划日期</label>
               <div class="col-md-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>{{task.task.endTime}}
                 </div>
               </div>
             </div>
@@ -291,8 +291,6 @@ export default {
         t.task.projectCopy = res.project
         t.task.task = res
         t.task.task.percent = t.personMsg.percent
-        console.log(t.personMsg)
-        console.log(t.personMsg.percent)
         this.task.selectedType = t.task.task.tags.split(',')
         t.$refs.inputTimer.value = t.task.task.endTime
         this.initialProjectResource()

@@ -33,7 +33,8 @@ const url = {
   apiPutTag: managerApiBase + '/api-super-manager/1.0.0/savetag',
   apiCodeReview: managerApiBase + '/api-super-manager/1.0.0/codeReview',
   apiUpdateCodeReview: managerApiBase + '/api-super-manager/1.0.0/codeReview/codeReviewInfo/update',
-  apiGetChildTaskScore: managerApiBase + '/api-super-manager/1.0.0/task/parent/showTaskScore/'
+  apiGetChildTaskScore: managerApiBase + '/api-super-manager/1.0.0/task/parent/showTaskScore/',
+  apiShowConvertedWorkHours: managerApiBase + '/api-super-manager/1.0.0/task/show/converted/workhours'
 }
 
 const event = {

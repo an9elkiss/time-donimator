@@ -9,6 +9,7 @@ import TaskMangementDetail from '@/components/pages/TaskMangementDetail'
 import CodeReviewDetail from '@/components/pages/codeReview/CodeReviewDetail'
 import CodeReviewForm from '@/components/pages/codeReview/CodeReviewForm'
 import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
+import ShowConvertedWorkHour from '@/components/pages/convertedWorkHour/ShowConvertedWorkHour'
 import App from '@/APP'
 
 Vue.use(VueResource)
@@ -91,6 +92,15 @@ export default new Router({
             keepAlive: true
           },
           component: CodeReviewList
+        },
+        {
+          path: 'show-converted-work-hour',
+          name: 'ShowConvertedWorkHour',
+          meta: {
+            requireAuth: true,
+            keepAlive: true
+          },
+          component: ShowConvertedWorkHour
         }
       ]
     }

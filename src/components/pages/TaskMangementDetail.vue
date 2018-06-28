@@ -4,7 +4,7 @@
       <div class="panel">
         <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{taskCommand.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
         <div class="panel-body">
-          <form class="form-horizontal group-border-dashed" id="taskForm" action="">
+          <form class="form-horizontal group-border-dashed">
             <div class="form-group">
               <label class="col-sm-3 control-label">任务名称</label>
               <div class="col-sm-6">
@@ -122,7 +122,6 @@
                 <a class="btn btn-space btn-primary" v-if="nowIndex-1 >= 0" @click="turnToTask(nowIndex-1)">上一个</a>
                 <button :type="flag?'button':'submit'" class="btn btn-space btn-primary" @click="submitTask">提交</button>
                 <a class="btn btn-space btn-primary" @click="goBack">返回</a>
-                <!--<router-link class="btn btn-space btn-primary" :to="{ name: 'TaskMangementList'}">返回</router-link>-->
                 <a class="btn btn-space btn-primary" v-if="nowIndex+1 < taskList.length" @click="turnToTask(nowIndex+1)">下一个</a>
               </div>
             </div>

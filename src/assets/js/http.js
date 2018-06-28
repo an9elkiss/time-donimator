@@ -38,7 +38,6 @@ export const http = async function (url, form, method = 'POST') {
             query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&'
           }
         }
-
         return query.length ? query.substr(0, query.length - 1) : query
       }
       return param(data)

@@ -9,6 +9,7 @@ import TaskMangementDetail from '@/components/pages/TaskMangementDetail'
 import CodeReviewDetail from '@/components/pages/codeReview/CodeReviewDetail'
 import CodeReviewForm from '@/components/pages/codeReview/CodeReviewForm'
 import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
+import ShowConvertedWorkHour from '@/components/pages/convertedWorkHour/ShowConvertedWorkHour'
 import App from '@/APP'
 
 Vue.use(VueResource)
@@ -52,7 +53,7 @@ export default new Router({
           name: 'TaskMangementList',
           meta: {
             requireAuth: true,
-            keepAlive: false
+            keepAlive: true
           },
           component: TaskMangementList
         },
@@ -91,8 +92,25 @@ export default new Router({
             keepAlive: true
           },
           component: CodeReviewList
+        },
+        {
+          path: 'show-converted-work-hour',
+          name: 'ShowConvertedWorkHour',
+          meta: {
+            requireAuth: true,
+            keepAlive: true
+          },
+          component: ShowConvertedWorkHour
         }
       ]
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    // return 期望滚动到哪个的位置
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })

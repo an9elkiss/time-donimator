@@ -24,6 +24,12 @@
                     <sub-menu id="sm_4" path="/code-review-list" name="Code Review" />
                   </ul>
                 </li>
+              <li class="parent">
+                <a href="#"><i class="icon mdi mdi-chart"></i><span>报表管理</span></a>
+                <ul class="sub-menu">
+                  <sub-menu id="sm_5" path="/show-converted-work-hour" name="任务图表" />
+                </ul>
+              </li>
             </ul>
           </div>
         </div>

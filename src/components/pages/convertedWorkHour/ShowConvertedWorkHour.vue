@@ -254,6 +254,11 @@ export default {
       }
     },
     drawLine () {
+      if (this.selectedPersons.length === 0) {
+        document.getElementById('container').style.display = 'none'
+      } else {
+        document.getElementById('container').style.display = ''
+      }
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById('container'))
       // 拿到taskResultCommand数据

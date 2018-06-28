@@ -2,13 +2,13 @@
   <div class="be-content">
     <div class="main-content container-fluid">
       <div class="panel">
-        <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{task.task.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
+        <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{taskCommand.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
         <div class="panel-body">
-          <form action="#" class="form-horizontal group-border-dashed">
+          <form class="form-horizontal group-border-dashed">
             <div class="form-group">
               <label class="col-sm-3 control-label">任务名称</label>
               <div class="col-sm-6">
-                <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="task.task.title" @keydown.enter.prevent>
+                <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="taskCommand.title" @keydown.enter.prevent>
               </div>
             </div>
             <div class="form-group">
@@ -27,8 +27,8 @@
             <div class="form-group" v-if="isParentFlag === 'false'">
               <label class="col-sm-3 control-label">选择父任务</label>
               <div class="col-sm-6">
-                <p class="disabledP" v-if="isDisabled && task.task.parentTitle">{{task.task.parentTitle}}</p>
-                <select class="form-control input-sm" v-model="task.task.parentId" @change="initialProjectResource" v-else>
+                <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
+                <select class="form-control input-sm" v-model="taskCommand.parentId" v-else @change="parentTaskChange">
                   <option value="">未选择</option>
                   <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
                 </select>
@@ -37,7 +37,7 @@
             <div class="form-group">
               <label class="col-sm-3 control-label">项目名称</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="task.task.project" required="" :disabled="isDisabled">
+                <select class="form-control input-sm" v-model="taskCommand.project" required="" :disabled="isDisabled">
                   <option value="">未选择</option>
                   <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
                 </select>
@@ -48,37 +48,41 @@
               <div class="col-sm-6 cfix">
                 <clickable-button v-for="(value, key) of task.tag" :key="key" :value="value" :index="key" :activeFlag="buttonStatus(key)" @buttonClicked="buttonClicked"></clickable-button>
                 <new-button id="newButton" :isClicked="isClicked" @addNewTag="addNewTag" @buttonClicked="isClicked = !isClicked">标签</new-button>
-                <input v-model="task.task.tags" required="" class="placeholder">
+                <input v-model="taskCommand.tags" required="" class="placeholder">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">任务内容</label>
               <div class="col-sm-6">
-                <textarea class="form-control input-sm" v-model="task.task.description"></textarea>
+                <textarea class="form-control input-sm" v-model="taskCommand.description"></textarea>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">贡献值</label>
               <div class="col-sm-6">
-                <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="task.task.planScore" @input="inspectNum('planScore')" @keydown.enter.prevent>
+                <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="taskCommand.planScore" @keydown.enter.prevent>
               </div>
-              <div class="remind" v-if="this.task.task.parentId && isParentScore">
-                <span>贡献值不得超过{{task.parentScore}}</span>
+              <div class="col-sm-6 col-sm-offset-3" v-if="taskWeekId && taskCommand.parentId">
+                <div class="progress">
+                  <div ref="actualAllScore" class="progress-bar progress-bar-primary progress-bar-striped" v-if="actualAllScore >= 0">{{ actualAllScore }}</div>
+                  <div ref="planAllScore" class="progress-bar progress-bar-success progress-bar-striped" v-if="planAllScore >= 0">{{ planAllScore }}</div>
+                </div>
+                <div class="text-center clearfix progressColorRemind">
+                  <div class="fact">已生成</div>
+                  <div class="plan">已规划</div>
+                </div>
               </div>
             </div>
             <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">实际值</label>
               <div class="col-sm-6">
-                <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="task.task.actualScore" @keydown.enter.prevent>
-              </div>
-              <div class="remind" v-if="isNaN(Number(this.task.task.actualScore)) || Number(this.task.task.actualScore) < 0">
-                <span>实际值不得小于0小时</span>
+                <input data-parsley-type="number" placeholder="实际值" class="form-control input-sm" v-model="taskCommand.actualScore" @keydown.enter.prevent>
               </div>
             </div>
             <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">当期状态</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="task.task.currentStatus">
+                <select class="form-control input-sm" v-model="taskCommand.currentStatus">
                   <option value="">未选择</option>
                   <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
                 </select>
@@ -87,7 +91,7 @@
             <div class="form-group">
               <label class="col-sm-3 control-label">计划状态</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="task.task.planStatus" required="">
+                <select class="form-control input-sm" v-model="taskCommand.planStatus" required="">
                   <option value="">未选择</option>
                   <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
                 </select>
@@ -96,33 +100,29 @@
             <div class="form-group">
               <label class="col-sm-3 control-label">计划日期</label>
               <div class="col-md-6">
-                <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker">
-                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
+                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input v-model="taskCommand.endTime" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
                 </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">预估工时</label>
               <div class="col-sm-6">
-                <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="task.task.planHours" @input="inspectNum('planHours')" @keydown.enter.prevent>
-              </div>
-              <div class="remind" v-if="task.task.parentId && isParentHours">
-                <span>预估工时不得超过{{task.parentHours}}小时</span>
+                <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="taskCommand.planHours" @keydown.enter.prevent>
               </div>
             </div>
             <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">实际工时</label>
               <div class="col-sm-6">
-                <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="task.task.actualHours" @keydown.enter.prevent>
-              </div>
-              <div class="remind" v-if="isNaN(Number(this.task.task.actualHours)) || Number(this.task.task.actualHours) < 0">
-                <span>实际工时不得小于0小时</span>
+                <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="taskCommand.actualHours" @keydown.enter.prevent>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group btn-fixed">
               <div class="center">
-                <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
-                <button class="btn btn-space btn-primary" @click="goBack">返回</button>
+                <a class="btn btn-space btn-primary" v-if="nowIndex-1 >= 0" @click="turnToTask(nowIndex-1)">上一个</a>
+                <button :type="flag?'button':'submit'" class="btn btn-space btn-primary" @click="submitTask">提交</button>
+                <a class="btn btn-space btn-primary" @click="goBack">返回</a>
+                <a class="btn btn-space btn-primary" v-if="nowIndex+1 < taskList.length" @click="turnToTask(nowIndex+1)">下一个</a>
               </div>
             </div>
           </form>
@@ -138,7 +138,6 @@ import {
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import NewButton from '@/components/unit/NewButton'
-import { Toast } from 'vant'
 
 export default {
   data () {
@@ -152,25 +151,6 @@ export default {
         parentProject: [],
         parentHours: '',
         parentScore: '',
-        task: {
-          title: '',
-          project: '',
-          tags: '',
-          description: '',
-          planScore: 0,
-          actualScore: '',
-          currentStatus: '',
-          planStatus: '',
-          parentId: '',
-          isParent: null,
-          endTime: '',
-          planHours: '',
-          actualHours: '',
-          percent: '',
-          level: '',
-          userId: '',
-          userName: ''
-        },
         num1: 0,
         num2: 1,
         state1: '未完成',
@@ -181,16 +161,33 @@ export default {
         time3: 1,
         selectedType: []
       },
+      taskCommand: {
+        title: '',
+        project: '',
+        tags: '',
+        description: '',
+        planScore: 0,
+        actualScore: '',
+        currentStatus: '',
+        planStatus: '',
+        parentId: '',
+        isParent: null,
+        endTime: '',
+        planHours: '',
+        actualHours: '',
+        percent: '',
+        level: '',
+        userId: '',
+        userName: ''
+      },
+      nowIndex: 0,
+      planAllScore: 0,
+      actualAllScore: 0,
+      flag: false,
       isParentFlag: 'false',
       taskWeekId: 0,
-      operatingResult: {
-        message: '',
-        code: ''
-      },
       isClicked: false,
       isTrue: false,
-      isParentHours: false,
-      isParentScore: false,
       isDisabled: false
     }
   },
@@ -202,13 +199,22 @@ export default {
     ...mapState({
       personMsg: 'person',
       taskMsg: 'task',
-      nowDateString: 'selectedDate'
+      nowDateString: 'selectedDate',
+      taskList: 'taskList'
     })
   },
   mounted () {
+    var self = this
     window.$(document).ready(function () {
       window.App.init()
       window.App.formElements()
+
+      // 日期选择器专用监听事件，用于vue更新值
+      window.$('#datePicker').datetimepicker()
+        .on('hide', function (ev) {
+          var value = window.$('#dateInput').val()
+          self.taskCommand.endTime = value
+        })
     })
     this.init()
     this.initialProjectStatusAndTag()
@@ -218,30 +224,22 @@ export default {
     parentChange () {
       var t = this
       if (t.isParentFlag === 'false') {
-        if (t.task.task.parentId && t.task.task.parentTitle) {
+        if (t.taskCommand.parentId && t.taskCommand.parentTitle) {
           t.isDisabled = true
         } else {
           t.isDisabled = false
         }
-        t.task.task.parentId = t.task.parentIdCopy
-        t.task.task.project = t.task.projectCopy
+        t.taskCommand.parentId = t.task.parentIdCopy
+        t.taskCommand.project = t.task.projectCopy
       } else {
         t.isDisabled = false
       }
     },
-    inspectNum (flag) {
-      if (this.isParentFlag === 'false') {
-        if (flag === 'planHours') {
-          if ((this.task.task.parentId && this.task.parentHours < this.task.task.planHours) || isNaN(Number(this.task.task.planHours)) || Number(this.task.task.planHours) <= 0) {
-            this.isParentHours = true
-          } else {
-            this.isParentHours = false
-          }
-        } else {
-          if ((this.task.task.parentId && this.task.parentScore < this.task.task.planScore) || isNaN(Number(this.task.task.planScore)) || Number(this.task.task.planScore) < 0) {
-            this.isParentScore = true
-          } else {
-            this.isParentScore = false
+    parentTaskChange () {
+      if (this.taskCommand.parentId) {
+        for (var index in this.task.parentProject) {
+          if (this.taskCommand.parentId === this.task.parentProject[index].id) {
+            this.taskCommand.project = this.task.parentProject[index].project
           }
         }
       }
@@ -252,7 +250,7 @@ export default {
       } else {
         this.task.selectedType.push(index)
       }
-      this.task.task.tags = this.tagsArrayToString()
+      this.taskCommand.tags = this.tagsArrayToString()
     },
     buttonStatus (index) {
       if (this.task.selectedType.indexOf(index) >= 0) {
@@ -264,15 +262,16 @@ export default {
       return this.task.selectedType.toString()
     },
     goBack () {
-      this.$router.push({name: 'TaskMangementList'})
+      this.$router.go(-1)
     },
     init () {
       var t = this
-      t.task.task.userName = t.personMsg.name
-      t.task.task.userId = t.personMsg.userId
-      t.task.task.level = t.personMsg.level
-      t.task.task.percent = t.personMsg.percent
+      t.taskCommand.userName = t.personMsg.name
+      t.taskCommand.userId = t.personMsg.userId
+      t.taskCommand.level = t.personMsg.level
+      t.taskCommand.percent = t.personMsg.percent
       t.taskWeekId = t.$route.query.id
+      t.nowIndex = Number(t.$route.query.index)
       if (t.taskWeekId) {
         t.getTask()
       }
@@ -289,32 +288,36 @@ export default {
         }
         t.task.parentIdCopy = res.parentId
         t.task.projectCopy = res.project
-        t.task.task = res
-        t.task.task.percent = t.personMsg.percent
-        this.task.selectedType = t.task.task.tags.split(',')
-        t.$refs.inputTimer.value = t.task.task.endTime
-        this.initialProjectResource()
+        t.taskCommand = res
+        t.taskCommand.percent = t.personMsg.percent
+        this.task.selectedType = t.taskCommand.tags.split(',')
+        // t.$refs.inputTimer.value = t.taskCommand.endTime
         this.parentChange()
+        if (t.taskCommand.parentId) {
+          this.initialScoreProgress()
+        }
       }
+    },
+    validateForm () {
+      return this.taskCommand.title && this.taskCommand.project && this.taskCommand.tags && parseInt(this.taskCommand.planScore) >= 0 && this.taskCommand.planStatus && this.taskCommand.endTime && parseInt(this.taskCommand.planHours) >= 0
     },
     async submitTask () {
       var t = this
-      t.task.task.endTime = t.$refs.inputTimer.value
       if (t.isParentFlag === 'true') {
-        t.task.task.isParent = 1
+        t.taskCommand.isParent = 1
       } else {
-        t.task.task.isParent = null
+        t.taskCommand.isParent = null
       }
-      if (t.task.task.title && t.task.task.project && t.task.task.tags && parseInt(t.task.task.planScore) >= 0 && t.task.task.planStatus && t.task.task.endTime && parseInt(t.task.task.planHours) >= 0) {
+      if (this.validateForm()) {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
-        const result = await t.$api(api, t.task.task)
+        const result = await t.$api(api, t.taskCommand)
         if (result.data && result.data.code === 200) {
-          t.showResult(result.data)
+          t.$global.showResult(result.data)
           if (!t.taskWeekId) {
-            t.$refs.inputTimer.value = ''
+            t.initialParentProjectList()
             t.isParentFlag = 'false'
             t.task.selectedType = []
-            t.task.task = {
+            t.taskCommand = {
               title: '',
               project: '',
               tags: '',
@@ -351,49 +354,6 @@ export default {
         this.task.parentProject = result.data.data
       }
     },
-    async initialProjectResource () {
-      var t = this
-      if (!t.taskWeekId) {
-        t.task.task.planScore = 0
-        t.task.task.planHours = ''
-      }
-      if (t.task.task.parentId) {
-        var result = await this.$api(Global.url.apiGetParentResource + t.task.task.parentId, '', 'GET')
-        if (result.data && result.data.code === 200) {
-          t.task.parentHours = result.data.data.surplusHours + Number(t.task.task.planHours)
-          t.task.parentScore = result.data.data.surplusScore + Number(t.task.task.planScore)
-          t.isParentHours = true
-          t.isParentScore = true
-          for (var index in t.task.parentProject) {
-            if (t.task.task.parentId === t.task.parentProject[index].id) {
-              t.task.task.project = t.task.parentProject[index].project
-            }
-          }
-        }
-      }
-    },
-    showResult (result) {
-      var title = false
-      var message = ''
-      if (!result || !result.hasOwnProperty('code') || result.code === '') {
-        title = false
-        message = '连接后台API失败'
-      } else if (result.code === 200) {
-        title = true
-        message = '操作成功'
-      } else {
-        title = false
-        message = result.message
-      }
-      if (title) {
-        Toast.success(message)
-      } else {
-        Toast.fail(message)
-      }
-    },
-    confirmButtonClicked () {
-      this.operatingResult = {}
-    },
     async addNewTag (tag) {
       if (tag.length <= 5 && tag.length > 0) {
         if (!this.existNewTag(tag)) {
@@ -405,7 +365,7 @@ export default {
             this.initialProjectStatusAndTag()
           }
         } else {
-          Toast('输入的新标签名称重复，不给提交')
+          this.$global.showMessage('输入的新标签名称重复，不给提交')
         }
       }
       this.isClicked = false
@@ -417,16 +377,38 @@ export default {
         }
       }
       return false
+    },
+    turnToTask (taskListIndex) {
+      this.$router.replace({name: 'TaskMangementDetail', query: {'id': this.taskList[taskListIndex].taskWeekId, 'index': taskListIndex, 'flag': '0'}})
+    },
+    async initialScoreProgress () {
+      var result = await this.$api(Global.url.apiGetChildTaskScore + this.taskList[this.nowIndex].taskId, '', 'GET')
+      if (result.data && result.data.code === 200 && result.data.data) {
+        this.setProgressWidth(result.data.data)
+      }
+    },
+    setProgressWidth (data) {
+      this.planAllScore = data.planAllScore
+      this.actualAllScore = data.actualAllScore
+      if (this.planAllScore === 0 && this.actualAllScore === 0) {
+        this.$refs.planAllScore.style.width = '50%'
+        this.$refs.actualAllScore.style.width = '50%'
+      }
+      this.$refs.planAllScore.style.width = 100 * this.planAllScore / (this.planAllScore + this.actualAllScore) + '%'
+      this.$refs.actualAllScore.style.width = 100 * this.actualAllScore / (this.planAllScore + this.actualAllScore) + '%'
     }
   },
   watch: {
-    isParentFlag: function (newValue) {
-      if (newValue === 'true') {
-        this.isParentHours = false
-        this.isParentScore = false
-      }
+    '$route': function () {
+      this.init()
+      this.initialProjectStatusAndTag()
+      this.initialParentProjectList()
     },
-    'task.task.planHours': function () {
+    'taskCommand': {
+      handler (newValue) {
+        this.flag = Boolean(newValue.title) && Boolean(newValue.project) && Boolean(newValue.tags) && parseInt(newValue.planScore) >= 0 && Boolean(newValue.planStatus) && Boolean(newValue.endTime) && parseInt(newValue.planHours) >= 0
+      },
+      deep: true
     }
   }
 }
@@ -462,5 +444,34 @@ export default {
   }
   div.panel-heading.panel-heading-divider > span{
     text-align: right;
+  }
+  div.progress {
+    margin: 5px 0px;
+    border-radius: 15px;
+    line-height: 15px;
+    height: 15px;
+  }
+  div.progress > div {
+    line-height: 15px;
+    height: 15px;
+    font-size: 13px;
+  }
+  div.progressColorRemind {
+    height: 15px;
+    line-height: 15px;
+  }
+  div.progressColorRemind > div {
+    margin: 0px 5px;
+    padding: 0px 5px;
+    border-width: 0px 0px 0px 15px;
+    display: inline-block;
+    height: 15px;
+    line-height: 15px;
+  }
+  div.fact {
+    border: solid #4285f4;
+  }
+  div.plan {
+    border: solid #34a853;
   }
 </style>

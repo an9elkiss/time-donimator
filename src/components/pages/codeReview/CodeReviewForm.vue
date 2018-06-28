@@ -45,7 +45,6 @@
 <script>
 import Global from '@/components/Global'
 import { mapState } from 'vuex'
-import { Toast } from 'vant'
 
 export default {
   name: 'CodeReviewForm',
@@ -113,26 +112,6 @@ export default {
         this.$router.push({name: 'CodeReviewList'})
       }
     },
-    showResult (result) {
-      var title = false
-      var message = ''
-      if (!result || !result.hasOwnProperty('code') || result.code === '') {
-        title = false
-        message = '获取数据失败'
-      } else if (result.code === 200) {
-        title = true
-        message = '操作成功'
-      } else {
-        title = false
-        message = result.message
-      }
-      if (title) {
-        Toast.success(message)
-        this.freshForm()
-      } else {
-        Toast.fail(message)
-      }
-    },
     async submitCodeReviewForm () {
       this.codeReviewCommand.codeReviewTime = this.$refs.inputDateRef.value
       this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewInfoList)
@@ -144,11 +123,14 @@ export default {
         this.codeReview.userLabel = resultEdit.data.data.userLabel
         this.codeReview.codeReviewTime = resultEdit.data.data.codeReviewTime
         this.$store.commit('setCodeReview', this.codeReview)
-        this.showResult(resultEdit.data)
+        this.$global.showResult(resultEdit.data)
         this.$router.push({name: 'CodeReviewDetail', params: {'id': this.$route.query.id}})
       } else {
         var resultCreate = await this.$api(Global.url.apiCodeReview, this.codeReviewCommand, 'POST')
-        this.showResult(resultCreate.data)
+        if (resultCreate.data && resultCreate.data.code === 200) {
+          this.freshForm()
+        }
+        this.$global.showResult(resultCreate.data)
       }
     },
     validateCodeReview () {

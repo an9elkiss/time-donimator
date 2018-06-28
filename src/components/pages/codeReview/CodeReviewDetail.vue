@@ -53,7 +53,6 @@
 import {
   mapState
 } from 'vuex'
-import { Toast } from 'vant'
 import Global from '@/components/Global'
 export default {
   data: function () {
@@ -104,22 +103,20 @@ export default {
     async codeReviewPut () {
       this.prepareCodeReviewCommand()
       var result = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
+      this.$global.showResult(result.data)
       if (result.data && result.data.code === 200) {
-        this.showResult(result.data)
         this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
         this.codeReview.totalScore = result.data.data.totalScore
         this.$store.commit('setCodeReview', this.codeReview)
         this.updateCodeReviewDetailModules(result.data)
         this.isFlagScore = true
         this.isEditable = false
-      } else {
-        Toast.fail('数据更新失败！')
       }
     },
     async codeReviewDelete () {
       var result = await this.$api(Global.url.apiGetCodeReviewDelete + '/' + this.codeReview.id, '', 'DELETE')
+      this.$global.showResult(result.data)
       if (result.data && result.data.code === 200) {
-        Toast.success('删除成功！')
         this.goBack()
       }
     },
@@ -158,25 +155,6 @@ export default {
     updateCodeReviewDetailModules (result) {
       result.data.codeReviewInfos = result.data.codeReviewInfos.replace(/'/g, '"')
       this.codeReviewDetailModules = JSON.parse(result.data.codeReviewInfos)
-    },
-    showResult (result) {
-      var title = false
-      var message = ''
-      if (!result || !result.hasOwnProperty('code') || result.code === '') {
-        title = false
-        message = '获取数据失败'
-      } else if (result.code === 200) {
-        title = true
-        message = '操作成功'
-      } else {
-        title = false
-        message = result.message
-      }
-      if (title) {
-        Toast.success(message)
-      } else {
-        Toast.fail(message)
-      }
     },
     codeReviewEdit () {
       this.$router.push({name: 'CodeReviewForm', query: {'id': this.codeReview.id}})

@@ -4,7 +4,7 @@
       <div class="panel">
         <div class="panel-heading panel-heading-divider cfix"><span class="fLeft">{{task.task.userName}}</span><span class="fRight">{{nowDateString}}</span></div>
         <div class="panel-body">
-          <form action="#" class="form-horizontal group-border-dashed">
+          <form class="form-horizontal group-border-dashed">
             <div class="form-group">
               <label class="col-sm-3 control-label">任务名称</label>
               <div class="col-sm-6">
@@ -122,7 +122,7 @@
             <div class="form-group btn-fixed">
               <div class="center">
                 <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
-                <button class="btn btn-space btn-primary" @click="goBack">返回</button>
+                <a class="btn btn-space btn-primary" @click="goBack">返回</a>
               </div>
             </div>
           </form>
@@ -335,8 +335,6 @@ export default {
               userId: t.personMsg.userId,
               userName: t.personMsg.name
             }
-          } else {
-            this.goBack()
           }
         }
       }

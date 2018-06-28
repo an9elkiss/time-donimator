@@ -57,10 +57,16 @@ export default {
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
           }
         },
+        title: {
+          text: '任务报表',
+          left: 'center',
+          bottom: 1
+        },
         grid: {
           left: '3%',
-          right: '4%',
-          bottom: '3%',
+          right: '14%',
+          bottom: '9%',
+          top: '22%',
           containLabel: true
         },
         legend: {
@@ -68,10 +74,12 @@ export default {
         },
         xAxis: {
           type: 'value',
+          name: '时间/hour',
           splitLine: {show: true}
         },
         yAxis: {
           type: 'category',
+          name: '人员/week',
           splitLine: {show: true},
           min: 0,
           max: 4,
@@ -226,7 +234,6 @@ export default {
       var result = await this.$api(url, '', 'GET')
       if (result != null && result.data && result.data.code === 200) {
         this.personsData = result.data.data
-        console.log(this.personsData)
         this.changeStateSelectButton()
         this.drawLine()
       }
@@ -235,10 +242,13 @@ export default {
       this.selectedList.map(ele => {
         ele.selected = false
       })
-      for (var attr in this.personsData.map) {
-        for (var att in this.selectedList) {
-          if (this.selectedList[att].id + '' === attr) {
-            this.selectedList[att].selected = true
+      // 判断personData是否为空
+      if (this.personsData != null) {
+        for (var attr in this.personsData.map) {
+          for (var att in this.selectedList) {
+            if (this.selectedList[att].id + '' === attr) {
+              this.selectedList[att].selected = true
+            }
           }
         }
       }
@@ -248,35 +258,41 @@ export default {
       let myChart = echarts.init(document.getElementById('container'))
       // 拿到taskResultCommand数据
       var duplicateRemovalProjectName = []
-      for (var i in this.personsData.project) {
-        if (duplicateRemovalProjectName.indexOf(this.personsData.project[i]) === -1) {
-          duplicateRemovalProjectName.push(this.personsData.project[i])
+      if (this.personsData != null) {
+        for (var i in this.personsData.project) {
+          if (duplicateRemovalProjectName.indexOf(this.personsData.project[i]) === -1) {
+            duplicateRemovalProjectName.push(this.personsData.project[i])
+          }
         }
       }
       this.projectName = duplicateRemovalProjectName
       this.tableConfig.legend.data = duplicateRemovalProjectName
       this.tableConfig.yAxis.data.splice(0, this.tableConfig.yAxis.data.length)
-      for (var attr in this.personsData.map) {
-        this.tableConfig.yAxis.data.push(this.personsData.map[attr])
-        this.tableConfig.yAxis.max = this.personsData.map.length
-      }
-
-      this.tableConfig.series.splice(0, this.tableConfig.series.length)
-      for (var projectIndex in this.personsData.echartsCommand) {
-        var sery = {
-          name: this.personsData.echartsCommand[projectIndex].projectName,
-          type: 'bar',
-          stack: '总量',
-          barMaxWidth: 50,
-          label: {
-            normal: {
-              show: true,
-              position: 'insideRight'
-            }
-          },
-          data: this.personsData.echartsCommand[projectIndex].totalHours
+      // 判断personData是否为空
+      if (this.personsData != null) {
+        for (var attr in this.personsData.map) {
+          this.tableConfig.yAxis.data.push(this.personsData.map[attr])
+          this.tableConfig.yAxis.max = this.personsData.map.length
         }
-        this.tableConfig.series.push(sery)
+      }
+      this.tableConfig.series.splice(0, this.tableConfig.series.length)
+      if (this.personsData != null) {
+        for (var projectIndex in this.personsData.echartsCommand) {
+          var sery = {
+            name: this.personsData.echartsCommand[projectIndex].projectName,
+            type: 'bar',
+            stack: '总量',
+            barMaxWidth: 50,
+            label: {
+              normal: {
+                show: true,
+                position: 'insideRight'
+              }
+            },
+            data: this.personsData.echartsCommand[projectIndex].totalHours
+          }
+          this.tableConfig.series.push(sery)
+        }
       }
       // 绘制图表
       myChart.setOption(this.tableConfig, true)

@@ -1,3 +1,5 @@
+import { Toast } from 'vant'
+
 const apiBase = process.env.BASE_API
 const userApiBase = process.env.BASE_API_USER ? process.env.BASE_API_USER : process.env.BASE_API
 
@@ -44,11 +46,37 @@ export const format = (data) => {
   }
 }
 
+export const showResult = (result) => {
+  var title = false
+  var message = ''
+  if (!result || !result.hasOwnProperty('code') || result.code === '') {
+    title = false
+    message = '获取数据失败'
+  } else if (result.code === 200) {
+    title = true
+    message = '操作成功'
+  } else {
+    title = false
+    message = result.message
+  }
+  if (title) {
+    Toast.success(message)
+  } else {
+    Toast.fail(message)
+  }
+}
+
+export const showMessage = (message) => {
+  Toast(message)
+}
+
 export default {
   url,
   event,
   timeEntryType,
   format,
   goNext,
+  showResult,
+  showMessage,
   name: 'Global'
 }

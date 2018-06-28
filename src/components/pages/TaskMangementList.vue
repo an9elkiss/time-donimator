@@ -37,7 +37,7 @@
                       <span class="fLeft">任务{{index_2 + 1}}</span>
                       <div class="btn-group fRight">
                         <button class="btn btn-primary btn-sm" @click="getTaskCopy(task)">延后</button>
-                        <button class="btn btn-primary btn-sm" @click="editTask(task)">编辑</button>
+                        <button class="btn btn-primary btn-sm" @click="editTask(task, index_1, index_2)">编辑</button>
                         <button class="btn btn-primary btn-sm" @click="confirmTask(task, index_2)">删除</button>
                       </div>
                     </h2>
@@ -78,7 +78,7 @@
 <script>
 import { mapState } from 'vuex'
 import Global from '@/components/Global'
-import { Dialog, Toast } from 'vant'
+import { Dialog } from 'vant'
 
 export default {
   data: function () {
@@ -151,10 +151,6 @@ export default {
       num: 0,
       operatingTask: {},
       taskIndex: '',
-      operatingResult: {
-        message: '',
-        code: ''
-      },
       memberIds: []
     }
   },
@@ -250,12 +246,13 @@ export default {
       this.$store.commit('GetPersonMsg', person)
     },
     addTask () {
+      this.$store.commit('setSelectedDate', this.selectedDate)
       this.$router.push({name: 'TaskMangementDetail'})
-      this.$store.commit('setSelectedDate', this.selectedDate)
     },
-    editTask (task) {
-      this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'flag': '0'}})
+    editTask (task, personIndex, taskListIndex) {
       this.$store.commit('setSelectedDate', this.selectedDate)
+      this.$store.commit('setTaskList', this.tabLists[personIndex].taskLists.taskCommands)
+      this.$router.push({name: 'TaskMangementDetail', query: {'id': task.taskWeekId, 'index': taskListIndex, 'flag': '0'}})
     },
     async closeTask (task, i) {
       var t = this
@@ -281,8 +278,8 @@ export default {
     async getTaskCopy (task) {
       var t = this
       var result = await t.$api(Global.url.apiTaskWeekCopy + '?year=' + t.timeFilter.year + '&month=' + t.timeFilter.month + '&week=' + t.timeFilter.week + '&taskWeekId=' + task.taskWeekId, '', 'GET')
-      if (result.data && result.data.code === 200) {
-        t.operatingResult = result.data
+      if (result.data) {
+        this.$global.showResult(result.data)
       }
     },
     confirmTask (task, index) {
@@ -292,33 +289,11 @@ export default {
         message: '确定要删除此任务' + (index + 1) + '吗？'
       }).then(async () => {
         var operatingResult = await t.closeTask(task, index)
-        this.showResult(operatingResult)
+        this.$global.showResult(operatingResult)
         if (operatingResult.code === 200) {
           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
         }
       })
-    },
-    showResult (result) {
-      var title = false
-      var message = ''
-      if (!result || !result.hasOwnProperty('code') || result.code === '') {
-        title = false
-        message = '获取数据失败'
-      } else if (result.code === 200) {
-        title = true
-        message = '操作成功'
-      } else {
-        title = false
-        message = result.message
-      }
-      if (title) {
-        Toast.success(message)
-      } else {
-        Toast.fail(message)
-      }
-    },
-    confirmButtonClicked () {
-      this.operatingResult = {}
     },
     getValueFromId (objectArray, id) {
       for (var index in objectArray) {

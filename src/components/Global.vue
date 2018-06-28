@@ -32,7 +32,8 @@ const url = {
   apiGetWeek: managerApiBase + '/api-super-manager/1.0.0/common/year/month/week',
   apiPutTag: managerApiBase + '/api-super-manager/1.0.0/savetag',
   apiCodeReview: managerApiBase + '/api-super-manager/1.0.0/codeReview',
-  apiUpdateCodeReview: managerApiBase + '/api-super-manager/1.0.0/codeReview/codeReviewInfo/update'
+  apiUpdateCodeReview: managerApiBase + '/api-super-manager/1.0.0/codeReview/codeReviewInfo/update',
+  apiGetChildTaskScore: managerApiBase + '/api-super-manager/1.0.0/task/parent/showTaskScore/'
 }
 
 const event = {

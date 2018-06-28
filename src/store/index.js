@@ -17,7 +17,8 @@ export default new Vuex.Store({
     selectedWeek: null,
     codeReviewPerson: {},
     codeReview: {},
-    codeReviewDetail: {}
+    codeReviewDetail: {},
+    taskList: []
   },
   mutations: {
     login (state, data) {
@@ -53,6 +54,9 @@ export default new Vuex.Store({
     },
     setCodeReviewDetail (state, codeReviewDetail) {
       state.codeReviewDetail = codeReviewDetail
+    },
+    setTaskList (state, taskList) {
+      state.taskList = taskList
     }
   },
 
@@ -77,6 +81,9 @@ export default new Vuex.Store({
     },
     getCodeReview (state) {
       return state.codeReview
+    },
+    getTaskList (state) {
+      return state.taskList
     }
   },
 

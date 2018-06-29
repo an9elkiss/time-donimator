@@ -6,7 +6,7 @@
         <div class="panel-body text-left">
           <div class="col-xs-6">
             <div class="be-radio inline col-md-4">
-              <input v-model="selectedType" value="true" type="radio" name="yearMonthRadio" id="yearRadio"/>
+              <input v-model="selectedType" value="true" type="radio" @click="chooseYear" name="yearMonthRadio" id="yearRadio"/>
               <label for="yearRadio">年</label>
             </div>
             <div class="inline col-md-8">
@@ -17,7 +17,7 @@
           </div>
           <div class="col-xs-6">
             <div class="be-radio inline col-md-4">
-              <input v-model="selectedType" value="false" type="radio" name="yearMonthRadio" id="monthRadio"/>
+              <input v-model="selectedType" value="false" type="radio" @click="chooseMonth" name="yearMonthRadio" id="monthRadio"/>
               <label for="monthRadio">月</label>
             </div>
             <div class="inline col-md-8">
@@ -82,11 +82,13 @@ export default {
         },
         xAxis: {
           type: 'category',
+          name: '',
           boundaryGap: true,
           data: []
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          name: '贡献值'
         },
         series: []
       },
@@ -96,10 +98,12 @@ export default {
       totalChartOption: {
         xAxis: {
           type: 'category',
+          name: '人员',
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          name: '贡献值'
         },
         series: [{
           data: [820, 932, 901, 934, 1290, 1330, 1320],
@@ -167,12 +171,14 @@ export default {
           for (var monthIndex = 1; monthIndex <= monthCount; monthIndex++) {
             this.detailChartOption.xAxis.data.push(monthIndex + '月')
           }
+          this.detailChartOption.xAxis.name = '月'
         } else {
           // 选中月份
           var weekCount = result.data.data.abscissa.year.length
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
             this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
           }
+          this.detailChartOption.xAxis.name = '周'
         }
         for (var person in this.persons) {
           this.persons[person].sery = {
@@ -222,6 +228,16 @@ export default {
       this.detailChartSetOption()
       // this.updateTotalChartOption()
       // this.totalChartSetOption()
+    },
+    chooseYear () {
+      this.detailChartOption.xAxis.name = '月'
+      this.detailChartSetOption()
+      console.log(this.detailChartOption.xAxis.name)
+    },
+    chooseMonth () {
+      this.detailChartOption.xAxis.name = '周'
+      this.detailChartSetOption()
+      console.log(this.detailChartOption.xAxis.name)
     }
   }
 }

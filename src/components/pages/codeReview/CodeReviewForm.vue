@@ -33,7 +33,7 @@
             </div>
           </div>
         </div>
-        <div class="btn-fixed center">
+        <div class="box-fixed center">
           <button class="btn btn-space btn-primary btn-add" @click="submitCodeReviewForm">提交</button>
           <button class="btn btn-space btn-primary btn-add" @click="cancelCodeReviewForm">返回</button>
         </div>
@@ -115,9 +115,9 @@ export default {
     async submitCodeReviewForm () {
       this.codeReviewCommand.codeReviewTime = this.$refs.inputDateRef.value
       this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewInfoList)
-      if (!this.validateCodeReview()) {
-        return
-      }
+      // if (!this.validateCodeReview()) {
+      //   return
+      // }
       if (this.$route.query.id) {
         var resultEdit = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
         this.codeReview.userLabel = resultEdit.data.data.userLabel
@@ -153,7 +153,8 @@ export default {
       }
     },
     cancelCodeReviewForm () {
-      this.$router.push({name: 'CodeReviewList'})
+      this.$router.go(-1)
+      // this.$router.push({name: 'CodeReviewList'})
     }
   }
 }

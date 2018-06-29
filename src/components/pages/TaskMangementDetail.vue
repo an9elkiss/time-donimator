@@ -117,7 +117,7 @@
                 <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="taskCommand.actualHours" @keydown.enter.prevent>
               </div>
             </div>
-            <div class="form-group btn-fixed">
+            <div class="form-group box-fixed">
               <div class="center">
                 <a class="btn btn-space btn-primary" v-if="nowIndex-1 >= 0" @click="turnToTask(nowIndex-1)">上一个</a>
                 <button :type="flag?'button':'submit'" class="btn btn-space btn-primary" @click="submitTask">提交</button>

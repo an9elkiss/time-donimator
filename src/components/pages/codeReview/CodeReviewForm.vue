@@ -115,9 +115,9 @@ export default {
     async submitCodeReviewForm () {
       this.codeReviewCommand.codeReviewTime = this.$refs.inputDateRef.value
       this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewInfoList)
-      if (!this.validateCodeReview()) {
-        return
-      }
+      // if (!this.validateCodeReview()) {
+      //   return
+      // }
       if (this.$route.query.id) {
         var resultEdit = await this.$api(Global.url.apiUpdateCodeReview, this.codeReviewCommand, 'POST')
         this.codeReview.userLabel = resultEdit.data.data.userLabel

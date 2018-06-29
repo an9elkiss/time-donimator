@@ -21,13 +21,13 @@
                   <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
                   <ul class="sub-menu">
                     <sub-menu id="sm_3" path="/task-mangement-list" name="一周任务" />
-                    <sub-menu id="sm_4" path="/code-review-list" name="Code Review" />
+                    <sub-menu id="sm_4" path="/code-review-list" name="代码审核" />
                   </ul>
                 </li>
               <li class="parent">
                 <a href="#"><i class="icon mdi mdi-chart"></i><span>报表管理</span></a>
                 <ul class="sub-menu">
-                  <sub-menu id="sm_5" path="/show-converted-work-hour" name="任务图表" />
+                  <sub-menu id="sm_5" path="/show-converted-work-hour" name="一周计划" />
                 </ul>
               </li>
             </ul>

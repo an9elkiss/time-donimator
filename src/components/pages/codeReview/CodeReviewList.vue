@@ -26,7 +26,7 @@
           你还没有 Code Review，赶快新建一个吧
         </div>
         <div class="box-fixed center">
-          <button class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</button>
+          <a class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</a>
         </div>
       </div>
     </div>

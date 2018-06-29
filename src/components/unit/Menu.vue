@@ -28,7 +28,7 @@
                 <a href="#"><i class="icon mdi mdi-chart"></i><span>报表管理</span></a>
                 <ul class="sub-menu">
                   <sub-menu id="sm_5" path="/show-converted-work-hour" name="一周计划" />
-                  <sub-menu id="sm_5" path="/show-converted-work-hour" name="贡献值" />
+                  <sub-menu id="sm_6" path="/score-charts" name="贡献值图表" />
                 </ul>
               </li>
             </ul>

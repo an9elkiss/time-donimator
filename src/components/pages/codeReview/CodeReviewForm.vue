@@ -153,7 +153,8 @@ export default {
       }
     },
     cancelCodeReviewForm () {
-      this.$router.push({name: 'CodeReviewList'})
+      this.$router.go(-1)
+      // this.$router.push({name: 'CodeReviewList'})
     }
   }
 }

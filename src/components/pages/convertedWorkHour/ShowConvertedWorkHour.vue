@@ -2,7 +2,8 @@
   <div class="be-content">
     <div class="main-content container-fluid">
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">时间筛选</div>
+        <div class="panel-heading panel-heading-divider">筛选条件</div>
+        <span class="time-member-filter">时间筛选</span>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
             <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
@@ -20,18 +21,18 @@
             </select>
           </div>
         </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">人员筛选</div>
+        <!--<div class="panel-heading panel-heading-divider"></div>-->
+        <span class="time-member-filter">人员筛选</span>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of selectedList" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
-          <!--<div class="personInput" v-for="person of selectedList" :key="person.id" >-->
-            <!--<input type="checkbox" v-model="person.selected" @change="checkboxClicked"/>{{ person.name }}-->
-          <!--</div>-->
         </div>
       </div>
-      <div id="container" class="container" style="height: 500px;"></div>
+      <div class="panel panel-default">
+          <div class="panel-heading panel-heading-divider">任务报表</div>
+        <div class="panel-body flexBox">
+          <div id="container" class="container" style="height: 500px; width: 100%"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -64,7 +65,7 @@ export default {
         },
         grid: {
           left: '3%',
-          right: '14%',
+          right: '18%',
           bottom: '9%',
           top: '22%',
           containLabel: true
@@ -74,7 +75,7 @@ export default {
         },
         xAxis: {
           type: 'value',
-          name: '时间/hour',
+          name: '时间/H',
           splitLine: {show: true}
         },
         yAxis: {
@@ -225,9 +226,6 @@ export default {
         })
       }
     },
-    checkboxClicked () {
-      this.getPersonsData()
-    },
     async getPersonsData () {
       var memberIds = this.selectedPersons.map(ele => { return ele.id })
       var url = Global.url.apiShowConvertedWorkHours + '?year=' + this.timeFilter.year + '&month=' + this.timeFilter.month + '&week=' + this.timeFilter.week + '&memberId=' + memberIds
@@ -315,7 +313,19 @@ export default {
 </script>
 
 <style scoped>
-  .container{
-
+  .time-member-filter{
+    font-weight: 400;
+    font-size: 13px;
+    display: inline-block;
+    max-width: 100%;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  .container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 </style>

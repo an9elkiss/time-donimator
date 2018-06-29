@@ -12,7 +12,7 @@
             <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>*表示重点整治的问题，请加强重视，不要重犯；</span></p>
           </div>
         </div>
-        <div v-for="modular of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
+        <div v-for="(modular, index) of codeReviewDetailModules" :key="modular.id" class="panel panel-default code-review-block">
           <div class="panel-heading panel-heading-divider">{{ modular.modularType }}</div>
           <div class="panel-body">
             <h2>内容</h2>
@@ -26,7 +26,7 @@
               <div class="form-group xs-mt-10">
                 <label class="col-sm-1 control-label bold">得分</label>
                 <div class="col-sm-11">
-                  <input v-model="modular.modularFraction" data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm">
+                  <input v-model="modular.modularFraction" @input="scoreInputValidator(index)" data-parsley-type="number" placeholder="请输入得分限数字" class="form-control input-sm">
                 </div>
               </div>
               <div class="form-group">
@@ -135,14 +135,11 @@ export default {
     //   }
     //   return result
     // },
-    // scoreInputValidator (index) {
-    //   var value = this.codeReviewDetailModules[index].modularFraction
-    //   value = value.replace(/[^\d]/g, '')
-    //   if (value.length > 2) {
-    //     value = value.substr(0, 2)
-    //   }
-    //   this.codeReviewDetailModules[index].modularFraction = value
-    // },
+    scoreInputValidator (index) {
+      var value = this.codeReviewDetailModules[index].modularFraction
+      value = value.replace(/[^\d]/g, '')
+      this.codeReviewDetailModules[index].modularFraction = value
+    },
     prepareCodeReviewCommand () {
       this.codeReviewCommand.id = this.codeReview.id
       this.codeReviewCommand.userId = this.codeReviewPerson.userId

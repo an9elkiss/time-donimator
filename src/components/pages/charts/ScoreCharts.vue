@@ -3,10 +3,10 @@
     <div class="main-content container-fluid">
       <div class="panel panel-default">
         <div class="panel-heading panel-heading-divider">筛选条件</div>
-        <span class="time-member-filter">时间筛选</span>
+        <h2 class="time-member-filter">时间筛选</h2>
         <div class="panel-body text-left">
           <div class="col-xs-6">
-            <div class="be-radio inline col-md-4">
+            <div class="be-radio inline col-md-12 text-left">
               <input v-model="selectedType" value="true" type="radio" name="yearMonthRadio" id="yearRadio"/>
               <label for="yearRadio">年</label>
             </div>
@@ -17,7 +17,7 @@
             </div>
           </div>
           <div class="col-xs-6">
-            <div class="be-radio inline col-md-4">
+            <div class="be-radio inline col-md-12 text-left">
               <input v-model="selectedType" value="false" type="radio" name="yearMonthRadio" id="monthRadio"/>
               <label for="monthRadio">月</label>
             </div>
@@ -28,17 +28,16 @@
             </div>
           </div>
         </div>
-        <span class="time-member-filter">人员筛选</span>
+        <h2 class="time-member-filter">人员筛选</h2>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of persons" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider"></div>
+        <div class="panel-heading panel-heading-divider">贡献值统计</div>
         <div class="panel-body">
           <div id="detailChart" class="charts"></div>
         </div>
-        <div class="panel-heading panel-heading-divider"></div>
         <div class="panel-body">
           <div id="totalChart" class="charts"></div>
         </div>
@@ -59,6 +58,7 @@ export default {
   },
   data: function () {
     return {
+      showEchartsTotalInfo: '',
       year: 0,
       month: 0,
       selectedType: 'true',
@@ -68,7 +68,7 @@ export default {
         title: {
           text: '',
           left: 'center',
-          bottom: 'bottom'
+          bottom: 1
         },
         tooltip: {
           trigger: 'axis'
@@ -80,7 +80,7 @@ export default {
         grid: {
           left: '0',
           right: '50px',
-          bottom: '30px',
+          bottom: '9%',
           containLabel: true
         },
         xAxis: {
@@ -108,7 +108,7 @@ export default {
         grid: {
           left: '0',
           right: '50px',
-          bottom: '30px',
+          bottom: '9%',
           containLabel: true
         },
         xAxis: {
@@ -305,13 +305,15 @@ export default {
     padding: 0px;
   }
   .time-member-filter{
-    font-weight: 400;
-    font-size: 13px;
-    display: inline-block;
-    max-width: 100%;
-    margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 8px;
+    margin: 0;
+    padding-top: 8px;
+    padding-left: 20px;
+    padding-bottom: 3px;
+    display: block;
+    line-height: 1.1;
+    color: inherit;
+    font-weight: bold;
+    font-size: 14px;
   }
   .col-xs-6{
     padding-left: 0;

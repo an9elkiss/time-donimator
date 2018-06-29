@@ -3,7 +3,7 @@
     <div class="main-content container-fluid">
       <div class="panel panel-default">
         <div class="panel-heading panel-heading-divider">筛选条件</div>
-        <span class="time-member-filter">时间筛选</span>
+        <h2 class="time-member-filter">时间筛选</h2>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
             <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
@@ -22,7 +22,7 @@
           </div>
         </div>
         <!--<div class="panel-heading panel-heading-divider"></div>-->
-        <span class="time-member-filter">人员筛选</span>
+        <h2 class="time-member-filter">人员筛选</h2>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of selectedList" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
         </div>
@@ -314,13 +314,15 @@ export default {
 
 <style scoped>
   .time-member-filter{
-    font-weight: 400;
-    font-size: 13px;
-    display: inline-block;
-    max-width: 100%;
-    margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 8px;
+    margin: 0;
+    padding-top: 8px;
+    padding-left: 20px;
+    padding-bottom: 3px;
+    display: block;
+    line-height: 1.1;
+    color: inherit;
+    font-weight: bold;
+    font-size: 14px;
   }
   .container {
     margin-right: auto;

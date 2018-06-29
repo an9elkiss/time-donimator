@@ -30,6 +30,7 @@ export default new Router({
       path: '/',
       name: 'App',
       component: App,
+      redirect: '/task-mangement-list',
       children: [
         {
           path: 'time-entry',

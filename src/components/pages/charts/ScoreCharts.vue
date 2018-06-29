@@ -12,7 +12,8 @@
             </div>
             <div class="inline col-md-8">
               <select class="form-control input-sm" v-model="year" @change="yearChanged">
-                <option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>
+                <!--<option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>-->
+                <option value="2018">2018</option>
               </select>
             </div>
           </div>
@@ -22,7 +23,7 @@
               <label for="monthRadio">月</label>
             </div>
             <div class="inline col-md-8">
-              <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged">
+              <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged" disabled>
                 <option v-for="n in 12" :key="n" :value="n">{{ n }} 月</option>
               </select>
             </div>
@@ -137,7 +138,6 @@ export default {
   },
   async mounted () {
     await this.initialYearAndMonth()
-    this.$refs.monthSelect.setAttribute('disabled', 'disabled')
     await this.initialPersons()
     await this.initialTotalChartOption()
     this.totalChartSetOption()

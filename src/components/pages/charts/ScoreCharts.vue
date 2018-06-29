@@ -286,7 +286,7 @@ export default {
     buttonClicked (index) {
       this.persons[index].selected = !this.persons[index].selected
       if (this.selectedPersons.length === 0) {
-        this.$global.showMessage('请留下至少一个人的数据')
+        this.$global.showMessage('请至少留下一个人的数据')
         this.persons[index].selected = true
         return
       }

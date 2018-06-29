@@ -306,6 +306,11 @@ export default {
     },
     buttonClicked (index) {
       this.selectedList[index].selected = !this.selectedList[index].selected
+      if (this.selectedPersons.length === 0) {
+        this.$global.showMessage('请至少留下一个人的数据')
+        this.selectedList[index].selected = true
+        return
+      }
       this.getPersonsData()
     }
   }

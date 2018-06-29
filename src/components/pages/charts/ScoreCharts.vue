@@ -5,24 +5,24 @@
         <div class="panel-heading panel-heading-divider">筛选条件</div>
         <h2 class="time-member-filter">时间筛选</h2>
         <div class="panel-body text-left">
-          <div class="col-xs-6">
-            <div class="be-radio inline col-md-12 text-left">
+          <div class="col-xs-6 col-sm-3 col-lg-2">
+            <div class="be-radio inline">
               <input v-model="selectedType" value="true" type="radio" name="yearMonthRadio" id="yearRadio"/>
               <label for="yearRadio">年</label>
             </div>
-            <div class="inline col-md-8">
+            <div class="inline">
               <select class="form-control input-sm" v-model="year" @change="yearChanged">
                 <!--<option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>-->
                 <option value="2018">2018</option>
               </select>
             </div>
           </div>
-          <div class="col-xs-6">
-            <div class="be-radio inline col-md-12 text-left">
+          <div class="col-xs-6 col-sm-3 col-lg-2">
+            <div class="be-radio inline">
               <input v-model="selectedType" value="false" type="radio" name="yearMonthRadio" id="monthRadio"/>
               <label for="monthRadio">月</label>
             </div>
-            <div class="inline col-md-8">
+            <div class="inline">
               <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged" disabled>
                 <option v-for="n in 12" :key="n" :value="n">{{ n }} 月</option>
               </select>

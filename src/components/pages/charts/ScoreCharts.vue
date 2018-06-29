@@ -66,7 +66,9 @@ export default {
       persons: [],
       detailChartOption: {
         title: {
-          text: ''
+          text: '',
+          left: 'center',
+          bottom: 'bottom'
         },
         tooltip: {
           trigger: 'axis'
@@ -77,8 +79,8 @@ export default {
         },
         grid: {
           left: '0',
-          right: '5%',
-          bottom: '0',
+          right: '50px',
+          bottom: '30px',
           containLabel: true
         },
         xAxis: {
@@ -95,8 +97,19 @@ export default {
         series: []
       },
       totalChartOption: {
+        title: {
+          text: '',
+          left: 'center',
+          bottom: 'bottom'
+        },
         tooltip: {
           trigger: 'axis'
+        },
+        grid: {
+          left: '0',
+          right: '50px',
+          bottom: '30px',
+          containLabel: true
         },
         xAxis: {
           type: 'category',
@@ -139,9 +152,9 @@ export default {
     }
   },
   watch: {
-    selectedType: function () {
+    selectedType: async function () {
       this.monthEnabled = !this.monthEnabled
-      this.initialDetailChartOption()
+      await this.initialDetailChartOption()
       this.detailChartSetOption()
     },
     monthEnabled: function (newValue) {
@@ -213,6 +226,7 @@ export default {
           for (var monthIndex = 1; monthIndex <= monthCount; monthIndex++) {
             this.detailChartOption.xAxis.data.push(monthIndex + '月')
           }
+          this.detailChartOption.title.text = this.year + '年每月贡献统计'
           this.detailChartOption.xAxis.name = '月'
         } else {
           // 选中月份
@@ -220,6 +234,7 @@ export default {
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
             this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
           }
+          this.detailChartOption.title.text = this.year + '年' + this.month + '月每周贡献统计'
           this.detailChartOption.xAxis.name = '周'
         }
         for (var person in this.persons) {
@@ -233,6 +248,7 @@ export default {
       }
     },
     updateTotalChartOption () {
+      this.totalChartOption.title.text = this.year + '年贡献总计'
       this.totalChartOption.xAxis.data = this.selectedPersons.map(person => {
         return person.name
       })
@@ -276,6 +292,11 @@ export default {
     },
     buttonClicked (index) {
       this.persons[index].selected = !this.persons[index].selected
+      if (this.selectedPersons.length === 0) {
+        this.$global.showMessage('请留下至少一个人的数据')
+        this.persons[index].selected = true
+        return
+      }
       this.updateDetailChartOption()
       this.detailChartSetOption()
     }

@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="panel panel-default">
-          <div class="panel-heading panel-heading-divider">任务报表</div>
+          <div class="panel-heading panel-heading-divider">一周计划统计</div>
         <div class="panel-body flexBox">
           <div id="container" class="container" style="height: 500px; width: 100%"></div>
         </div>

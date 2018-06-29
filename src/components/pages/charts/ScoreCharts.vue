@@ -3,7 +3,7 @@
     <div class="main-content container-fluid">
       <div class="panel panel-default">
         <div class="panel-heading panel-heading-divider">筛选条件</div>
-        <h2 class="time-member-filter">时间筛选</h2>
+        <h2 class="time-member-filter">类型筛选</h2>
         <div class="panel-body text-left">
           <div class="col-xs-6">
             <div class="be-radio inline col-md-12 text-left">
@@ -219,7 +219,7 @@ export default {
           for (var monthIndex = 1; monthIndex <= monthCount; monthIndex++) {
             this.detailChartOption.xAxis.data.push(monthIndex + '月')
           }
-          this.detailChartOption.title.text = this.year + '年每月贡献统计'
+          this.detailChartOption.title.text = this.year + '年每月贡献值统计'
           this.detailChartOption.xAxis.name = '月'
         } else {
           // 选中月份
@@ -227,7 +227,7 @@ export default {
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
             this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
           }
-          this.detailChartOption.title.text = this.year + '年' + this.month + '月每周贡献统计'
+          this.detailChartOption.title.text = this.year + '年' + this.month + '月每周贡献值统计'
           this.detailChartOption.xAxis.name = '周'
         }
         for (var person in this.persons) {
@@ -241,7 +241,7 @@ export default {
       }
     },
     updateTotalChartOption () {
-      this.totalChartOption.title.text = this.year + '年贡献总计'
+      this.totalChartOption.title.text = this.year + '年贡献值总计统计'
       this.totalChartOption.xAxis.data = this.selectedPersons.map(person => {
         return person.name
       })

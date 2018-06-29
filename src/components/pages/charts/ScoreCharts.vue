@@ -2,7 +2,8 @@
   <div class="be-content">
     <div class="main-content container-fluid">
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">类型选择</div>
+        <div class="panel-heading panel-heading-divider">筛选条件</div>
+        <span class="time-member-filter">时间筛选</span>
         <div class="panel-body text-left">
           <div class="col-xs-6">
             <div class="be-radio inline col-md-4">
@@ -27,19 +28,17 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">人员筛选</div>
+        <span class="time-member-filter">人员筛选</span>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of persons" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
         </div>
       </div>
       <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider"></div>
         <div class="panel-body">
           <div id="detailChart" class="charts"></div>
         </div>
-      </div>
-      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider"></div>
         <div class="panel-body">
           <div id="totalChart" class="charts"></div>
         </div>
@@ -151,6 +150,13 @@ export default {
       } else {
         this.$refs.monthSelect.setAttribute('disabled', 'disabled')
       }
+    },
+    'persons': {
+      handler: function (newValue, oldValue) {
+        console.log(newValue.length + '新数组')
+        console.log(oldValue.length + '旧数组')
+      },
+      deep: true
     }
   },
   methods: {
@@ -278,10 +284,22 @@ export default {
 </script>
 
 <style scoped>
-.charts {
-  height: 500px;
-}
-div.col-md-8.inline{
-  padding: 0px;
-}
+  .charts {
+    height: 500px;
+  }
+  div.col-md-8.inline{
+    padding: 0px;
+  }
+  .time-member-filter{
+    font-weight: 400;
+    font-size: 13px;
+    display: inline-block;
+    max-width: 100%;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  .col-xs-6{
+    padding-left: 0;
+  }
 </style>

@@ -2,7 +2,8 @@
   <div class="be-content">
     <div class="main-content container-fluid">
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">时间筛选</div>
+        <div class="panel-heading panel-heading-divider">筛选条件</div>
+        <span class="time-member-filter">时间筛选</span>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
             <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
@@ -20,15 +21,18 @@
             </select>
           </div>
         </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">人员筛选</div>
+        <!--<div class="panel-heading panel-heading-divider"></div>-->
+        <span class="time-member-filter">人员筛选</span>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of selectedList" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
         </div>
       </div>
-      <div id="container" class="container" style="height: 500px; width: 100%"></div>
+      <div class="panel panel-default">
+          <div class="panel-heading panel-heading-divider">任务报表</div>
+        <div class="panel-body flexBox">
+          <div id="container" class="container" style="height: 500px; width: 100%"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -309,7 +313,19 @@ export default {
 </script>
 
 <style scoped>
-  .container{
-
+  .time-member-filter{
+    font-weight: 400;
+    font-size: 13px;
+    display: inline-block;
+    max-width: 100%;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  .container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 </style>

@@ -26,12 +26,9 @@
         <div class="panel-heading panel-heading-divider">人员筛选</div>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of selectedList" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
-          <!--<div class="personInput" v-for="person of selectedList" :key="person.id" >-->
-            <!--<input type="checkbox" v-model="person.selected" @change="checkboxClicked"/>{{ person.name }}-->
-          <!--</div>-->
         </div>
       </div>
-      <div id="container" class="container" style="height: 500px;"></div>
+      <div id="container" class="container" style="height: 500px; width: 100%"></div>
     </div>
   </div>
 </template>
@@ -64,7 +61,7 @@ export default {
         },
         grid: {
           left: '3%',
-          right: '14%',
+          right: '18%',
           bottom: '9%',
           top: '22%',
           containLabel: true
@@ -74,7 +71,7 @@ export default {
         },
         xAxis: {
           type: 'value',
-          name: '时间/hour',
+          name: '时间/H',
           splitLine: {show: true}
         },
         yAxis: {
@@ -224,9 +221,6 @@ export default {
           }
         })
       }
-    },
-    checkboxClicked () {
-      this.getPersonsData()
     },
     async getPersonsData () {
       var memberIds = this.selectedPersons.map(ele => { return ele.id })

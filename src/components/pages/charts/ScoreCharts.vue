@@ -6,22 +6,22 @@
         <div class="panel-body text-left">
           <div class="col-xs-6">
             <div class="be-radio inline col-md-4">
-              <input v-model="selectedType" value="true" type="radio" @click="chooseYear" name="yearMonthRadio" id="yearRadio"/>
+              <input v-model="selectedType" value="true" type="radio" name="yearMonthRadio" id="yearRadio"/>
               <label for="yearRadio">年</label>
             </div>
             <div class="inline col-md-8">
-              <select class="form-control input-sm" v-model="year">
+              <select class="form-control input-sm" v-model="year" @change="yearChanged">
                 <option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>
               </select>
             </div>
           </div>
           <div class="col-xs-6">
             <div class="be-radio inline col-md-4">
-              <input v-model="selectedType" value="false" type="radio" @click="chooseMonth" name="yearMonthRadio" id="monthRadio"/>
+              <input v-model="selectedType" value="false" type="radio" name="yearMonthRadio" id="monthRadio"/>
               <label for="monthRadio">月</label>
             </div>
             <div class="inline col-md-8">
-              <select class="form-control input-sm" v-model="month">
+              <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged">
                 <option v-for="n in 12" :key="n" :value="n">{{ n }} 月</option>
               </select>
             </div>
@@ -63,6 +63,7 @@ export default {
       year: 0,
       month: 0,
       selectedType: 'true',
+      monthEnabled: false,
       persons: [],
       detailChartOption: {
         title: {
@@ -72,6 +73,7 @@ export default {
           trigger: 'axis'
         },
         legend: {
+          selectedMode: false,
           data: []
         },
         grid: {
@@ -84,6 +86,7 @@ export default {
           type: 'category',
           name: '',
           boundaryGap: true,
+          splitLine: {show: true},
           data: []
         },
         yAxis: {
@@ -92,28 +95,37 @@ export default {
         },
         series: []
       },
-      detailChartOptionLegend: [],
-      detailChartOptionSeries: [],
-      totalChartOptionXAxis: [],
       totalChartOption: {
+        tooltip: {
+          trigger: 'axis'
+        },
         xAxis: {
           type: 'category',
           name: '人员',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          splitLine: {show: true},
+          data: []
         },
         yAxis: {
           type: 'value',
           name: '贡献值'
         },
         series: [{
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          type: 'line'
+          data: [],
+          type: 'line',
+          color: '#2572f2',
+          label: {
+            normal: {
+              show: true,
+              position: 'top'
+            }
+          }
         }]
       }
     }
   },
   async mounted () {
     await this.initialYearAndMonth()
+    this.$refs.monthSelect.setAttribute('disabled', 'disabled')
     await this.initialPersons()
     await this.initialTotalChartOption()
     this.totalChartSetOption()
@@ -125,6 +137,20 @@ export default {
       return this.persons.filter(ele => {
         return ele.selected
       })
+    }
+  },
+  watch: {
+    selectedType: function () {
+      this.monthEnabled = !this.monthEnabled
+      this.initialDetailChartOption()
+      this.detailChartSetOption()
+    },
+    monthEnabled: function (newValue) {
+      if (newValue) {
+        this.$refs.monthSelect.removeAttribute('disabled')
+      } else {
+        this.$refs.monthSelect.setAttribute('disabled', 'disabled')
+      }
     }
   },
   methods: {
@@ -148,7 +174,19 @@ export default {
       }
     },
     async initialTotalChartOption () {
-
+      var queryString = '?year=' + this.year
+      queryString = queryString + '&userIds='
+      var selectedPersonsList = this.selectedPersons.map(ele => {
+        return ele.id
+      })
+      queryString = queryString + (selectedPersonsList.toString())
+      var result = await this.$api(Global.url.apiGetTotalScoreData + queryString, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        for (var person in this.persons) {
+          this.persons[person].totalScore = result.data.data.usersActualScore[this.persons[person].id]
+        }
+        this.updateTotalChartOption()
+      }
     },
     async initialDetailChartOption () {
       var queryString = '?year=' + this.year
@@ -160,9 +198,7 @@ export default {
         return ele.id
       })
       queryString = queryString + (selectedPersonsList.toString())
-      console.log(queryString)
       var result = await this.$api(Global.url.apiGetScoreData + queryString, '', 'GET')
-      console.log(result)
       this.detailChartOption.xAxis.data = []
       if (result.data && result.data.code === 200) {
         if (this.selectedType === 'true') {
@@ -174,7 +210,7 @@ export default {
           this.detailChartOption.xAxis.name = '月'
         } else {
           // 选中月份
-          var weekCount = result.data.data.abscissa.year.length
+          var weekCount = result.data.data.abscissa.month.length
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
             this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
           }
@@ -191,11 +227,11 @@ export default {
       }
     },
     updateTotalChartOption () {
-      this.totalChartOption.legend.data = this.selectedPersons.map(person => {
+      this.totalChartOption.xAxis.data = this.selectedPersons.map(person => {
         return person.name
       })
-      this.totalChartOption.series = this.selectedPersons.map(person => {
-        return person.sery
+      this.totalChartOption.series[0].data = this.selectedPersons.map(person => {
+        return person.totalScore
       })
     },
     updateDetailChartOption () {
@@ -205,6 +241,16 @@ export default {
       this.detailChartOption.series = this.selectedPersons.map(person => {
         return person.sery
       })
+    },
+    async yearChanged () {
+      await this.initialTotalChartOption()
+      await this.initialDetailChartOption()
+      this.totalChartSetOption()
+      this.detailChartSetOption()
+    },
+    async monthChanged () {
+      await this.initialDetailChartOption()
+      this.detailChartSetOption()
     },
     getNameFromPersonId (id) {
       for (var index in this.persons) {
@@ -226,18 +272,6 @@ export default {
       this.persons[index].selected = !this.persons[index].selected
       this.updateDetailChartOption()
       this.detailChartSetOption()
-      // this.updateTotalChartOption()
-      // this.totalChartSetOption()
-    },
-    chooseYear () {
-      this.detailChartOption.xAxis.name = '月'
-      this.detailChartSetOption()
-      console.log(this.detailChartOption.xAxis.name)
-    },
-    chooseMonth () {
-      this.detailChartOption.xAxis.name = '周'
-      this.detailChartSetOption()
-      console.log(this.detailChartOption.xAxis.name)
     }
   }
 }
@@ -246,5 +280,8 @@ export default {
 <style scoped>
 .charts {
   height: 500px;
+}
+div.col-md-8.inline{
+  padding: 0px;
 }
 </style>

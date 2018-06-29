@@ -34,8 +34,8 @@
           </div>
         </div>
         <div class="box-fixed center">
-          <button class="btn btn-space btn-primary btn-add" @click="submitCodeReviewForm">提交</button>
-          <button class="btn btn-space btn-primary btn-add" @click="cancelCodeReviewForm">返回</button>
+          <a class="btn btn-space btn-primary btn-add" @click="submitCodeReviewForm">提交</a>
+          <a class="btn btn-space btn-primary btn-add" @click="cancelCodeReviewForm">返回</a>
         </div>
       </form>
     </div>
@@ -153,7 +153,8 @@ export default {
       }
     },
     cancelCodeReviewForm () {
-      this.$router.push({name: 'CodeReviewList'})
+      this.$router.go(-1)
+      // this.$router.push({name: 'CodeReviewList'})
     }
   }
 }

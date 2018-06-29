@@ -9,8 +9,9 @@ import TaskMangementDetail from '@/components/pages/TaskMangementDetail'
 import CodeReviewDetail from '@/components/pages/codeReview/CodeReviewDetail'
 import CodeReviewForm from '@/components/pages/codeReview/CodeReviewForm'
 import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
-import ShowConvertedWorkHour from '@/components/pages/convertedWorkHour/ShowConvertedWorkHour'
+import ShowConvertedWorkHour from '@/components/pages/charts/ShowConvertedWorkHour'
 import App from '@/APP'
+import ScoreCharts from '@/components/pages/charts/ScoreCharts'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -29,6 +30,7 @@ export default new Router({
       path: '/',
       name: 'App',
       component: App,
+      redirect: '/task-mangement-list',
       children: [
         {
           path: 'time-entry',
@@ -101,6 +103,15 @@ export default new Router({
             keepAlive: true
           },
           component: ShowConvertedWorkHour
+        },
+        {
+          path: 'score-charts',
+          name: 'ScoreCharts',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: ScoreCharts
         }
       ]
     }

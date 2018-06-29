@@ -163,13 +163,6 @@ export default {
       } else {
         this.$refs.monthSelect.setAttribute('disabled', 'disabled')
       }
-    },
-    'persons': {
-      handler: function (newValue, oldValue) {
-        console.log(newValue.length + '新数组')
-        console.log(oldValue.length + '旧数组')
-      },
-      deep: true
     }
   },
   methods: {

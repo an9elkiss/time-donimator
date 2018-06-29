@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div class="center btn-fixed">
+        <div class="center box-fixed">
           <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="isEditable = !isEditable">评分</a>
           <a class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</a>
           <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="codeReviewEdit">编辑</a>

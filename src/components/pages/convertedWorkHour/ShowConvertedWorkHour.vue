@@ -41,7 +41,7 @@ import Global from '@/components/Global'
 import { mapState } from 'vuex'
 import echarts from 'echarts'
 import ClickableButton from '@/components/unit/ClickableButton'
-
+import { Toast } from 'vant'
 export default {
   name: 'hello',
   components: { ClickableButton },
@@ -235,6 +235,15 @@ export default {
       if (result != null && result.data && result.data.code === 200) {
         this.personsData = result.data.data
         this.changeStateSelectButton()
+        if (this.personsData == null) {
+          document.getElementById('container').style.display = 'none'
+          Toast.fail('未选取人员')
+        } else if (this.personsData.project.length === 0) {
+          document.getElementById('container').style.display = 'none'
+          Toast.fail('暂无数据')
+        } else {
+          document.getElementById('container').style.display = ''
+        }
         this.drawLine()
       }
     },

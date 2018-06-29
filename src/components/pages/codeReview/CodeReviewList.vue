@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <div class="panel panel-default m-b-0">
+      <div class="panel panel-default">
         <div v-if="reviews.length > 0" class="panel-body p-b-0">
           <div v-for="review of reviews" :key="review.id" class="code-review-brief">
             <p class="flexBox boxPackJustify" @click="reviewClicked(review)">
@@ -25,7 +25,7 @@
         <div v-else class="text-center noneReviewRemind">
           你还没有 Code Review，赶快新建一个吧
         </div>
-        <div class="btn-fixed center">
+        <div class="box-fixed center">
           <button class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</button>
         </div>
       </div>

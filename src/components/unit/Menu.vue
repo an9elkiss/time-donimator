@@ -83,7 +83,6 @@ export default {
       this.$http.get(Global.url.apiMenus).then(response => {
         if (response.body.code === 200) {
           this.menus = response.body.data.menus
-          console.log(response.body.data)
           // this.menuBtn.m1 = false
           // this.menuBtn.m101 = false
           // this.menuBtn.m102 = false

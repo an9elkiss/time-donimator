@@ -292,6 +292,7 @@ export default {
         this.$global.showResult(operatingResult)
         if (operatingResult.code === 200) {
           t.getTasks(t.userId, t.timeFilter.year, t.timeFilter.month, t.timeFilter.week, t.num)
+          t.loadTaskParentResource(t.memberIds, t.tabLists)
         }
       })
     },

@@ -14,6 +14,7 @@ import App from '@/APP'
 import ScoreCharts from '@/components/pages/charts/ScoreCharts'
 import TrainingContent from '@/components/pages/trainingSharing/TrainingContent'
 import ShareComments from '@/components/pages/trainingSharing/ShareComments'
+import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -132,6 +133,15 @@ export default new Router({
             keepAlive: false
           },
           component: ShareComments
+        },
+        {
+          path: 'sharing-comment-list',
+          name: 'SharingCommentList',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: SharingCommentList
         }
       ]
     }

@@ -12,6 +12,7 @@ import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
 import ShowConvertedWorkHour from '@/components/pages/charts/ShowConvertedWorkHour'
 import App from '@/APP'
 import ScoreCharts from '@/components/pages/charts/ScoreCharts'
+import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -112,6 +113,15 @@ export default new Router({
             keepAlive: false
           },
           component: ScoreCharts
+        },
+        {
+          path: 'sharing-comment-list',
+          name: 'SharingCommentList',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: SharingCommentList
         }
       ]
     }

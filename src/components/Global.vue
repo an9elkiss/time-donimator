@@ -36,7 +36,10 @@ const url = {
   apiGetChildTaskScore: managerApiBase + '/api-super-manager/1.0.0/task/parent/showTaskScore/',
   apiShowConvertedWorkHours: managerApiBase + '/api-super-manager/1.0.0/task/show/converted/workhours',
   apiGetScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscore',
-  apiGetTotalScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscoreTotal'
+  apiGetTotalScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscoreTotal',
+  apiPostTrainingContent: managerApiBase + '/api-super-manager/1.0.0/share/insert',
+  apiGetShareComments: managerApiBase + '/api-super-manager/1.0.0/shareComment/insert',
+  apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/shareComment/select'
 }
 
 const event = {

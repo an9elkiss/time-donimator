@@ -5,9 +5,14 @@
         <div class="panel-heading panel-heading-divider">人员筛选</div>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
-            <select class="form-control input-sm" v-model="selectedPersonId" @change="handleSelectedPersonChange">
-              <option v-for="person of persons" :key="person.userId" :value="person.userId">{{ person.name }}</option>
-            </select>
+            <div class="pcPart">
+              <select class="form-control input-sm" v-model="selectedPersonId" @change="handleSelectedPersonChange">
+                <option v-for="person of persons" :key="person.userId" :value="person.userId">{{ person.name }}</option>
+              </select>
+            </div>
+            <div class="mobPart">
+              <input-select title='选择员工' :columns="personColumns" state="true" :initial="selectedPerson?selectedPerson.name:''" @selectConfirmed="personSelectChange"></input-select>
+            </div>
           </div>
         </div>
       </div>
@@ -36,8 +41,11 @@
 <script>
 import Global from '@/components/Global'
 import { mapState } from 'vuex'
+import InputSelect from '@/components/unit/InputSelect'
+
 export default {
   name: 'CodeReviewList',
+  components: {InputSelect},
   data: function () {
     return {
       persons: [],
@@ -67,6 +75,11 @@ export default {
         }
       }
       return null
+    },
+    personColumns () {
+      return this.persons.map(person => {
+        return person.name
+      })
     }
   },
   methods: {
@@ -92,6 +105,10 @@ export default {
           this.reviews = result.data.data
         }
       }
+    },
+    personSelectChange (index) {
+      this.selectedPersonId = this.persons[index].userId
+      this.handleSelectedPersonChange()
     },
     handleSelectedPersonChange () {
       this.$store.commit('setCodeReviewPerson', this.selectedPerson)

@@ -6,19 +6,34 @@
         <h2 class="time-member-filter">时间筛选</h2>
         <div class="panel-body flexBox">
           <div class="boxFlex_1">
-            <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
-              <option value="2018">2018年</option>
-            </select>
+            <div class="pcPart">
+              <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
+                <option value="2018">2018年</option>
+              </select>
+            </div>
+            <div class="mobPart">
+              <input-select title='选择年' :columns="yearColumns" state="true" :initial="timeFilter.year + '年'" @selectConfirmed="yearSelectChange"></input-select>
+            </div>
           </div>
           <div class="boxFlex_1">
-            <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
-              <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
-            </select>
+            <div class="pcPart">
+              <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
+                <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
+              </select>
+            </div>
+            <div class="mobPart">
+              <input-select title='选择月份' :columns="monthColumns" state="true" :initial="timeFilter.months[timeFilter.month - 1].value" @selectConfirmed="monthSelectChange"></input-select>
+            </div>
           </div>
           <div class="boxFlex_1">
-            <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
-              <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
-            </select>
+            <div class="pcPart">
+              <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
+                <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
+              </select>
+            </div>
+            <div class="mobPart">
+              <input-select title='选择周' :columns="weekColumns" state="true" :initial="timeFilter.weeks[timeFilter.week - 1].value" @selectConfirmed="weekSelectChange"></input-select>
+            </div>
           </div>
         </div>
         <!--<div class="panel-heading panel-heading-divider"></div>-->
@@ -43,9 +58,11 @@ import { mapState } from 'vuex'
 import echarts from 'echarts'
 import ClickableButton from '@/components/unit/ClickableButton'
 import { Toast } from 'vant'
+import InputSelect from '@/components/unit/InputSelect'
+
 export default {
   name: 'hello',
-  components: { ClickableButton },
+  components: { ClickableButton, InputSelect },
   data () {
     return {
       personsData: {},
@@ -93,6 +110,10 @@ export default {
         month: 6,
         week: 2,
         maxWeek: 0,
+        years: [{
+          id: 2018,
+          value: '2018年'
+        }],
         months: [{
           id: 1,
           value: '1月'
@@ -170,6 +191,23 @@ export default {
       selectedMonth: 'selectedMonth',
       selectedWeek: 'selectedWeek'
     }),
+    yearColumns: function () {
+      return this.timeFilter.years.map(ele => {
+        return ele.value
+      })
+    },
+    monthColumns: function () {
+      return this.timeFilter.months.map(ele => {
+        return ele.value
+      })
+    },
+    weekColumns: function () {
+      return this.timeFilter.weeks.filter(ele => {
+        return ele.id <= this.timeFilter.maxWeek
+      }).map(ele => {
+        return ele.value
+      })
+    },
     selectedDate: function () {
       return this.timeFilter.year + '年 ' + this.getValueFromId(this.timeFilter.months, this.timeFilter.month) + ' ' + this.getValueFromId(this.timeFilter.weeks, this.timeFilter.week)
     },
@@ -179,6 +217,18 @@ export default {
     }
   },
   methods: {
+    yearSelectChange (index) {
+      this.timeFilter.year = this.timeFilter.years[index].id
+      this.changeYearOrMonth()
+    },
+    monthSelectChange (index) {
+      this.timeFilter.month = this.timeFilter.months[index].id
+      this.changeYearOrMonth()
+    },
+    weekSelectChange (index) {
+      this.timeFilter.week = this.timeFilter.weeks[index].id
+      this.changeSelect()
+    },
     changeSelect () {
       this.selectedDateCommitStore()
       this.selectedList.map(ele => {

@@ -132,5 +132,19 @@
     background: rgba(255, 255, 255, 0.7);
   }
 }
+.mobPart {
+  display: none;
+}
+.form-control[readonly] {
+  background-color: #FFFFFF;
+}
+@media (max-width: 767px) {
+  .mobPart {
+    display: block;
+  }
+  .pcPart {
+    display: none;
+  }
+}
 
 

@@ -7,19 +7,20 @@
           <form class="form-horizontal group-border-dashed">
             <div class="form-group">
               <label class="col-sm-3 control-label">任务名称</label>
-              <div class="col-sm-6">
-                <input type="text" required="" placeholder="任务名称" class="form-control input-sm" v-model="taskCommand.title" @keydown.enter.prevent>
+              <div class="col-sm-6" :class="mustInputTaskAttributes.titleFlag?'has-error':''">
+                <input type="text" placeholder="任务名称" class="form-control input-sm" v-model="taskCommand.title" @input="mustInputTaskAttributes.titleFlag = false" @keydown.enter.prevent>
+                <span v-if="mustInputTaskAttributes.titleFlag" class="mdi mdi-close form-control-feedback"></span>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">父任务</label>
               <div class="col-sm-6" style=" text-align:left; padding: 0 12px;">
                 <div class="be-radio inline">
-                  <input type="radio" v-model="isParentFlag" required="" value="true" id="radio1" @change="parentChange"/>
+                  <input type="radio" v-model="isParentFlag" value="true" id="radio1" @change="parentChange"/>
                   <label for="radio1">是</label>
                 </div>
                 <div class="be-radio inline">
-                  <input type="radio" v-model="isParentFlag" required="" value='false' id="radio2" @change="parentChange" checked/>
+                  <input type="radio" v-model="isParentFlag" value='false' id="radio2" @change="parentChange" checked/>
                   <label for="radio2">否</label>
                 </div>
               </div>
@@ -27,20 +28,35 @@
             <div class="form-group" v-if="isParentFlag === 'false'">
               <label class="col-sm-3 control-label">选择父任务</label>
               <div class="col-sm-6">
-                <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
-                <select class="form-control input-sm" v-model="taskCommand.parentId" v-else @change="parentTaskChange">
-                  <option value="">未选择</option>
-                  <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
-                </select>
+                <div class="pcPart">
+                  <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
+                  <select class="form-control input-sm" v-model="taskCommand.parentId" v-else @change="parentTaskChange">
+                    <option value="">未选择</option>
+                    <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
+                  </select>
+                </div>
+                <div class="mobPart">
+                  <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
+                  <input-select v-else title='选择父任务' :columns="parentColumns" state="true" :initial="taskCommand.parentId?findElementFromListById(task.parentProject, taskCommand.parentId).title:'未选择'" @selectConfirmed="parentSelectChange"></input-select>
+                </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">项目名称</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="taskCommand.project" required="" :disabled="isDisabled">
-                  <option value="">未选择</option>
-                  <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
-                </select>
+                <div class="pcPart" :class="mustInputTaskAttributes.projectFlag?'has-error':''">
+                  <select class="form-control input-sm" v-model="taskCommand.project" :disabled="isDisabled" @change="mustInputTaskAttributes.projectFlag = false">
+                    <option value="">未选择</option>
+                    <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
+                  </select>
+                </div>
+                <div class="mobPart">
+                  <input-select title="选择项目名称" :columns="projectColumns" :state="isDisabled?'':'true'" :hasErrorFlag="mustInputTaskAttributes.projectFlag" :initial="taskCommand.project?task.project[taskCommand.project]:'未选择'" @selectConfirmed="projectSelectChange"></input-select>
+                  <select v-model="taskCommand.project" required="" :disabled="isDisabled" class="placeholder">
+                    <option value="">未选择</option>
+                    <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -59,8 +75,9 @@
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">贡献值</label>
-              <div class="col-sm-6">
-                <input data-parsley-type="number" required="" placeholder="贡献值" class="form-control input-sm" v-model="taskCommand.planScore" @keydown.enter.prevent>
+              <div class="col-sm-6" :class="mustInputTaskAttributes.planScoreFlag?'has-error':''">
+                <input data-parsley-type="number" placeholder="贡献值" class="form-control input-sm" v-model="taskCommand.planScore" @keydown.enter.prevent>
+                <span v-if="mustInputTaskAttributes.planScoreFlag" class="mdi mdi-close form-control-feedback"></span>
               </div>
               <div class="col-sm-6 col-sm-offset-3" v-if="taskWeekId && taskCommand.parentId">
                 <div class="progress">
@@ -82,33 +99,50 @@
             <div class="form-group" v-if="$route.query.flag">
               <label class="col-sm-3 control-label">当期状态</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="taskCommand.currentStatus">
-                  <option value="">未选择</option>
-                  <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
-                </select>
+                <div class="pcPart">
+                  <select class="form-control input-sm" v-model="taskCommand.currentStatus">
+                    <option value="">未选择</option>
+                    <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
+                  </select>
+                </div>
+                <div class="mobPart">
+                  <input-select title="选择当期状态" :columns="statusColumns" state="true" :initial="taskCommand.currentStatus?task.status[taskCommand.currentStatus]:'未选择'" @selectConfirmed="currentStatusSelectChange"></input-select>
+                </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">计划状态</label>
               <div class="col-sm-6">
-                <select class="form-control input-sm" v-model="taskCommand.planStatus" required="">
-                  <option value="">未选择</option>
-                  <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
-                </select>
+                <div class="pcPart" :class="mustInputTaskAttributes.planStatusFlag?'has-error':''">
+                  <select class="form-control input-sm" v-model="taskCommand.planStatus" @change="mustInputTaskAttributes.planStatusFlag = false">
+                    <option value="">未选择</option>
+                    <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
+                  </select>
+                </div>
+                <div class="mobPart">
+                  <input-select title="选择计划状态" :columns="statusColumns" state="true" :hasErrorFlag="mustInputTaskAttributes.planStatusFlag" :initial="taskCommand.planStatus?task.status[taskCommand.planStatus]:'未选择'" @selectConfirmed="planStatusSelectChange"></input-select>
+                  <select v-model="taskCommand.planStatus" required="" class="placeholder">
+                    <option value="">未选择</option>
+                    <option v-for="(value, key) of task.status" :key="key" :value="key">{{value}}</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">计划日期</label>
-              <div class="col-md-6">
+              <div class="col-sm-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
-                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input v-model="taskCommand.endTime" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span>
+                  <input v-model="taskCommand.endTime" :class="mustInputTaskAttributes.endTimeFlag?'error':''" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <span v-if="mustInputTaskAttributes.endTimeFlag" :class="mustInputTaskAttributes.endTimeFlag?'errorSpan':''" class="mdi mdi-close form-control-feedback"></span>
                 </div>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">预估工时</label>
-              <div class="col-sm-6">
-                <input data-parsley-type="number" required="" placeholder="预估工时" class="form-control input-sm" v-model="taskCommand.planHours" @keydown.enter.prevent>
+              <div class="col-sm-6" :class="mustInputTaskAttributes.planHoursFlag?'has-error':''">
+                <input data-parsley-type="number" placeholder="预估工时" class="form-control input-sm" v-model="taskCommand.planHours" @input="mustInputTaskAttributes.planHoursFlag = false" @keydown.enter.prevent>
+                <span v-if="mustInputTaskAttributes.planHoursFlag" class="mdi mdi-close form-control-feedback"></span>
               </div>
             </div>
             <div class="form-group" v-if="$route.query.flag">
@@ -120,7 +154,7 @@
             <div class="form-group box-fixed">
               <div class="center">
                 <a class="btn btn-space btn-primary" v-if="nowIndex-1 >= 0" @click="turnToTask(nowIndex-1)">上一个</a>
-                <button :type="flag?'button':'submit'" class="btn btn-space btn-primary" @click="submitTask">提交</button>
+                <a class="btn btn-space btn-primary" @click="submitTask">提交</a>
                 <a class="btn btn-space btn-primary" @click="goBack">返回</a>
                 <a class="btn btn-space btn-primary" v-if="nowIndex+1 < taskList.length" @click="turnToTask(nowIndex+1)">下一个</a>
               </div>
@@ -138,6 +172,7 @@ import {
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import NewButton from '@/components/unit/NewButton'
+import InputSelect from '../unit/InputSelect'
 
 export default {
   data () {
@@ -146,8 +181,11 @@ export default {
         parentIdCopy: '',
         projectCopy: '',
         project: {},
+        projects: [],
         status: {},
+        statuses: [],
         tag: {},
+        tags: [],
         parentProject: [],
         parentHours: '',
         parentScore: '',
@@ -166,7 +204,7 @@ export default {
         project: '',
         tags: '',
         description: '',
-        planScore: 0,
+        planScore: '0',
         actualScore: '',
         currentStatus: '',
         planStatus: '',
@@ -180,6 +218,15 @@ export default {
         userId: '',
         userName: ''
       },
+      mustInputTaskAttributes: {
+        titleFlag: false,
+        projectFlag: false,
+        tagsFlag: false,
+        planScoreFlag: false,
+        planStatusFlag: false,
+        endTimeFlag: false,
+        planHoursFlag: false
+      },
       nowIndex: 0,
       planAllScore: 0,
       actualAllScore: 0,
@@ -192,6 +239,7 @@ export default {
     }
   },
   components: {
+    InputSelect,
     ClickableButton,
     NewButton
   },
@@ -201,7 +249,28 @@ export default {
       taskMsg: 'task',
       nowDateString: 'selectedDate',
       taskList: 'taskList'
-    })
+    }),
+    parentColumns () {
+      const list = this.task.parentProject.map(ele => {
+        return {text: ele.title}
+      })
+      list.splice(0, 0, {text: '未选择', disabled: true})
+      return list
+    },
+    projectColumns () {
+      const list = this.task.projects.map(ele => {
+        return {text: ele.value}
+      })
+      list.splice(0, 0, {text: '未选择', disabled: true})
+      return list
+    },
+    statusColumns () {
+      const list = this.task.statuses.map(ele => {
+        return {text: ele.value}
+      })
+      list.splice(0, 0, {text: '未选择', disabled: true})
+      return list
+    }
   },
   mounted () {
     var self = this
@@ -221,6 +290,31 @@ export default {
     this.initialParentProjectList()
   },
   methods: {
+    simpleObjectToArray (obj) {
+      var arr = []
+      for (let i in obj) {
+        let o = {}
+        o['id'] = i
+        o['value'] = obj[i]
+        arr.push(o)
+      }
+      return arr
+    },
+    parentSelectChange (index) {
+      this.taskCommand.parentId = this.task.parentProject[index - 1].id
+      this.parentTaskChange()
+    },
+    projectSelectChange (index) {
+      this.taskCommand.project = this.task.projects[index - 1].id
+      this.mustInputTaskAttributes.projectFlag = false
+    },
+    currentStatusSelectChange (index) {
+      this.taskCommand.currentStatus = this.task.statuses[index - 1].id
+    },
+    planStatusSelectChange (index) {
+      this.taskCommand.planStatus = this.task.statuses[index - 1].id
+      this.mustInputTaskAttributes.planStatusFlag = false
+    },
     parentChange () {
       var t = this
       if (t.isParentFlag === 'false') {
@@ -299,7 +393,45 @@ export default {
       }
     },
     validateForm () {
-      return this.taskCommand.title && this.taskCommand.project && this.taskCommand.tags && parseInt(this.taskCommand.planScore) >= 0 && this.taskCommand.planStatus && this.taskCommand.endTime && parseInt(this.taskCommand.planHours) >= 0
+      var flag = true
+      for (var index in this.mustInputTaskAttributes) {
+        this.mustInputTaskAttributes[index] = false
+      }
+      if (!this.taskCommand.title) {
+        this.mustInputTaskAttributes.titleFlag = true
+        flag = false
+      }
+      if (!this.taskCommand.project) {
+        this.mustInputTaskAttributes.projectFlag = true
+        flag = false
+      }
+      if (!(this.taskCommand.planScore + '') || isNaN(this.taskCommand.planScore) || Number(this.taskCommand.planScore) < 0) {
+        this.mustInputTaskAttributes.planScoreFlag = true
+        flag = false
+      }
+      if (!this.taskCommand.planStatus) {
+        this.mustInputTaskAttributes.planStatusFlag = true
+        flag = false
+      }
+      if (!this.taskCommand.endTime) {
+        this.mustInputTaskAttributes.endTimeFlag = true
+        flag = false
+      }
+      if (!this.taskCommand.planHours || isNaN(Number(this.taskCommand.planHours)) || Number(this.taskCommand.planHours) < 0) {
+        this.mustInputTaskAttributes.planHoursFlag = true
+        flag = false
+      }
+      if (!flag) {
+        this.$global.showMessage('请输入红色标注的任务信息')
+      }
+      if (!this.taskCommand.tags) {
+        this.mustInputTaskAttributes.tagsFlag = true
+        if (flag) {
+          this.$global.showMessage('请为新增的任务添加标签')
+        }
+        flag = false
+      }
+      return flag
     },
     async submitTask () {
       var t = this
@@ -346,6 +478,9 @@ export default {
         this.task.project = Object.assign({}, result.data.data.project)
         this.task.status = Object.assign({}, result.data.data.status)
         this.task.tag = Object.assign({}, result.data.data.tag)
+        this.task.projects = this.simpleObjectToArray(this.task.project)
+        this.task.statuses = this.simpleObjectToArray(this.task.status)
+        this.task.tags = this.simpleObjectToArray(this.task.tag)
       }
     },
     async initialParentProjectList () {
@@ -396,6 +531,11 @@ export default {
       }
       this.$refs.planAllScore.style.width = 100 * this.planAllScore / (this.planAllScore + this.actualAllScore) + '%'
       this.$refs.actualAllScore.style.width = 100 * this.actualAllScore / (this.planAllScore + this.actualAllScore) + '%'
+    },
+    findElementFromListById (list, id) {
+      return list.find(ele => {
+        return Number(ele.id) === Number(id)
+      })
     }
   },
   watch: {
@@ -406,7 +546,9 @@ export default {
     },
     'taskCommand': {
       handler (newValue) {
-        this.flag = Boolean(newValue.title) && Boolean(newValue.project) && Boolean(newValue.tags) && parseInt(newValue.planScore) >= 0 && Boolean(newValue.planStatus) && Boolean(newValue.endTime) && parseInt(newValue.planHours) >= 0
+        if (newValue.endTime) {
+          this.mustInputTaskAttributes.endTimeFlag = false
+        }
       },
       deep: true
     }
@@ -473,5 +615,16 @@ export default {
   }
   div.plan {
     border: solid #34a853;
+  }
+  .error {
+    border: 1px solid #ea4335;
+  }
+  .errorSpan {
+    color: #ea4335;
+  }
+  div.col-sm-6 {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: auto 15px;
   }
 </style>

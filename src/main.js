@@ -7,10 +7,11 @@ import axios from 'axios'
 import store from './store'
 import Globals from '@/assets/js/global'
 import {http} from '@/assets/js/http'
-import Vant from 'vant'
+import { Picker, Popup } from 'vant'
 import 'vant/lib/vant-css/index.css'
 
-Vue.use(Vant)
+Vue.use(Picker)
+Vue.use(Popup)
 Vue.prototype.$api = http
 Vue.prototype.$global = Globals
 Vue.config.productionTip = false

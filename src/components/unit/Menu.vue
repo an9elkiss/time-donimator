@@ -1,6 +1,6 @@
 <template>
   <div class="be-left-sidebar">
-    <div class="left-sidebar-wrapper"><a href="#" class="left-sidebar-toggle">菜单</a>
+    <div class="left-sidebar-wrapper"><a class="left-sidebar-toggle">菜单</a>
       <div class="left-sidebar-spacer">
         <div class="left-sidebar-scroll">
           <div class="left-sidebar-content">

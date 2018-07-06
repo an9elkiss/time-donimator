@@ -11,10 +11,15 @@
               <label for="yearRadio">年</label>
             </div>
             <div class="inline">
-              <select class="form-control input-sm" v-model="year" @change="yearChanged">
-                <!--<option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>-->
-                <option value="2018">2018</option>
-              </select>
+              <div class="pcPart">
+                <select class="form-control input-sm" v-model="year" @change="yearChanged">
+                  <!--<option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>-->
+                  <option value="2018">2018</option>
+                </select>
+              </div>
+              <div class="mobPart">
+                <input-select title='选择年' :columns="yearColumns" state="true" :initial="year + '年'" @selectConfirmed="yearSelectChange"></input-select>
+              </div>
             </div>
           </div>
           <div class="col-xs-6 col-sm-3 col-lg-2">
@@ -23,15 +28,21 @@
               <label for="monthRadio">月</label>
             </div>
             <div class="inline">
-              <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged" disabled>
-                <option v-for="n in 12" :key="n" :value="n">{{ n }} 月</option>
-              </select>
+              <div class="pcPart">
+                <select class="form-control input-sm" ref="monthSelect" v-model="month" @change="monthChanged" disabled>
+                  <option v-for="n in 12" :key="n" :value="n">{{ n }} 月</option>
+                </select>
+              </div>
+              <div class="mobPart">
+                <input-select title='选择月份' :columns="monthColumns" :state="monthEnabled" :initial="month + '月'" @selectConfirmed="monthSelectChange"></input-select>
+              </div>
             </div>
           </div>
         </div>
         <h2 class="time-member-filter">人员筛选</h2>
         <div class="panel-body">
           <clickable-button v-for="(person, index) of persons" :key="index" :value="person.name" :index="index" :activeFlag="person.selected" @buttonClicked="buttonClicked"></clickable-button>
+          <a @click="clearAllPersonsSelected" class="btn btn-primary">清除所有</a>
         </div>
       </div>
       <div class="panel panel-default">
@@ -51,17 +62,24 @@
 import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import echarts from 'echarts'
+import InputSelect from '@/components/unit/InputSelect'
 
 export default {
   name: 'ScoreCharts',
   components: {
-    ClickableButton
+    ClickableButton,
+    InputSelect
   },
   data: function () {
     return {
       showEchartsTotalInfo: '',
       year: 0,
       month: 0,
+      years: [{
+        id: 2018,
+        value: '2018年'
+      }],
+      months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       selectedType: 'true',
       monthEnabled: false,
       persons: [],
@@ -89,6 +107,10 @@ export default {
           name: '',
           boundaryGap: true,
           splitLine: {show: true},
+          axisLabel: {
+            interval: 0,
+            rotate: 40
+          },
           data: []
         },
         yAxis: {
@@ -104,7 +126,10 @@ export default {
           bottom: 'bottom'
         },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          axisPointer: { // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          }
         },
         grid: {
           left: '0',
@@ -112,24 +137,25 @@ export default {
           bottom: '9%',
           containLabel: true
         },
-        xAxis: {
+        yAxis: {
           type: 'category',
           name: '人员',
           splitLine: {show: true},
           data: []
         },
-        yAxis: {
+        xAxis: {
           type: 'value',
           name: '贡献值'
         },
         series: [{
           data: [],
-          type: 'line',
+          type: 'bar',
           color: '#2572f2',
+          barMaxWidth: 50,
           label: {
             normal: {
               show: true,
-              position: 'top'
+              position: 'inside'
             }
           }
         }]
@@ -149,6 +175,16 @@ export default {
       return this.persons.filter(ele => {
         return ele.selected
       })
+    },
+    yearColumns () {
+      return this.years.map(ele => {
+        return ele.value
+      })
+    },
+    monthColumns () {
+      return this.months.map(ele => {
+        return ele + ' 月'
+      })
     }
   },
   watch: {
@@ -166,6 +202,21 @@ export default {
     }
   },
   methods: {
+    yearSelectChange (index) {
+      this.year = this.years[index].id
+      this.yearChanged()
+    },
+    monthSelectChange (index) {
+      this.month = index + 1
+      this.monthChanged()
+    },
+    clearAllPersonsSelected () {
+      this.persons.map(person => {
+        person.selected = false
+      })
+      this.updateDetailChartOption()
+      this.detailChartSetOption()
+    },
     async initialYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       if (result.data && result.data.code === 200) {
@@ -188,7 +239,7 @@ export default {
     async initialTotalChartOption () {
       var queryString = '?year=' + this.year
       queryString = queryString + '&userIds='
-      var selectedPersonsList = this.selectedPersons.map(ele => {
+      var selectedPersonsList = this.persons.map(ele => {
         return ele.id
       })
       queryString = queryString + (selectedPersonsList.toString())
@@ -206,7 +257,7 @@ export default {
         queryString = queryString + ('&month=' + this.month)
       }
       queryString = queryString + '&userIds='
-      var selectedPersonsList = this.selectedPersons.map(ele => {
+      var selectedPersonsList = this.persons.map(ele => {
         return ele.id
       })
       queryString = queryString + (selectedPersonsList.toString())
@@ -242,10 +293,13 @@ export default {
     },
     updateTotalChartOption () {
       this.totalChartOption.title.text = this.year + '年贡献值总计统计'
-      this.totalChartOption.xAxis.data = this.selectedPersons.map(person => {
+      this.totalChartOption.yAxis.data = this.selectedPersons.map(person => {
         return person.name
       })
       this.totalChartOption.series[0].data = this.selectedPersons.map(person => {
+        if (person.totalScore === 0) {
+          return null
+        }
         return person.totalScore
       })
     },
@@ -285,11 +339,6 @@ export default {
     },
     buttonClicked (index) {
       this.persons[index].selected = !this.persons[index].selected
-      if (this.selectedPersons.length === 0) {
-        this.$global.showMessage('请至少留下一个人的数据')
-        this.persons[index].selected = true
-        return
-      }
       this.updateDetailChartOption()
       this.detailChartSetOption()
     }

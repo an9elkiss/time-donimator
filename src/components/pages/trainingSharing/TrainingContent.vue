@@ -40,11 +40,6 @@
                   <input type="file"/>{{chooseFiles}}
                 </a>&nbsp;&nbsp;{{uploadFileName}}
             </div>
-            <!--<div class="form-group" style="padding-top: 0">-->
-              <!--<div class="col-sm-6">-->
-                <!--<p style="margin: 0" v-for="(uploadfilename, index) in uploadFilesName" :key="index" class="upload-file-name">{{uploadfilename}}</p>-->
-              <!--</div>-->
-            <!--</div>-->
             <div class="form-group box-fixed">
               <div class="center">
                 <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
@@ -129,7 +124,6 @@ export default {
       this.uploadFileName = file[0].name
       // this.chooseFiles = '继续添加'
       this.shareCommand.multipartFile = file[0]
-      console.log(this.shareCommand.multipartFile)
     },
     init () {
       var t = this
@@ -176,7 +170,6 @@ export default {
       formData.append('level', t.taskCommand.level)
       formData.append('userName', t.taskCommand.userName)
       formData.append('token', t.personMsg.token)
-      console.log(t.personMsg.token)
       if (this.validateForm()) {
         this.$http.post(api, formData, config).then(response => {
           if (response.body.code === 200) {
@@ -185,15 +178,12 @@ export default {
             this.errorMessage = response.body.message
           }
         }, response => {
-          console.log('error')
           // error callback
         })
       }
     },
     validateForm () {
       if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 31457280) {
-        console.log('上传文件：' + this.shareCommand.multipartFile)
-        console.log('上传文件的大小为：' + this.shareCommand.multipartFile.size)
         return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
       } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
         this.$global.showMessage('上传的文件不能超过30MB！')
@@ -230,12 +220,12 @@ export default {
   }
 
   .ui-upload input {
-    position: absolute;
-    font-size: 100px;
+    font-size: 16px;
     right: 0;
     top: 0;
     opacity: 0;
     filter: alpha(opacity=0);
-    cursor: pointer
+    cursor: pointer;
+    height: 0px;
   }
 </style>

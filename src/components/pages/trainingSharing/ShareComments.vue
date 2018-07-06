@@ -160,20 +160,28 @@ export default {
       t.opinionScore.userId = t.taskCommand.userId
       t.opinionScore.level = t.taskCommand.level
       t.opinionScore.score = t.cheakedStarts.length + ''
-      var result = await this.$api(api, t.opinionScore)
-      if (result != null && result.data && result.data.code === 200) {
-        console.log('用户id' + t.opinionScore.userId)
-        t.cheakedStarts = []
-        t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
-        t.opinionScore.description = ''
-        console.log('巴拉巴拉')
-        // 调用获取评论接口
-        t.getOpinions(t.opinionScore.shareId)
-      } else if (result.data.code === 401) {
-        t.$global.showMessage(result.data.message)
-        t.cheakedStarts = []
-        t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
-        t.opinionScore.description = ''
+      if (this.validateForm()) {
+        var result = await this.$api(api, t.opinionScore)
+        if (result != null && result.data && result.data.code === 200) {
+          t.cheakedStarts = []
+          t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
+          t.opinionScore.description = ''
+          // 调用获取评论接口
+          t.getOpinions(t.opinionScore.shareId)
+        } else if (result.data.code === 401) {
+          t.$global.showMessage(result.data.message)
+          t.cheakedStarts = []
+          t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
+          t.opinionScore.description = ''
+        }
+      }
+    },
+    validateForm () {
+      if (this.opinionScore.description.trim().length > 0) {
+        return true
+      } else {
+        this.$global.showMessage('意见反馈不能为空！')
+        return false
       }
     }
   }

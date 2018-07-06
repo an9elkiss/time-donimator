@@ -41,7 +41,7 @@
                 <span class="current-time">{{opinion.createTime.substr(0, 10)}}</span>
               </div>
               <div class="panel-body" style="padding-top: 10px;">
-                <span>{{opinion.description}}</span>
+                <span>{{$global.format(opinion.description)}}</span>
                 <br/>
                 <label style="color: #101010; width: 80%; padding-top: 10px;">
                   <span v-for="index in opinion.score" :key="index" class="mdi mdi-star-outline color-style"></span>

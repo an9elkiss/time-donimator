@@ -22,9 +22,9 @@
             </div>
             <div class="operatorDiv clearfix">
               <div class="col-xs-3 text-center"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</div>
-              <div class="col-xs-3 text-center" @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{comment.commentNum}}</div>
-              <div class="col-xs-3 text-center" @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{comment.average}}</div>
-              <div class="col-xs-3 text-center" @click="downloadFile(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{comment.commentNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{comment.average}}</a></div>
+              <div class="col-xs-3 text-center"><a :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
             </div>
           </div>
         </div>
@@ -45,6 +45,7 @@
 
 <script>
 import Global from '@/components/Global'
+import {mapState} from 'vuex'
 
 export default {
   name: 'SharingCommentList',
@@ -55,15 +56,13 @@ export default {
       pageIndex: 0,
       pageSize: 10,
       hasNext: true,
-      scrollFlag: false,
-      temporaryData: {
-        title: '第一次分享会',
-        tags: '前端',
-        author: '张三',
-        time: '2017-07-03',
-        description: '如果你无法简洁的表达你的想法，那只能说明你还不够了解。'
-      }
+      scrollFlag: false
     }
+  },
+  computed: {
+    ...mapState({
+      personMsg: 'user'
+    })
   },
   async mounted () {
     await this.getCommentsByPageIndexAndSize()
@@ -80,6 +79,9 @@ export default {
     toShareComments (comment) {
       this.$store.commit('setSharingComment', comment)
       this.$router.push({name: 'ShareComments'})
+    },
+    getUrl (fileUrl, fileName) {
+      return Global.url.apiGetSharingFileDownload + '?filename=' + fileName + '&fileUrl=' + fileUrl + '&token=' + this.personMsg.token
     },
     handleScroll () {
       var scrollTop = window.scrollY
@@ -102,13 +104,11 @@ export default {
           this.hasNext = false
         }
         for (let index in this.newComments) {
+          console.log(this.newComments[index].description)
+          console.log(this.$global.format(this.newComments[index].description))
           this.historyComments.push(this.newComments[index])
         }
       }
-    },
-    downloadFile (fileUrl, title) {
-      console.log(fileUrl)
-      console.log(title)
     }
   }
 }
@@ -130,7 +130,8 @@ export default {
   div.commentBody > div {
     margin: 10px 0px;
   }
-  div.operatorDiv > div {
+  div.operatorDiv a {
+    color: #404040;
     cursor: pointer;
   }
   div.operatorDiv span {

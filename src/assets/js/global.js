@@ -40,9 +40,9 @@ export const goNext = (t, x) => {
 
 export const format = (data) => {
   if (data) {
-    data = data.replace(/[\r\n]/g, '<br/>')
-    data = data.replace(/[\n]/g, '<br/>')
-    return data
+    // data = data.replace(/[\r\n]/g, '<br/>')
+    // data = data.replace(/[\n]/g, '<br/>')
+    return data.replace(/\r?\n/g, '<br />')
   }
 }
 

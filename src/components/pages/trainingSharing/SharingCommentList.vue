@@ -56,16 +56,17 @@ export default {
       pageIndex: 0,
       pageSize: 10,
       hasNext: true,
-      scrollFlag: false
+      scrollFlag: false,
+      person: {}
     }
   },
   computed: {
     ...mapState({
-      personMsg: 'user',
-      person: 'person'
+      personMsg: 'user'
     })
   },
   async mounted () {
+    await this.initialPerson()
     await this.getCommentsByPageIndexAndSize()
     this.historyComments = this.newComments
     window.addEventListener('scroll', this.handleScroll)
@@ -91,6 +92,18 @@ export default {
         this.scrollFlag = true
         if (this.hasNext) {
           this.getCommentsByPageIndexAndSize()
+        }
+      }
+    },
+    async initialPerson () {
+      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        var persons = result.data.data
+        for (var index in persons) {
+          if (persons[index].userId === this.personMsg.id) {
+            this.person = persons[index]
+            return
+          }
         }
       }
     },

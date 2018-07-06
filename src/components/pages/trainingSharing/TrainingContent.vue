@@ -191,7 +191,7 @@ export default {
       }
     },
     validateForm () {
-      if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 20971520) {
+      if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 31457280) {
         console.log('上传文件：' + this.shareCommand.multipartFile)
         console.log('上传文件的大小为：' + this.shareCommand.multipartFile.size)
         return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime

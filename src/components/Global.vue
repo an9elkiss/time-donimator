@@ -40,7 +40,8 @@ const url = {
   apiPostTrainingContent: managerApiBase + '/api-super-manager/1.0.0/share',
   apiGetShareComments: managerApiBase + '/api-super-manager/1.0.0/shareComment',
   apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/findShareComment',
-  apiGetSharingCommentsList: managerApiBase + '/api-super-manager/1.0.0/share/show'
+  apiGetSharingCommentsList: managerApiBase + '/api-super-manager/1.0.0/share/show',
+  apiGetSharingFileDownload: managerApiBase + '/api-super-manager/1.0.0/share/downloadFile'
 }
 
 const event = {

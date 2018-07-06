@@ -39,7 +39,8 @@ const url = {
   apiGetTotalScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscoreTotal',
   apiPostTrainingContent: managerApiBase + '/api-super-manager/1.0.0/share',
   apiGetShareComments: managerApiBase + '/api-super-manager/1.0.0/shareComment',
-  apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/findShareComment'
+  apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/findShareComment',
+  apiGetSharingCommentsList: managerApiBase + '/api-super-manager/1.0.0/share/show'
 }
 
 const event = {

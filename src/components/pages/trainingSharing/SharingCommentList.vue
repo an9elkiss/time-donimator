@@ -117,8 +117,6 @@ export default {
           this.hasNext = false
         }
         for (let index in this.newComments) {
-          console.log(this.newComments[index].description)
-          console.log(this.$global.format(this.newComments[index].description))
           this.historyComments.push(this.newComments[index])
         }
       }

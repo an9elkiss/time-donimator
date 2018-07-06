@@ -7,13 +7,13 @@
           <form class="form-horizontal group-border-dashed" enctype="multipart/form-data">
             <div class="form-group">
               <label class="col-sm-3 control-label">名称</label>
-              <div class="col-md-6">
+              <div class="col-sm-6">
                 <input type="text" required="" v-model="shareCommand.title" placeholder="培训名称" class="form-control input-sm">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">时间</label>
-              <div class="col-md-6">
+              <div class="col-sm-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
                   <!--<span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0">-->
                   <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="shareCommand.shareTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
@@ -42,7 +42,7 @@
             </div>
             <div class="form-group box-fixed">
               <div class="center">
-                <button class="btn btn-space btn-primary" @click="submitTask">提交</button>
+                <a class="btn btn-space btn-primary" @click="submitTask">提交</a>
               </div>
             </div>
           </form>
@@ -183,13 +183,17 @@ export default {
       }
     },
     validateForm () {
-      if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 31457280) {
-        return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
-      } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
-        this.$global.showMessage('上传的文件不能超过30MB！')
-        return false
+      if (this.shareCommand.title.trim().length <= 0 || this.shareCommand.description.trim().length <= 0 || this.shareCommand.shareTime.trim().length <= 0) {
+        this.$global.showMessage('表单不能为空！')
       } else {
-        return this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+        if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 31457280) {
+          return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+        } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
+          this.$global.showMessage('上传的文件不能超过30MB！')
+          return false
+        } else {
+          return this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+        }
       }
     }
   },

@@ -4,16 +4,16 @@
       <div class="panel panel-default">
         <div class="col-md-12">
           <div class="panel">
-            <div class="panel-heading panel-heading-divider">{{shareCommand.title}}<span class="panel-subtitle">{{shareCommand.author}} {{shareCommand.time}}</span>
+            <div class="panel-heading panel-heading-divider">{{sharingComment.title}}<span class="panel-subtitle">{{sharingComment.userName}} {{sharingComment.createTime.substr(0, 10)}}</span>
             </div>
             <div class="panel-body">
               <label style="color: #101010">标签： </label>&nbsp;&nbsp;
-              <label style="color: #101010">{{shareCommand.tags}}</label>
+              <label style="color: #101010">{{sharingComment.shareLabel}}</label>
             </div>
             <div class="panel-body">
               <label style="color: #101010">简介： </label>&nbsp;&nbsp;
               <label style="color: #101010; width: 80%; vertical-align:text-top">
-                {{shareCommand.description}}
+                {{sharingComment.description}}
               </label>
             </div>
             <div class="panel-body">
@@ -29,7 +29,7 @@
               </label>
               <div class="center">
                 <button @click="submitComments" class="btn btn-space btn-primary">提交</button>
-                <button class="btn btn-space btn-primary">资料下载</button>
+                <button class="btn btn-space btn-primary" @click="downloadFile(sharingComment.filrUrl)">资料下载</button>
               </div>
             </div>
             <!-- 评论 -->
@@ -38,7 +38,7 @@
               <div class="comment-item"></div>
               <div class="panel-body" style="padding-top: 10px;">
                 <span class="mdi mdi-github-alt"></span>&nbsp;<span>{{opinion.userName}}</span>
-                <span class="current-time">{{opinion.createTime}}</span>
+                <span class="current-time">{{opinion.createTime.substr(0, 10)}}</span>
               </div>
               <div class="panel-body" style="padding-top: 10px;">
                 <span>{{opinion.description}}</span>
@@ -102,7 +102,8 @@ export default {
   },
   computed: {
     ...mapState({
-      personMsg: 'user'
+      personMsg: 'user',
+      sharingComment: 'sharingComment'
     })
   },
   methods: {
@@ -116,12 +117,12 @@ export default {
           t.taskCommand.percent = t.persons[index].percent
         }
       }
-      t.opinionScore.shareId = t.$route.query.shareId
-      t.shareCommand.title = t.$route.query.title
-      t.shareCommand.tags = t.$route.query.tags
-      t.shareCommand.author = t.$route.query.author
-      t.shareCommand.time = t.$route.query.time
-      t.shareCommand.description = t.$route.query.description
+      t.opinionScore.shareId = t.sharingComment.shareId
+      // t.shareCommand.title = t.$route.query.title
+      // t.shareCommand.tags = t.$route.query.tags
+      // t.shareCommand.author = t.$route.query.author
+      // t.shareCommand.time = t.$route.query.time
+      // t.shareCommand.description = t.$route.query.description
       console.log(t.opinionScore.shareId)
       if (t.opinionScore.shareId) {
         t.getOpinions(t.opinionScore.shareId)
@@ -140,6 +141,9 @@ export default {
       if (result != null && result.data && result.data.code === 200) {
         this.opinions = result.data.data
       }
+    },
+    async downloadFile (fileUrl) {
+      this.$api(fileUrl, '', 'GET')
     },
     makeScore (index) {
       for (var i = 0; i <= index; i++) {
@@ -172,7 +176,6 @@ export default {
         console.log('巴拉巴拉')
         // 调用获取评论接口
         t.getOpinions(t.opinionScore.shareId)
-        // aaaaaaaa
       } else if (result.data.code === 401) {
         t.$global.showMessage(result.data.message)
         t.cheakedStarts = []

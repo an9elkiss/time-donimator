@@ -175,6 +175,8 @@ export default {
       formData.append('userId', t.taskCommand.userId)
       formData.append('level', t.taskCommand.level)
       formData.append('userName', t.taskCommand.userName)
+      formData.append('token', t.personMsg.token)
+      console.log(t.personMsg.token)
       if (this.validateForm()) {
         this.$http.post(api, formData, config).then(response => {
           if (response.body.code === 200) {
@@ -182,18 +184,23 @@ export default {
           } else {
             this.errorMessage = response.body.message
           }
-          console.log('success')
         }, response => {
           console.log('error')
           // error callback
         })
-        // const result = await t.$api(api, t.shareCommand)
-        // console.log(result)
       }
     },
     validateForm () {
-      // return this.taskCommand.title && this.taskCommand.project && this.taskCommand.tags && parseInt(this.taskCommand.planScore) >= 0 && this.taskCommand.planStatus && this.taskCommand.endTime && parseInt(this.taskCommand.planHours) >= 0
-      return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+      if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 20971520) {
+        console.log('上传文件：' + this.shareCommand.multipartFile)
+        console.log('上传文件的大小为：' + this.shareCommand.multipartFile.size)
+        return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+      } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
+        this.$global.showMessage('上传的文件不能超过30MB！')
+        return false
+      } else {
+        return this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+      }
     }
   },
   watch: {

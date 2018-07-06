@@ -21,7 +21,7 @@
               <span class="descriptionDot"></span>
             </div>
             <div class="operatorDiv clearfix">
-              <div class="col-xs-3 text-center"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</div>
+              <div class="col-xs-3 text-center"><a @click="givePraise(comment.id)"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{comment.commentNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{comment.average}}</a></div>
               <div class="col-xs-3 text-center"><a :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
@@ -61,7 +61,8 @@ export default {
   },
   computed: {
     ...mapState({
-      personMsg: 'user'
+      personMsg: 'user',
+      person: 'person'
     })
   },
   async mounted () {
@@ -91,6 +92,18 @@ export default {
         if (this.hasNext) {
           this.getCommentsByPageIndexAndSize()
         }
+      }
+    },
+    async givePraise (id) {
+      let sharePraiseScore = {
+        shareId: id,
+        userId: this.person.userId,
+        userName: this.person.name,
+        level: this.person.level
+      }
+      let result = await this.$api(Global.url.apiSharePraise, sharePraiseScore, 'POST')
+      if (result && result.data && result.data.code) {
+        this.$global.showResult(result.data)
       }
     },
     async getCommentsByPageIndexAndSize () {

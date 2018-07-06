@@ -12,6 +12,8 @@ import CodeReviewList from '@/components/pages/codeReview/CodeReviewList'
 import ShowConvertedWorkHour from '@/components/pages/charts/ShowConvertedWorkHour'
 import App from '@/APP'
 import ScoreCharts from '@/components/pages/charts/ScoreCharts'
+import TrainingContent from '@/components/pages/trainingSharing/TrainingContent'
+import ShareComments from '@/components/pages/trainingSharing/ShareComments'
 import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
 
 Vue.use(VueResource)
@@ -113,6 +115,24 @@ export default new Router({
             keepAlive: false
           },
           component: ScoreCharts
+        },
+        {
+          path: 'training-content',
+          name: 'TrainingContent',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: TrainingContent
+        },
+        {
+          path: 'share-comments',
+          name: 'ShareComments',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: ShareComments
         },
         {
           path: 'sharing-comment-list',

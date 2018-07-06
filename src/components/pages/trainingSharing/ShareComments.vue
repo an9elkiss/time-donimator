@@ -29,7 +29,7 @@
               </label>
               <div class="center">
                 <button @click="submitComments" class="btn btn-space btn-primary">提交</button>
-                <button class="btn btn-space btn-primary" @click="downloadFile(sharingComment.filrUrl)">资料下载</button>
+                <a class="btn btn-space btn-primary" :href="downloadUrl">资料下载</a>
               </div>
             </div>
             <!-- 评论 -->
@@ -65,6 +65,7 @@ import Global from '@/components/Global'
 export default {
   data () {
     return {
+      downloadUrl: '',
       shareCommand: {
         persons: [],
         title: '',
@@ -117,16 +118,11 @@ export default {
           t.taskCommand.percent = t.persons[index].percent
         }
       }
-      t.opinionScore.shareId = t.sharingComment.shareId
-      // t.shareCommand.title = t.$route.query.title
-      // t.shareCommand.tags = t.$route.query.tags
-      // t.shareCommand.author = t.$route.query.author
-      // t.shareCommand.time = t.$route.query.time
-      // t.shareCommand.description = t.$route.query.description
-      console.log(t.opinionScore.shareId)
+      t.opinionScore.shareId = t.sharingComment.id
       if (t.opinionScore.shareId) {
         t.getOpinions(t.opinionScore.shareId)
       }
+      t.downloadUrl = Global.url.apiGetSharingFileDownload + '?filename=' + this.sharingComment.title + '&fileUrl=' + t.sharingComment.fileUrl + '&token=' + t.personMsg.token
     },
     async getPersons () {
       let result = await this.$api(Global.url.apiPersons, '', 'GET')
@@ -141,9 +137,6 @@ export default {
       if (result != null && result.data && result.data.code === 200) {
         this.opinions = result.data.data
       }
-    },
-    async downloadFile (fileUrl) {
-      this.$api(fileUrl, '', 'GET')
     },
     makeScore (index) {
       for (var i = 0; i <= index; i++) {

@@ -4,17 +4,16 @@
       <div class="panel panel-default">
         <div class="col-md-12">
           <div class="panel">
-            <div class="panel-heading panel-heading-divider">第一次分享会<span class="panel-subtitle">张三 2018-07-03</span>
+            <div class="panel-heading panel-heading-divider">{{shareCommand.title}}<span class="panel-subtitle">{{shareCommand.author}} {{shareCommand.time}}</span>
             </div>
             <div class="panel-body">
               <label style="color: #101010">标签： </label>&nbsp;&nbsp;
-              <label style="color: #101010">前端</label>
+              <label style="color: #101010">{{shareCommand.tags}}</label>
             </div>
             <div class="panel-body">
               <label style="color: #101010">简介： </label>&nbsp;&nbsp;
               <label style="color: #101010; width: 80%; vertical-align:text-top">
-                Quisque gravida aliquam diam at cursus,
-                quisque laoreet ac lectus a rhoncusac tempus odio.
+                {{shareCommand.description}}
               </label>
             </div>
             <div class="panel-body">
@@ -66,6 +65,14 @@ import Global from '@/components/Global'
 export default {
   data () {
     return {
+      shareCommand: {
+        persons: [],
+        title: '',
+        tags: '',
+        author: '',
+        time: '',
+        description: ''
+      },
       starts: ['第1个', '第2个', '第3个', '第4个', '第5个'],
       cheakedStarts: [],
       taskCommand: {
@@ -91,34 +98,47 @@ export default {
       window.App.init()
       window.App.formElements()
     })
-    this.init()
+    this.getPersons()
   },
   computed: {
     ...mapState({
-      personMsg: 'person'
+      personMsg: 'user'
     })
   },
   methods: {
     init () {
       var t = this
-      t.taskCommand.userName = t.personMsg.name
-      t.taskCommand.userId = t.personMsg.userId
-      t.taskCommand.level = t.personMsg.level
-      t.taskCommand.percent = t.personMsg.percent
-      t.opinionScore.shareId = t.$route.query.id
+      for (var index in t.persons) {
+        if (t.persons[index].userId === t.personMsg.id) {
+          t.taskCommand.userName = t.persons[index].name
+          t.taskCommand.userId = t.persons[index].userId
+          t.taskCommand.level = t.persons[index].level
+          t.taskCommand.percent = t.persons[index].percent
+        }
+      }
+      t.opinionScore.shareId = t.$route.query.shareId
+      t.shareCommand.title = t.$route.query.title
+      t.shareCommand.tags = t.$route.query.tags
+      t.shareCommand.author = t.$route.query.author
+      t.shareCommand.time = t.$route.query.time
+      t.shareCommand.description = t.$route.query.description
+      console.log(t.opinionScore.shareId)
       if (t.opinionScore.shareId) {
         t.getOpinions(t.opinionScore.shareId)
+      }
+    },
+    async getPersons () {
+      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.persons = result.data.data
+        this.init()
       }
     },
     async getOpinions (shareId) {
       var api = Global.url.apiGetOpinions + '?shareId=' + shareId
       var result = await this.$api(api, '', 'GET')
       if (result != null && result.data && result.data.code === 200) {
-        console.log(result.data.data)
         this.opinions = result.data.data
-        // for (var aaaa of this.opinions) {
-        //   console.log(aaaa)
-        // }
       }
     },
     makeScore (index) {
@@ -137,33 +157,27 @@ export default {
       }
     },
     async submitComments () {
-      var aa = false
-      if (aa) {
-        this.$global.showMessage('您已经评论过一次了！')
-      } else {
-        var t = this
-        var api = Global.url.apiGetShareComments
-        t.opinionScore.userName = t.taskCommand.userName
-        t.opinionScore.userId = t.taskCommand.userId
-        t.opinionScore.level = t.taskCommand.level
-        t.opinionScore.score = t.cheakedStarts.length + ''
-        t.opinionScore.shareId = 21
-        var result = await this.$api(api, t.opinionScore)
-        if (result != null && result.data && result.data.code === 200) {
-          t.cheakedStarts = []
-          t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
-          t.opinionScore.description = ''
-          console.log('巴拉巴拉')
-          // 调用获取评论接口
-          t.getOpinions(t.opinionScore.shareId)
-          // aaaaaaaa
-        } else if (result.data.code === 401) {
-          t.$global.showMessage(result.data.message)
-          t.cheakedStarts = []
-          t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
-          t.opinionScore.description = ''
-          t.getOpinions(t.opinionScore.shareId)
-        }
+      var t = this
+      var api = Global.url.apiGetShareComments
+      t.opinionScore.userName = t.taskCommand.userName
+      t.opinionScore.userId = t.taskCommand.userId
+      t.opinionScore.level = t.taskCommand.level
+      t.opinionScore.score = t.cheakedStarts.length + ''
+      var result = await this.$api(api, t.opinionScore)
+      if (result != null && result.data && result.data.code === 200) {
+        console.log('用户id' + t.opinionScore.userId)
+        t.cheakedStarts = []
+        t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
+        t.opinionScore.description = ''
+        console.log('巴拉巴拉')
+        // 调用获取评论接口
+        t.getOpinions(t.opinionScore.shareId)
+        // aaaaaaaa
+      } else if (result.data.code === 401) {
+        t.$global.showMessage(result.data.message)
+        t.cheakedStarts = []
+        t.starts = ['第1个', '第2个', '第3个', '第4个', '第5个']
+        t.opinionScore.description = ''
       }
     }
   }

@@ -68,6 +68,7 @@ import Global from '@/components/Global'
 export default {
   data () {
     return {
+      persons: [],
       tags: [],
       isClicked: false,
       uploadFileName: '',
@@ -101,7 +102,7 @@ export default {
   },
   computed: {
     ...mapState({
-      personMsg: 'person'
+      personMsg: 'user'
     })
   },
   mounted () {
@@ -117,7 +118,7 @@ export default {
           self.shareCommand.shareTime = value
         })
     })
-    this.init()
+    this.getPersons()
   },
   methods: {
     uploadFile (event) {
@@ -132,10 +133,21 @@ export default {
     },
     init () {
       var t = this
-      t.taskCommand.userName = t.personMsg.name
-      t.taskCommand.userId = t.personMsg.userId
-      t.taskCommand.level = t.personMsg.level
-      t.taskCommand.percent = t.personMsg.percent
+      for (var index in t.persons) {
+        if (t.persons[index].userId === t.personMsg.id) {
+          t.taskCommand.userName = t.persons[index].name
+          t.taskCommand.userId = t.persons[index].userId
+          t.taskCommand.level = t.persons[index].level
+          t.taskCommand.percent = t.persons[index].percent
+        }
+      }
+    },
+    async getPersons () {
+      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.persons = result.data.data
+        this.init()
+      }
     },
     addNewTag (tag) {
       if (tag.length <= 5 && tag.length > 0) {
@@ -165,8 +177,14 @@ export default {
       formData.append('userName', t.taskCommand.userName)
       if (this.validateForm()) {
         this.$http.post(api, formData, config).then(response => {
-
+          if (response.body.code === 200) {
+            this.$router.push({name: 'SharingCommentList'})
+          } else {
+            this.errorMessage = response.body.message
+          }
+          console.log('success')
         }, response => {
+          console.log('error')
           // error callback
         })
         // const result = await t.$api(api, t.shareCommand)

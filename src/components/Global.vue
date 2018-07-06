@@ -37,9 +37,9 @@ const url = {
   apiShowConvertedWorkHours: managerApiBase + '/api-super-manager/1.0.0/task/show/converted/workhours',
   apiGetScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscore',
   apiGetTotalScoreData: managerApiBase + '/api-super-manager/1.0.0/task/week/actualscoreTotal',
-  apiPostTrainingContent: managerApiBase + '/api-super-manager/1.0.0/share/insert',
-  apiGetShareComments: managerApiBase + '/api-super-manager/1.0.0/shareComment/insert',
-  apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/shareComment/select'
+  apiPostTrainingContent: managerApiBase + '/api-super-manager/1.0.0/share',
+  apiGetShareComments: managerApiBase + '/api-super-manager/1.0.0/shareComment',
+  apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/findShareComment'
 }
 
 const event = {

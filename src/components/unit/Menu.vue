@@ -31,6 +31,13 @@
                   <sub-menu v-show="menuBtn.m303" id="sm_6" path="/score-charts" name="贡献值" />
                 </ul>
               </li>
+              <li v-show="menuBtn.m301" class="parent">
+                <a href="#"><i class="icon mdi mdi-chart"></i><span>培训分享</span></a>
+                <ul class="sub-menu">
+                  <sub-menu v-show="menuBtn.m302" id="sm_5" path="/training-content" name="我要分享" />
+                  <sub-menu v-show="menuBtn.m303" id="sm_6" path="/sharing-comment-list" name="分享列表" />
+                </ul>
+              </li>
             </ul>
           </div>
         </div>

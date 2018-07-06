@@ -18,7 +18,8 @@ export default new Vuex.Store({
     codeReviewPerson: {},
     codeReview: {},
     codeReviewDetail: {},
-    taskList: []
+    taskList: [],
+    sharingComment: {}
   },
   mutations: {
     login (state, data) {
@@ -57,6 +58,9 @@ export default new Vuex.Store({
     },
     setTaskList (state, taskList) {
       state.taskList = taskList
+    },
+    setSharingComment (state, sharingComment) {
+      state.sharingComment = sharingComment
     }
   },
 
@@ -84,6 +88,9 @@ export default new Vuex.Store({
     },
     getTaskList (state) {
       return state.taskList
+    },
+    getSharingComment (state) {
+      return state.sharingComment
     }
   },
 

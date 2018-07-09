@@ -183,16 +183,14 @@ export default {
       }
     },
     validateForm () {
-      if (this.shareCommand.title.trim().length <= 0 || this.shareCommand.description.trim().length <= 0 || this.shareCommand.shareTime.trim().length <= 0) {
-        this.$global.showMessage('表单不能为空！')
+      if (this.shareCommand.title.trim().length <= 0 || this.shareCommand.shareTime.trim().length <= 0 || this.shareCommand.multipartFile == null) {
+        this.$global.showMessage('名称、时间、上传文件不能为空！')
       } else {
-        if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size <= 31457280) {
-          return this.shareCommand.multipartFile && this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
+        if (this.shareCommand.multipartFile.size <= 31457280) {
+          return true
         } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
           this.$global.showMessage('上传的文件不能超过30MB！')
           return false
-        } else {
-          return this.shareCommand.title && this.shareCommand.description && this.shareCommand.shareLabel && this.shareCommand.shareTime
         }
       }
     }

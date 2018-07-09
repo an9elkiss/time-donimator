@@ -12,8 +12,7 @@
             </div>
             <div class="panel-body">
               <label style="color: #101010">简介： </label>&nbsp;&nbsp;
-              <label style="color: #101010; width: 80%; vertical-align:text-top">
-                <p v-html="$global.format(sharingComment.description)"></p>
+              <label style="color: #101010; width: 80%;" v-html="$global.format(sharingComment.description)">
               </label>
             </div>
             <div class="panel-body">
@@ -24,10 +23,10 @@
             </div>
             <div class="panel-body">
               <label style="color: #101010">意见反馈： </label>&nbsp;&nbsp;
-              <label style="color: #101010; width: 68%; vertical-align:text-top">
+              <label style="color: #101010;" class="feedback">
                 <textarea v-model="opinionScore.description" rows="4" class="form-control input-sm"></textarea>
               </label>
-              <div class="center">
+              <div class="text-center">
                 <button @click="submitComments" class="btn btn-space btn-primary">提交</button>
                 <a class="btn btn-space btn-primary" :href="downloadUrl">资料下载</a>
                 <a @click="$router.go(-1)" class="btn btn-space btn-primary">返回</a>
@@ -49,7 +48,7 @@
                 </label>
               </div>
             </div>
-            <div class="comment-item"></div>
+            <!--<div class="comment-item"></div>-->
           </div>
         </div>
       </div>
@@ -195,6 +194,9 @@ export default {
   .panel-body {
     padding: 3px;
   }
+  .panel-body label {
+    vertical-align: top;
+  }
   .mdi-star-outline {
     transition: color 300ms ease-in-out;
     font-size: 20px;
@@ -226,5 +228,13 @@ export default {
   .col-md-12 {
     background-color: #FFFFFF;
     border-radius: 3px;
+  }
+  label.feedback {
+    width: 68%;
+  }
+  @media (max-width: 767px) {
+    label.feedback {
+      width: 100%;
+    }
   }
 </style>

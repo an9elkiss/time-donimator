@@ -3,11 +3,11 @@
     <div class="main-content container-fluid">
       <div class="panel panel-default">
         <div v-for="comment in historyComments" :key="comment.id" class="panel-body sharingComment">
-          <div class="commentHeading cfix">
+          <div @click="toShareComments(comment)" class="commentHeading cfix">
             <div class="fLeft">
               <div class="circle"></div>{{comment.title}}
             </div>
-            <div class="fRight">
+            <div v-if="comment.shareLabel" class="fRight">
               标签：{{comment.shareLabel}}
             </div>
           </div>
@@ -21,9 +21,9 @@
               <span class="descriptionDot"></span>
             </div>
             <div class="operatorDiv clearfix">
-              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{comment.commentNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{comment.average}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'':comment.praiseNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'':comment.commentNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'':comment.average}}</a></div>
               <div class="col-xs-3 text-center"><a :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
             </div>
           </div>
@@ -80,6 +80,12 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    isNullOrZoneOrMinus (number) {
+      if (number == null || number <= 0) {
+        return true
+      }
+      return false
+    },
     toShare () {
       window.removeEventListener('scroll', this.handleScroll)
       this.$router.push({name: 'TrainingContent'})
@@ -164,6 +170,7 @@ export default {
   }
   div.commentHeading {
     margin: 10px 0px;
+    cursor: pointer;
   }
   div.commentBody {
     background-color: #eee;
@@ -181,6 +188,7 @@ export default {
   div.operatorDiv span {
     font-size: 18px;
     margin-right: 4px;
+    vertical-align: top;
   }
   div.circle {
     background-color: #404040;

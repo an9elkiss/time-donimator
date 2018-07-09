@@ -67,8 +67,13 @@ export default {
   },
   async mounted () {
     await this.initialPerson()
+    this.pageIndex = 0
     await this.getCommentsByPageIndexAndSize()
     this.historyComments = this.newComments
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  async activated () {
+    await this.getRefreshComments()
     window.addEventListener('scroll', this.handleScroll)
   },
   destroyed () {
@@ -76,9 +81,11 @@ export default {
   },
   methods: {
     toShare () {
+      window.removeEventListener('scroll', this.handleScroll)
       this.$router.push({name: 'TrainingContent'})
     },
     toShareComments (comment) {
+      window.removeEventListener('scroll', this.handleScroll)
       this.$store.commit('setSharingComment', comment)
       this.$router.push({name: 'ShareComments'})
     },
@@ -135,6 +142,16 @@ export default {
         for (let index in this.newComments) {
           this.historyComments.push(this.newComments[index])
         }
+      }
+    },
+    async getRefreshComments () {
+      if (this.pageIndex === 0) {
+        return
+      }
+      let queryString = '?currentPage=1&size=' + this.pageIndex * this.pageSize
+      let result = await this.$api(Global.url.apiGetSharingCommentsList + queryString, '', 'GET')
+      if (result && result.data && result.data.code === 200) {
+        this.historyComments = result.data.data
       }
     }
   }

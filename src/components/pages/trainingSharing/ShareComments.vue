@@ -94,11 +94,6 @@ export default {
     }
   },
   mounted () {
-    // var self = this
-    window.$(document).ready(function () {
-      window.App.init()
-      window.App.formElements()
-    })
     this.getPersons()
   },
   computed: {

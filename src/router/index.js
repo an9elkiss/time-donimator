@@ -22,6 +22,8 @@ Vue.use(Router)
 Vue.http.options.emulateJSON = true
 
 export default new Router({
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
   routes: [
     {
       path: '/login',
@@ -139,7 +141,7 @@ export default new Router({
           name: 'SharingCommentList',
           meta: {
             requireAuth: true,
-            keepAlive: false
+            keepAlive: true
           },
           component: SharingCommentList
         }

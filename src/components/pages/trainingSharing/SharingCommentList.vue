@@ -21,7 +21,7 @@
               <span class="descriptionDot"></span>
             </div>
             <div class="operatorDiv clearfix">
-              <div class="col-xs-3 text-center"><a @click="givePraise(comment.id)"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{comment.praiseNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{comment.commentNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{comment.average}}</a></div>
               <div class="col-xs-3 text-center"><a :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
@@ -107,9 +107,9 @@ export default {
         }
       }
     },
-    async givePraise (id) {
+    async givePraise (comment) {
       let sharePraiseScore = {
-        shareId: id,
+        shareId: comment.id,
         userId: this.person.userId,
         userName: this.person.name,
         level: this.person.level
@@ -117,6 +117,9 @@ export default {
       let result = await this.$api(Global.url.apiSharePraise, sharePraiseScore, 'POST')
       if (result && result.data && result.data.code) {
         this.$global.showResult(result.data)
+      }
+      if (result && result.data && result.data.code === 200) {
+        comment.praiseNum += 1
       }
     },
     async getCommentsByPageIndexAndSize () {

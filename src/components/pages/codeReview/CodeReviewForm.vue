@@ -93,7 +93,6 @@ export default {
   },
   mounted: function () {
     window.$(document).ready(function () {
-      window.App.init()
       window.App.formElements()
     })
     // edit codeReview

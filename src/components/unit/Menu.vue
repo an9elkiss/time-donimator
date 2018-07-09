@@ -6,24 +6,23 @@
           <div class="left-sidebar-content">
             <ul class="sidebar-elements">
               <li class="divider">菜单</li>
-                <li v-show="menuBtn.m1">
-                  <a href="/"><i class="icon mdi mdi-home"></i><span>首页</span></a>
-                </li>
-                <li v-show="menuBtn.m101" class="parent">
-                  <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
-                  <ul class="sub-menu">
-                      <sub-menu v-show="menuBtn.m102" id="sm_1" path="/time-entry" name="日程记录" />
-                      <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
-                  </ul>
-                </li>
-              <!--v-show="menuBtn.m201" v-show="menuBtn.m202"-->
-                <li v-show="menuBtn.m201" class="parent">
-                  <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
-                  <ul class="sub-menu">
-                    <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
-                    <sub-menu v-show="menuBtn.m203" id="sm_4" path="/code-review-list" name="代码审核" />
-                  </ul>
-                </li>
+              <li v-show="menuBtn.m1">
+                <a href="/"><i class="icon mdi mdi-home"></i><span>首页</span></a>
+              </li>
+              <li v-show="menuBtn.m101" class="parent">
+                <a href="#"><i class="icon mdi mdi-hourglass-alt"></i><span>时间管理</span></a>
+                <ul class="sub-menu">
+                  <sub-menu v-show="menuBtn.m102" id="sm_1" path="/time-entry" name="日程记录" />
+                  <sub-menu v-show="menuBtn.m103" id="sm_2" path="/time-chart" name="日程报表" />
+                </ul>
+              </li>
+              <li v-show="menuBtn.m201" class="parent">
+                <a href="#"><i class="icon mdi mdi-slideshare"></i><span>任务管理</span></a>
+                <ul class="sub-menu">
+                  <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
+                  <sub-menu v-show="menuBtn.m203" id="sm_4" path="/code-review-list" name="代码审核" />
+                </ul>
+              </li>
               <li v-show="menuBtn.m301" class="parent">
                 <a href="#"><i class="icon mdi mdi-chart"></i><span>报表管理</span></a>
                 <ul class="sub-menu">
@@ -34,8 +33,8 @@
               <li v-show="menuBtn.m400" class="parent">
                 <a href="#"><i class="icon mdi mdi-chart"></i><span>培训分享</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m401" id="sm_5" path="/training-content" name="我要分享" />
-                  <sub-menu v-show="menuBtn.m402" id="sm_6" path="/sharing-comment-list" name="分享列表" />
+                  <sub-menu v-show="menuBtn.m401" id="sm_7" path="/training-content" name="我要分享" />
+                  <sub-menu v-show="menuBtn.m402" id="sm_8" path="/sharing-comment-list" name="分享列表" />
                 </ul>
               </li>
             </ul>

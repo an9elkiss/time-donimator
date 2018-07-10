@@ -46,19 +46,19 @@ var App = (function () {
     }, cb);
 
     cb(start, end);
-    
+
     //Select2
     $(".select2").select2({
       width: '100%'
     });
-    
+
     //Select2 tags
     $(".tags").select2({tags: true, width: '100%'});
 
     //Bootstrap Slider
-    $('.bslider').bootstrapSlider();
+    // $('.bslider').bootstrapSlider();
 
-    // File input 
+    // File input
     $( '.inputfile' ).each( function(){
       var $input   = $( this ),
         $label   = $input.next( 'label' ),
@@ -79,7 +79,7 @@ var App = (function () {
           $label.html( labelVal );
       });
     });
-    
+
   };
 
   return App;

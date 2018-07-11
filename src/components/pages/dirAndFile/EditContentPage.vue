@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="aside-nav collapse">
-            <z-tree :zNodes="zNodes" pIdKey="parentId"></z-tree>
+            <z-tree :zNodes="zNodes" pIdKey="parentId" @addTreeNode="addTreeNodeHandler" @deleteTreeNode="deleteTreeNodeHandler" @renameTreeNode="renameTreeNodeHandler"></z-tree>
           </div>
         </div>
         <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
@@ -68,6 +68,9 @@
         </div>
       </div>
     </div>
+    <van-dialog v-model="confirmFlag" show-cancel-button :before-close="beforeClose" :title="confirmTitle">
+      <van-field v-model="newDictionaryName" label="文件夹名称" placeholder="请输入"/>
+    </van-dialog>
   </div>
 </template>
 
@@ -77,6 +80,7 @@ import {
 } from 'vuex'
 import Global from '@/components/Global'
 import ZTree from '@/components/unit/ZTree'
+import { Dialog } from 'vant'
 
 export default {
   name: 'EditContentPage',
@@ -84,11 +88,19 @@ export default {
   computed: {
     ...mapState({
       personMsg: 'user'
-    })
+    }),
+    confirmTitle: function () {
+      switch (this.addOrReNameConfirmFlag) {
+        case 'add': return '请为 ' + this.targetNode.name + ' 添加文件夹'
+        case 'rename': return '请为 ' + this.targetNode.name + ' 更新文件夹名称'
+        default: return ''
+      }
+    }
   },
   data () {
     return {
       persons: [],
+      // taskCommand 中有关登陆者的信息在初始化后不可以做任何修改
       taskCommand: {
         name: '',
         fileTime: '',
@@ -100,6 +112,10 @@ export default {
         userId: '',
         userName: ''
       },
+      confirmFlag: false,
+      addOrReNameConfirmFlag: '',
+      newDictionaryName: '',
+      targetNode: {},
       zNodes: [],
       pageStatus: {
         detailPage: false,
@@ -124,8 +140,6 @@ export default {
     })
     this.getPersons()
     this.getZNodes()
-    this.pageContentId = 724
-    this.getPageDetailById()
   },
   methods: {
     async getPersons () {
@@ -149,10 +163,24 @@ export default {
     },
     async getZNodes () {
       let result = await this.$api(Global.url.apiGetAllFileTree, '', 'GET')
-      console.log(result)
       if (result && result.data && result.data.code === 200) {
         this.zNodes = result.data.data
       }
+    },
+    async postDictionary () {
+      let dictionary = {
+        name: this.newDictionaryName,
+        fileTime: null,
+        parentId: this.targetNode.id,
+        fileType: 42,
+        description: null,
+        percent: this.taskCommand.percent,
+        level: this.taskCommand.level,
+        userId: this.taskCommand.userId,
+        userName: this.taskCommand.userName
+      }
+      let result = await this.$api(Global.url.apiPostNodeContent, dictionary, 'POST')
+      this.$global.showResult(result.data)
     },
     async submitTask () {
       console.log(this.taskCommand)
@@ -169,6 +197,56 @@ export default {
         this.contentData = result.data.data
         console.log(this.contentData)
       }
+    },
+    async renameTreeNode () {
+      let result = await this.$api(Global.url.apiPostNodeContent + '/' + this.targetNode.id, {id: this.targetNode.id, name: this.newDictionaryName}, 'POST')
+      this.$global.showResult(result.data)
+      return result.data.data
+    },
+    async deleteTreeNode () {
+      let result = await this.$api(Global.url.apiPostNodeContent + '/' + this.targetNode.id, '', 'DELETE')
+      this.$global.showResult(result.data)
+      return result.data.code
+    },
+    async beforeClose (action, done) {
+      if (action === 'confirm' && this.newDictionaryName !== '') {
+        switch (this.addOrReNameConfirmFlag) {
+          case 'add':
+            await this.postDictionary()
+            break
+          case 'rename':
+            await this.renameTreeNode()
+            break
+          default:
+            done()
+        }
+        this.newDictionaryName = ''
+        this.getZNodes()
+      }
+      done()
+    },
+    addTreeNodeHandler (targetNode) {
+      this.addOrReNameConfirmFlag = 'add'
+      this.targetNode = targetNode
+      this.confirmFlag = true
+    },
+    renameTreeNodeHandler (targetNode) {
+      this.addOrReNameConfirmFlag = 'rename'
+      this.targetNode = targetNode
+      this.confirmFlag = true
+    },
+    deleteTreeNodeHandler (targetNode) {
+      this.targetNode = targetNode
+      Dialog.confirm({
+        title: '警告',
+        message: '确认删除 ' + targetNode.name + ' 吗？'
+      }).then(async () => {
+        if (await this.deleteTreeNode() === 200) {
+          this.getZNodes()
+        }
+      }).catch(() => {
+
+      })
     }
   }
 }

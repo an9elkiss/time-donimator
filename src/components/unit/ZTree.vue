@@ -8,22 +8,6 @@ export default {
   props: ['zNodes', 'pIdKey'],
   data () {
     return {
-      // zNodes: [
-      //   {id: 0, pId: null, name: '根节点', open: true},
-      //   {id: 1, pId: 0, name: '父节点 1', open: true},
-      //   {id: 11, pId: 1, name: '叶子节点 1-1'},
-      //   {id: 12, pId: 1, name: '叶子节点 1-2'},
-      //   {id: 13, pId: 1, name: '叶子节点 1-3'},
-      //   {id: 2, pId: 0, name: '父节点 2', open: true},
-      //   {id: 21, pId: 2, name: '叶子节点 2-1'},
-      //   {id: 22, pId: 2, name: '叶子节点 2-2'},
-      //   {id: 23, pId: 2, name: '叶子节点 2-3'},
-      //   {id: 3, pId: 0, name: '父节点 3', open: true},
-      //   {id: 31, pId: 3, name: '叶子节点 3-1'},
-      //   {id: 32, pId: 3, name: '叶子节点 3-2'},
-      //   {id: 33, pId: 3, name: '叶子节点 3-3'}
-      // ],
-      // className: 'dark',
       setting: {
         view: {
           addHoverDom: this.addHoverDom,
@@ -50,7 +34,8 @@ export default {
           beforeRemove: this.beforeRemove,
           beforeRename: this.beforeRename,
           onRemove: this.onRemove,
-          onRename: this.onRename
+          onRename: this.onRename,
+          onClick: this.onClick
         }
       }
     }
@@ -59,6 +44,19 @@ export default {
     'zNodes': function () {
       console.log(this.zNodes)
       window.$.fn.zTree.init(window.$('#zTree'), this.setting, this.zNodes)
+      let ztree = window.$.fn.zTree.getZTreeObj('zTree')
+      let folderNode = ztree.getNodesByFilter(node => {
+        return node.fileType !== 43
+      })
+      folderNode.map(node => {
+        node.isParent = true
+      })
+      ztree.getNodesByFilter(node => {
+        return node[this.pIdKey] === null
+      }).map(node => {
+        node.open = true
+      })
+      ztree.refresh()
     }
   },
   methods: {
@@ -68,6 +66,9 @@ export default {
       var sObj = window.$('#' + treeNode.tId + '_span')
       if (treeNode.editNameFlag || window.$('#addBtn_' + treeNode.tId).length > 0) {
         // 如果是不可以修改状态 或者 已经在哪里显示添加按钮，则本次不做处理
+        return
+      }
+      if (treeNode.fileType === 43) {
         return
       }
       // 添加的更新按钮的HTML
@@ -80,6 +81,8 @@ export default {
         btn.bind('click', function () {
           // TODO
           console.log('add button clicked')
+          console.log(treeNode)
+          this.$emit('addTreeNode', treeNode)
           // 这里是原来的方式添加tree，我们这里可以在修改后重新获取tree的信息更新
           // var zTree = $.fn.zTree.getZTreeObj("treeDemo");
           // zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
@@ -134,7 +137,7 @@ export default {
         setTimeout(function () {
           var zTree = window.$.fn.zTree.getZTreeObj('zTree')
           zTree.cancelEditName()
-          alert('节点名称不能为空.')
+          this.$global.showMessage('节点名称不能为空.')
         }, 0)
         return false
       }
@@ -144,11 +147,18 @@ export default {
       // showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name)
       console.log(e, treeNode)
       console.log('真正的删除操作')
+      this.$emit('deleteTreeNode', treeNode)
     },
     onRename (e, treeId, treeNode, isCancel) {
       // showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""))
       console.log(e, treeNode)
       console.log('真正的更新操作')
+      this.$emit('renameTreeNode', treeNode)
+    },
+    onClick (e, treeId, treeNode, isCancel) {
+      console.log(treeNode)
+      console.log('我被点击了')
+      this.$emit('clickTreeNode', treeNode)
     }
   }
 }

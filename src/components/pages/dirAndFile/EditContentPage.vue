@@ -12,23 +12,7 @@
             </div>
           </div>
           <div class="aside-nav collapse">
-            <ul class="nav">
-              <li><a href="#"><span class="label label-primary">8</span><i class="icon mdi mdi-inbox"></i> Inbox</a>
-              </li>
-              <li class="active"><a href="#"><i class="icon mdi mdi-email"></i> Sent Mail</a></li>
-              <li><a href="#"><span class="label label-default">4</span><i class="icon mdi mdi-case"></i> Important</a>
-              </li>
-              <li><a href="#"><i class="icon mdi mdi-file"></i> Drafts</a></li>
-              <li><a href="#"><i class="icon mdi mdi-star"></i> Tags</a></li>
-              <li><a href="#"><i class="icon mdi mdi-delete"></i> Trash</a></li>
-            </ul>
-            <span class="title">Labels</span>
-            <ul class="nav nav-pills nav-stacked">
-              <li><a href="#"><span class="label label-success">0</span> Inbox</a></li>
-              <li><a href="#"><span class="label label-danger">8</span>Sent Mail</a></li>
-              <li><a href="#"><span class="label label-warning">4</span>Important</a></li>
-            </ul>
-            <div class="aside-compose"><a class="btn btn-lg btn-primary btn-block">Compose Email</a></div>
+            <z-tree :zNodes="zNodes" pIdKey="parentId"></z-tree>
           </div>
         </div>
         <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
@@ -54,7 +38,7 @@
             <label class="col-sm-2 control-label">时间</label>
             <div class="col-sm-8">
               <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
-                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="shareTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="shareTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" autocomplete="off" style="z-index: 0" @keydown.enter.prevent>
               </div>
             </div>
           </div>
@@ -77,9 +61,11 @@ import {
   mapState
 } from 'vuex'
 import Global from '@/components/Global'
+import ZTree from '@/components/unit/ZTree'
 
 export default {
   name: 'EditContentPage',
+  components: {ZTree},
   data () {
     return {
       shareTime: '',
@@ -92,7 +78,8 @@ export default {
         level: '',
         userId: '',
         userName: ''
-      }
+      },
+      zNodes: []
     }
   },
   mounted () {
@@ -109,6 +96,7 @@ export default {
         })
     })
     this.getPersons()
+    this.getZNodes()
   },
   computed: {
     ...mapState({
@@ -133,6 +121,13 @@ export default {
           t.taskCommand.percent = t.persons[index].percent
           return
         }
+      }
+    },
+    async getZNodes () {
+      let result = await this.$api(Global.url.apiGetAllFileTree, '', 'GET')
+      console.log(result)
+      if (result && result.data && result.data.code === 200) {
+        this.zNodes = result.data.data
       }
     }
   }

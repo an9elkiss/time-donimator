@@ -42,7 +42,8 @@ const url = {
   apiGetOpinions: managerApiBase + '/api-super-manager/1.0.0/findShareComment',
   apiGetSharingCommentsList: managerApiBase + '/api-super-manager/1.0.0/share/show',
   apiGetSharingFileDownload: managerApiBase + '/api-super-manager/1.0.0/share/downloadFile',
-  apiSharePraise: managerApiBase + '/api-super-manager/1.0.0/sharePraise'
+  apiSharePraise: managerApiBase + '/api-super-manager/1.0.0/sharePraise',
+  apiGetAllFileTree: managerApiBase + '/api-super-manager/1.0.0/fileTree/findAll'
 }
 
 const event = {

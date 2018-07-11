@@ -24,7 +24,7 @@
               <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'':comment.praiseNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'':comment.commentNum}}</a></div>
               <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'':comment.average}}</a></div>
-              <div class="col-xs-3 text-center"><a :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
+              <div class="col-xs-3 text-center"><a v-if="comment.fileUrl != null" :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
             </div>
           </div>
         </div>

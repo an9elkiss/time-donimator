@@ -28,7 +28,7 @@
               </label>
               <div class="text-center">
                 <button @click="submitComments" class="btn btn-space btn-primary">提交</button>
-                <a class="btn btn-space btn-primary" :href="downloadUrl">资料下载</a>
+                <a v-if="sharingComment.fileUrl != null" class="btn btn-space btn-primary" :href="downloadUrl">资料下载</a>
                 <a @click="$router.go(-1)" class="btn btn-space btn-primary">返回</a>
               </div>
             </div>

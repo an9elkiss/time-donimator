@@ -183,14 +183,19 @@ export default {
       }
     },
     validateForm () {
-      if (this.shareCommand.title.trim().length <= 0 || this.shareCommand.shareTime.trim().length <= 0 || this.shareCommand.multipartFile == null) {
-        this.$global.showMessage('名称、时间、上传文件不能为空！')
+      if (this.shareCommand.title.length <= 0 || this.shareCommand.shareTime.length <= 0) {
+        this.$global.showMessage('名称、时间不能为空！')
+        return false
       } else {
-        if (this.shareCommand.multipartFile.size <= 31457280) {
+        if (this.uploadFileName.length > 0) {
+          if (this.shareCommand.multipartFile.size <= 31457280) {
+            return true
+          } else if (this.shareCommand.multipartFile.size > 31457280) {
+            this.$global.showMessage('上传的文件不能超过30MB！')
+            return false
+          }
+        } else {
           return true
-        } else if (this.shareCommand.multipartFile != null && this.shareCommand.multipartFile.size > 31457280) {
-          this.$global.showMessage('上传的文件不能超过30MB！')
-          return false
         }
       }
     }

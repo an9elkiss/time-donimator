@@ -79,7 +79,8 @@
                 <input data-parsley-type="number" placeholder="贡献值" class="form-control input-sm" v-model="taskCommand.planScore" @keydown.enter.prevent>
                 <span v-if="mustInputTaskAttributes.planScoreFlag" class="mdi mdi-close form-control-feedback"></span>
               </div>
-              <div class="col-sm-6 col-sm-offset-3" v-if="taskWeekId && taskCommand.parentId">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-6" v-if="taskWeekId && taskCommand.parentId">
                 <div class="progress">
                   <div ref="actualAllScore" class="progress-bar progress-bar-primary progress-bar-striped" v-if="actualAllScore >= 0">{{ actualAllScore }}</div>
                   <div ref="planAllScore" class="progress-bar progress-bar-success progress-bar-striped" v-if="planAllScore >= 0">{{ planAllScore }}</div>

@@ -47,7 +47,8 @@
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
                 <div class="panel-body">
-                  <div class="task-block" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
+                  <div class="task-block" :class="task.currentStatus === task.planStatus?'complete':''" v-for="(task,index_2) in item.taskLists.taskCommands" :key="index_2">
+                    <van-icon name="success" v-if="task.currentStatus === task.planStatus"/>
                     <h2 class="cfix">
                       <span class="fLeft">任务{{index_2 + 1}}</span>
                       <div class="btn-group fRight">
@@ -388,7 +389,8 @@ export default {
     background: rgba(245, 245, 245, 0.4);
     color: #454545;
     padding: 10px 20px;
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1)
+    border-bottom: 1px solid rgba(225, 225, 225, 0.9);
+    position: relative;
   }
   .task-block h2{
     font-size: 14px;
@@ -426,7 +428,27 @@ export default {
   .task-lists .accordion .panel .panel-heading a .icon{
     margin-right: 5px;
   }
+  div.complete {
+    background-color: rgba(203, 251, 216, .1)
+  }
   .btn-center{
     text-align: center;
+  }
+  .van-icon-success {
+    position: absolute;
+    bottom: 30%;
+    right: 40px;
+    color: green;
+    opacity: 0.2;
+    font-size: 80px;
+  }
+  .van-icon-extra:before {
+    content: '\e626';
+  }
+  @media (max-width: 720px) {
+    .van-icon-success {
+      bottom: 40%;
+      right: 45px;
+    }
   }
 </style>

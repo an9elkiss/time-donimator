@@ -4,8 +4,8 @@
 
       <div class="panel panel-default">
         <div class="panel-heading panel-heading-divider">时间筛选</div>
-        <div class="panel-body flexBox">
-          <div class="boxFlex_1">
+        <div class="panel-body">
+          <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
             <div class="pcPart">
               <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
                 <option value="2018">2018年</option>
@@ -15,7 +15,7 @@
               <input-select title='选择年' :columns="yearColumns" state="true" :initial="timeFilter.year + '年'" @selectConfirmed="yearSelectChange"></input-select>
             </div>
           </div>
-          <div class="boxFlex_1">
+          <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
             <div class="pcPart">
               <select class="form-control input-sm" v-model="timeFilter.month" @change="changeYearOrMonth()">
                 <option :value="itemmonth.id" :key="itemmonth.id" v-for="itemmonth in timeFilter.months">{{itemmonth.value}}</option>
@@ -25,7 +25,7 @@
               <input-select title='选择月份' :columns="monthColumns" state="true" :initial="timeFilter.months[timeFilter.month - 1].value" @selectConfirmed="monthSelectChange"></input-select>
             </div>
           </div>
-          <div class="boxFlex_1">
+          <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
             <div class="pcPart">
               <select class="form-control input-sm" v-model="timeFilter.week" @change="changeSelect()">
                 <option :value="itemweek.id" :key="itemweek.id" v-for="itemweek in timeFilter.weeks" v-if="itemweek.id <= timeFilter.maxWeek">{{itemweek.value}}</option>
@@ -363,6 +363,9 @@ export default {
 
 </script>
 <style scoped>
+  div.col-xs-4.col-sm-3.col-md-2.col-lg-2 {
+    padding: 0px;
+  }
   .btn-add {
     margin: 15px auto 0;
     display: block;

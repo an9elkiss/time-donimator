@@ -225,14 +225,14 @@ export default {
     text-decoration: none;
     margin-left: 13px;
   }
-
   .ui-upload input {
-    font-size: 16px;
-    right: 0;
-    top: 0;
     opacity: 0;
-    filter: alpha(opacity=0);
+    filter:alpha(opacity=0);
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    z-index: 100;
     cursor: pointer;
-    height: 0px;
+    font-size: 23px;
   }
 </style>

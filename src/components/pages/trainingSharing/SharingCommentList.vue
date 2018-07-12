@@ -14,16 +14,16 @@
           <div class="commentBody">
             <div class="cfix">
               <div class="fLeft">作者：{{comment.userName}}</div>
-              <div class="fRight">时间：{{comment.createTime.substr(0, 10)}}</div>
+              <div class="fRight">时间：{{comment.shareTime.substr(0, 10)}}</div>
             </div>
             <div>
               <p v-html="$global.format(comment.description)" class="commentDescription"></p>
               <span class="descriptionDot"></span>
             </div>
             <div class="operatorDiv clearfix">
-              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'':comment.praiseNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'':comment.commentNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'':comment.average}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'0':comment.praiseNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'0':comment.commentNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'0':comment.average}}</a></div>
               <div class="col-xs-3 text-center"><a v-if="comment.fileUrl != null" :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
             </div>
           </div>

@@ -45,7 +45,9 @@ const url = {
   apiSharePraise: managerApiBase + '/api-super-manager/1.0.0/sharePraise',
   apiGetAllFileTree: managerApiBase + '/api-super-manager/1.0.0/fileTree/findAll',
   apiPostNodeContent: managerApiBase + '/api-super-manager/1.0.0/fileTree',
-  apiGetDetailContent: managerApiBase + '/api-super-manager/1.0.0/fileTree/find'
+  apiGetDetailContent: managerApiBase + '/api-super-manager/1.0.0/fileTree/find',
+  apiPostSubmitPic: managerApiBase + '/api-super-manager/1.0.0/fileTree/uploadFile',
+  apiGetImageUrl: managerApiBase + '/api-super-manager/1.0.0/'
 }
 
 const event = {

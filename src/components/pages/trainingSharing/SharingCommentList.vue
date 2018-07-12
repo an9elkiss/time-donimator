@@ -14,7 +14,7 @@
           <div class="commentBody">
             <div class="cfix">
               <div class="fLeft">作者：{{comment.userName}}</div>
-              <div class="fRight">时间：{{comment.createTime.substr(0, 10)}}</div>
+              <div class="fRight">时间：{{comment.shareTime.substr(0, 10)}}</div>
             </div>
             <div>
               <p v-html="$global.format(comment.description)" class="commentDescription"></p>

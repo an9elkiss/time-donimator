@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="aside-nav collapse">
-            <z-tree :zNodes="zNodes" pIdKey="parentId"></z-tree>
+            <z-tree :zNodes="zNodes" pIdKey="parentId" @clickTreeNode="treeNodeClicked"></z-tree>
           </div>
         </div>
         <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
@@ -31,7 +31,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">名称</label>
             <div class="col-sm-8">
-              <input type="text" required="" v-model="taskCommand.name" placeholder="" class="form-control input-sm">
+              <input type="text" required="" v-model="taskCommand.name" :placeholder="placeName" class="form-control input-sm">
             </div>
           </div>
           <div class="form-group">
@@ -56,14 +56,15 @@
         <div class="email-body">
           <div class="col-md-12">
             <div class="panel">
-              <div class="panel-heading panel-heading-divider detailPage">{{contentData.name}}<span class="panel-subtitle">{{contentData.userName}}&nbsp;&nbsp;{{contentData.fileTime}}</span></div>
+              <div class="panel-heading panel-heading-divider detailPage">{{contentData.name}}<span class="panel-subtitle">{{contentData.userName}}&nbsp;&nbsp;{{contentData.hasOwnProperty('fileTime')?contentData.fileTime.substr(0, 10):''}}</span></div>
               <div v-html="contentData.description" class="panel-body"></div>
             </div>
           </div>
           <div class="box-fixed center">
-            <a class="btn btn-space btn-primary btn-add">上一篇</a>
-            <a class="btn btn-space btn-primary btn-add">返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
-            <a class="btn btn-space btn-primary btn-add">下一篇</a>
+            <!--<a class="btn btn-space btn-primary btn-add">上一篇</a>-->
+            <!--<a class="btn btn-space btn-primary btn-add">返&nbsp;&nbsp;&nbsp;&nbsp;回</a>-->
+            <!--<a class="btn btn-space btn-primary btn-add">下一篇</a>-->
+            <a class="btn btn-space btn-primary btn-add"></a>
           </div>
         </div>
       </div>
@@ -89,6 +90,7 @@ export default {
   data () {
     return {
       persons: [],
+      placeName: '',
       taskCommand: {
         name: '',
         fileTime: '',
@@ -105,27 +107,24 @@ export default {
         detailPage: false,
         editPage: true
       },
-      pageContentId: 0,
       contentData: {}
     }
   },
   mounted () {
     var self = this
     window.$(document).ready(function () {
-      window.App.mailCompose()
+      window.App.mailCompose(self.personMsg.token, Global.url.apiPostSubmitPic, Global.url.apiGetImageUrl)
       window.App.formElements()
 
       // 日期选择器专用监听事件，用于vue更新值
       window.$('#datePicker').datetimepicker()
         .on('hide', function (ev) {
           var value = window.$('#dateInput').val()
-          self.shareTime = value
+          self.taskCommand.fileTime = value
         })
     })
     this.getPersons()
     this.getZNodes()
-    this.pageContentId = 724
-    this.getPageDetailById()
   },
   methods: {
     async getPersons () {
@@ -155,19 +154,62 @@ export default {
       }
     },
     async submitTask () {
-      console.log(this.taskCommand)
-      console.log(window.$('#email-editor').summernote('code'))
       this.taskCommand.description = window.$('#email-editor').summernote('code')
-      let result = await this.$api(Global.url.apiPostNodeContent, this.taskCommand, 'POST')
-      // if (result.data && result.data.code === 200) {
-      console.log(result)
-      // }
+      if (this.validateForm()) {
+        console.log(this.taskCommand)
+        let result = await this.$api(Global.url.apiPostNodeContent, this.taskCommand, 'POST')
+        if (result.data && result.data.code === 200) {
+          this.getZNodes()
+          this.taskCommand.name = ''
+          this.taskCommand.fileTime = ''
+          window.$('#email-editor').summernote('code', '')
+        }
+      }
     },
-    async getPageDetailById () {
-      let result = await this.$api(Global.url.apiGetDetailContent + '?id=' + this.pageContentId, '', 'GET')
+    validateForm () {
+      if (this.taskCommand.name.trim().length === 0) {
+        this.$global.showMessage('名称不能为空！')
+        return false
+      } else if (window.$('#email-editor').summernote('isEmpty')) {
+        this.$global.showMessage('请输入文本内容！')
+        return false
+      }
+      return true
+    },
+    async getPageDetailById (id) {
+      let result = await this.$api(Global.url.apiGetDetailContent + '?id=' + id, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.contentData = result.data.data
         console.log(this.contentData)
+      }
+    },
+    treeNodeClicked ({id, fileType, name}) {
+      var self = this
+      if (fileType === 43) {
+        this.pageStatus.editPage = false
+        this.pageStatus.detailPage = true
+        this.taskCommand.fileType = fileType
+        this.getPageDetailById(id)
+      } else {
+        if (this.pageStatus.editPage === true && this.pageStatus.detailPage === false) {
+          this.placeName = name
+          this.taskCommand.parentId = id
+        } else {
+          this.pageStatus.editPage = true
+          this.pageStatus.detailPage = false
+          this.placeName = name
+          this.taskCommand.parentId = id
+          setTimeout(function () {
+            window.App.mailCompose(self.personMsg.token, Global.url.apiPostSubmitPic, Global.url.apiGetImageUrl)
+            window.App.formElements()
+            // 日期选择器专用监听事件，用于vue更新值
+            window.$('#datePicker').datetimepicker()
+              .on('hide', function (ev) {
+                var value = window.$('#dateInput').val()
+                self.taskCommand.fileTime = value
+              })
+          }, 0)
+        }
       }
     }
   }
@@ -192,5 +234,13 @@ export default {
   }
   .detailPage {
     text-align: center;
+  }
+  .btn-add{
+    background: #FFFFFF;
+    border-color: #FFFFFF;
+    padding: 0 0px;
+    font-size: 13px;
+    line-height: 28px;
+    border-radius: 0px;
   }
 </style>

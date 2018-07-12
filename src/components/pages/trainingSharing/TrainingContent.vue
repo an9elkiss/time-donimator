@@ -234,6 +234,6 @@ export default {
     width: 100%;
     z-index: 100;
     cursor: pointer;
-    font-size: 23px;
+    font-size: 17px;
   }
 </style>

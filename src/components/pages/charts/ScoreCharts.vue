@@ -46,10 +46,13 @@
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">贡献值统计</div>
+        <div class="panel-heading panel-heading-divider">{{detailChartOptionTitle}}</div>
         <div class="panel-body">
           <div id="detailChart" class="charts"></div>
         </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">{{totalChartOptionTitle}}</div>
         <div class="panel-body">
           <div id="totalChart" class="charts"></div>
         </div>
@@ -83,49 +86,58 @@ export default {
       selectedType: 'true',
       monthEnabled: false,
       persons: [],
+      detailChartOptionTitle: '',
       detailChartOption: {
-        title: {
-          text: '',
-          left: 'center',
-          bottom: 1
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          selectedMode: false,
-          data: [],
-          x: 'right'
-        },
-        grid: {
-          left: '0',
-          right: '50px',
-          bottom: '9%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          name: '',
-          boundaryGap: true,
-          splitLine: {show: true},
-          axisLabel: {
-            interval: 0,
-            rotate: 40
+        baseOption: {
+          tooltip: {
+            trigger: 'axis'
           },
-          data: []
+          legend: {
+            selectedMode: false,
+            data: [],
+            x: 'center'
+          },
+          grid: {
+            left: '0',
+            right: '30px',
+            top: '75px',
+            bottom: '10px',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            name: '',
+            boundaryGap: true,
+            splitLine: {show: true},
+            data: []
+          },
+          yAxis: {
+            type: 'value',
+            name: '贡献值'
+          },
+          series: []
         },
-        yAxis: {
-          type: 'value',
-          name: '贡献值'
-        },
-        series: []
+        media: [
+          {
+            query: {
+              maxAspectRatio: 1.5
+            },
+            option: {
+              grid: {
+                top: '130px'
+              },
+              xAxis: {
+                axisLabel: {
+                  interval: 0,
+                  rotate: 40
+                }
+              }
+            }
+          }
+        ]
       },
+      totalChartOptionTitle: '',
       totalChartOption: {
-        title: {
-          text: '',
-          left: 'center',
-          bottom: 'bottom'
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -134,8 +146,9 @@ export default {
         },
         grid: {
           left: '0',
-          right: '50px',
-          bottom: '9%',
+          right: '60px',
+          top: '50px',
+          bottom: '10px',
           containLabel: true
         },
         yAxis: {
@@ -151,12 +164,12 @@ export default {
         series: [{
           data: [],
           type: 'bar',
-          color: '#2572f2',
           barMaxWidth: 50,
+          color: '#4285f4',
           label: {
             normal: {
               show: true,
-              position: 'inside'
+              position: 'right'
             }
           }
         }]
@@ -217,6 +230,8 @@ export default {
       })
       this.updateDetailChartOption()
       this.detailChartSetOption()
+      this.updateTotalChartOption()
+      this.totalChartSetOption()
     },
     async initialYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
@@ -263,24 +278,24 @@ export default {
       })
       queryString = queryString + (selectedPersonsList.toString())
       var result = await this.$api(Global.url.apiGetScoreData + queryString, '', 'GET')
-      this.detailChartOption.xAxis.data = []
+      this.detailChartOption.baseOption.xAxis.data = []
       if (result.data && result.data.code === 200) {
         if (this.selectedType === 'true') {
           // 选中年份
           var monthCount = result.data.data.abscissa.year.length
           for (var monthIndex = 1; monthIndex <= monthCount; monthIndex++) {
-            this.detailChartOption.xAxis.data.push(monthIndex + '月')
+            this.detailChartOption.baseOption.xAxis.data.push(monthIndex + '月')
           }
-          this.detailChartOption.title.text = this.year + '年每月贡献值统计'
-          this.detailChartOption.xAxis.name = '月'
+          this.detailChartOptionTitle = this.year + '年每月贡献值统计'
+          this.detailChartOption.baseOption.xAxis.name = '月'
         } else {
           // 选中月份
           var weekCount = result.data.data.abscissa.month.length
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
-            this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
+            this.detailChartOption.baseOption.xAxis.data.push('第' + weekIndex + '周')
           }
-          this.detailChartOption.title.text = this.year + '年' + this.month + '月每周贡献值统计'
-          this.detailChartOption.xAxis.name = '周'
+          this.detailChartOptionTitle = this.year + '年' + this.month + '月每周贡献值统计'
+          this.detailChartOption.baseOption.xAxis.name = '周'
         }
         for (var person in this.persons) {
           this.persons[person].sery = {
@@ -293,11 +308,14 @@ export default {
       }
     },
     updateTotalChartOption () {
-      this.totalChartOption.title.text = this.year + '年贡献值总计统计'
-      this.totalChartOption.yAxis.data = this.selectedPersons.map(person => {
+      this.totalChartOptionTitle = this.year + '年贡献值总计统计'
+      let orderedSelectedPersonByTotalScore = this.selectedPersons.sort(function (begin, last) {
+        return begin.totalScore - last.totalScore
+      })
+      this.totalChartOption.yAxis.data = orderedSelectedPersonByTotalScore.map(person => {
         return person.name
       })
-      this.totalChartOption.series[0].data = this.selectedPersons.map(person => {
+      this.totalChartOption.series[0].data = orderedSelectedPersonByTotalScore.map(person => {
         if (person.totalScore === 0) {
           return null
         }
@@ -305,10 +323,10 @@ export default {
       })
     },
     updateDetailChartOption () {
-      this.detailChartOption.legend.data = this.selectedPersons.map(person => {
+      this.detailChartOption.baseOption.legend.data = this.selectedPersons.map(person => {
         return person.name
       })
-      this.detailChartOption.series = this.selectedPersons.map(person => {
+      this.detailChartOption.baseOption.series = this.selectedPersons.map(person => {
         return person.sery
       })
     },
@@ -342,6 +360,8 @@ export default {
       this.persons[index].selected = !this.persons[index].selected
       this.updateDetailChartOption()
       this.detailChartSetOption()
+      this.updateTotalChartOption()
+      this.totalChartSetOption()
     }
   }
 }

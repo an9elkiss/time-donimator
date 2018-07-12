@@ -276,7 +276,7 @@ export default {
   mounted () {
     var self = this
     window.$(document).ready(function () {
-      window.App.init()
+      // window.App.init()
       window.App.formElements()
 
       // 日期选择器专用监听事件，用于vue更新值

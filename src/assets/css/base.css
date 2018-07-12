@@ -146,5 +146,9 @@
     display: none;
   }
 }
-
+.ztree li span.button.add {
+  margin-left: 2px;
+  background-position: -144px 0;
+  vertical-align: top;
+}
 

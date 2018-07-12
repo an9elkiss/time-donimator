@@ -15,6 +15,7 @@ import ScoreCharts from '@/components/pages/charts/ScoreCharts'
 import TrainingContent from '@/components/pages/trainingSharing/TrainingContent'
 import ShareComments from '@/components/pages/trainingSharing/ShareComments'
 import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
+import EditContentPage from '@/components/pages/dirAndFile/EditContentPage'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -144,6 +145,15 @@ export default new Router({
             keepAlive: true
           },
           component: SharingCommentList
+        },
+        {
+          path: 'edit-content-page',
+          name: 'EditContentPage',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: EditContentPage
         }
       ]
     }

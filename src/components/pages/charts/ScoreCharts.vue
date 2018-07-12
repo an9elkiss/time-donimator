@@ -94,7 +94,8 @@ export default {
         },
         legend: {
           selectedMode: false,
-          data: []
+          data: [],
+          x: 'right'
         },
         grid: {
           left: '0',
@@ -225,7 +226,7 @@ export default {
       }
     },
     async initialPersons () {
-      var result = await this.$api(Global.url.apiPersons, '', 'GET')
+      var result = await this.$api(Global.url.apiGetAllPersons, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.persons = result.data.data.map(ele => {
           return {

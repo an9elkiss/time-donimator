@@ -134,7 +134,7 @@
               <div class="col-sm-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
                   <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span>
-                  <input v-model="taskCommand.endTime" :class="mustInputTaskAttributes.endTimeFlag?'error':''" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <input v-model="taskCommand.endTime" :class="mustInputTaskAttributes.endTimeFlag?'error':''" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" autocomplete="off" @keydown.enter.prevent>
                   <span v-if="mustInputTaskAttributes.endTimeFlag" :class="mustInputTaskAttributes.endTimeFlag?'errorSpan':''" class="mdi mdi-close form-control-feedback"></span>
                 </div>
               </div>

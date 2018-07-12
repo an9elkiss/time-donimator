@@ -55,4 +55,9 @@ export default {
     padding: 0px;
     margin: 0px;
   }
+  @media (max-width: 720px) {
+    input.form-control {
+      padding-right: 20px;
+    }
+  }
 </style>

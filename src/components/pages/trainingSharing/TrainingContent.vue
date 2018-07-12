@@ -16,7 +16,7 @@
               <div class="col-sm-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
                   <!--<span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0">-->
-                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="shareCommand.shareTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="shareCommand.shareTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" autocomplete="off" @keydown.enter.prevent>
                 </div>
               </div>
             </div>
@@ -225,14 +225,13 @@ export default {
     text-decoration: none;
     margin-left: 13px;
   }
-
   .ui-upload input {
     opacity: 0;
     filter:alpha(opacity=0);
     position: absolute;
-    margin-top: -8px;
+    margin-top: 0px;
+    height: 30px;
     width: 100%;
-    height: 43px;
     z-index: 100;
     cursor: pointer;
     font-size: 23px;

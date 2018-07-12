@@ -66,6 +66,7 @@ export default {
         codeReviewJudges: '',
         totalScore: 0
       },
+      loginUserChineseName: '',
       codeReviewDetailModules: [],
       isFlagScore: false,
       isEditable: false
@@ -86,12 +87,27 @@ export default {
     }
   },
   mounted: async function () {
+    await this.initialLoginUserName()
     this.codeReviewInit()
     await this.codeReviewInfo()
   },
   methods: {
     codeReviewInit () {
       this.isFlagScore = this.codeReview.flagScore
+    },
+    async initialLoginUserName () {
+      while (this.loginUserChineseName === '') {
+        let result = await this.$api(Global.url.apiPersons, '', 'GET')
+        if (result.data && result.data.code === 200) {
+          let persons = result.data.data
+          for (let index in persons) {
+            if (persons[index].userId === Number(this.user.id)) {
+              this.loginUserChineseName = persons[index].name
+              return
+            }
+          }
+        }
+      }
     },
     async codeReviewInfo () {
       var result = await this.$api(Global.url.apiGetCodeReviewInfo + '/' + this.$route.params.id, '', 'GET')
@@ -146,7 +162,7 @@ export default {
       this.codeReviewCommand.codeReviewTime = this.codeReview.codeReviewTime
       this.codeReviewCommand.userLabel = this.codeReview.userLabel
       this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewDetailModules)
-      this.codeReviewCommand.codeReviewJudges = this.user.name
+      this.codeReviewCommand.codeReviewJudges = this.loginUserChineseName
       this.codeReviewCommand.totalScore = this.totalScore
     },
     updateCodeReviewDetailModules (result) {

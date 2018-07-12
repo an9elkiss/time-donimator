@@ -14,6 +14,7 @@ const url = {
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
+  apiGetAllPersons: userApiBase + '/api-union-user/1.0.0/allPersons',
   apiPersons: userApiBase + '/api-union-user/1.0.0/persons',
   apiTaskSave: managerApiBase + '/api-super-manager/1.0.0/task',
   apiTaskUpdate: managerApiBase + '/api-super-manager/1.0.0/task',

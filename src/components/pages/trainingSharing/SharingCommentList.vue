@@ -21,18 +21,18 @@
               <span class="descriptionDot"></span>
             </div>
             <div class="operatorDiv clearfix">
-              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'':comment.praiseNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'':comment.commentNum}}</a></div>
-              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'':comment.average}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="givePraise(comment)"><span class="mdi mdi-thumb-up"></span>{{isNullOrZoneOrMinus(comment.praiseNum)?'0':comment.praiseNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-comment-outline"></span>{{isNullOrZoneOrMinus(comment.commentNum)?'0':comment.commentNum}}</a></div>
+              <div class="col-xs-3 text-center"><a @click="toShareComments(comment)"><span class="mdi mdi-star-outline"></span>{{isNullOrZoneOrMinus(comment.average)?'0':comment.average}}</a></div>
               <div class="col-xs-3 text-center"><a v-if="comment.fileUrl != null" :href="getUrl(comment.fileUrl, comment.title)"><span class="mdi mdi-download"></span></a></div>
             </div>
           </div>
         </div>
-        <div v-if="scrollFlag" class="placeholder">
+        <div v-if="scrollFlag" class="ending">
           <div v-if="hasNext" class="text-center endRemind">正在加载...</div>
           <div v-else class="text-center endRemind">没有更多的数据了</div>
         </div>
-        <div v-else class="placeholder"></div>
+        <div v-else class="ending"></div>
       </div>
       <div class="box-fixed">
         <div class="center">
@@ -70,7 +70,6 @@ export default {
     this.pageIndex = 0
     await this.getCommentsByPageIndexAndSize()
     this.historyComments = this.newComments
-    window.addEventListener('scroll', this.handleScroll)
   },
   async activated () {
     await this.getRefreshComments()
@@ -165,8 +164,9 @@ export default {
 </script>
 
 <style scoped>
-  div.placeholder {
+  div.ending {
     height: 30px;
+    width: 100%;
   }
   div.commentHeading {
     margin: 10px 0px;

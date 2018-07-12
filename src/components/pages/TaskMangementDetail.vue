@@ -79,7 +79,8 @@
                 <input data-parsley-type="number" placeholder="贡献值" class="form-control input-sm" v-model="taskCommand.planScore" @keydown.enter.prevent>
                 <span v-if="mustInputTaskAttributes.planScoreFlag" class="mdi mdi-close form-control-feedback"></span>
               </div>
-              <div class="col-sm-6 col-sm-offset-3" v-if="taskWeekId && taskCommand.parentId">
+              <div class="col-sm-3"></div>
+              <div class="col-sm-6" v-if="taskWeekId && taskCommand.parentId">
                 <div class="progress">
                   <div ref="actualAllScore" class="progress-bar progress-bar-primary progress-bar-striped" v-if="actualAllScore >= 0">{{ actualAllScore }}</div>
                   <div ref="planAllScore" class="progress-bar progress-bar-success progress-bar-striped" v-if="planAllScore >= 0">{{ planAllScore }}</div>
@@ -133,7 +134,7 @@
               <div class="col-sm-6">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
                   <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span>
-                  <input v-model="taskCommand.endTime" :class="mustInputTaskAttributes.endTimeFlag?'error':''" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" @keydown.enter.prevent>
+                  <input v-model="taskCommand.endTime" :class="mustInputTaskAttributes.endTimeFlag?'error':''" size="16" type="text" required="" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" autocomplete="off" @keydown.enter.prevent>
                   <span v-if="mustInputTaskAttributes.endTimeFlag" :class="mustInputTaskAttributes.endTimeFlag?'errorSpan':''" class="mdi mdi-close form-control-feedback"></span>
                 </div>
               </div>
@@ -275,7 +276,7 @@ export default {
   mounted () {
     var self = this
     window.$(document).ready(function () {
-      window.App.init()
+      // window.App.init()
       window.App.formElements()
 
       // 日期选择器专用监听事件，用于vue更新值

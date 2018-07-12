@@ -42,7 +42,6 @@ export default {
   },
   watch: {
     'zNodes': function () {
-      console.log(this.zNodes)
       window.$.fn.zTree.init(window.$('#zTree'), this.setting, this.zNodes)
       let ztree = window.$.fn.zTree.getZTreeObj('zTree')
       let folderNode = ztree.getNodesByFilter(node => {
@@ -62,6 +61,7 @@ export default {
   methods: {
     // 鼠标悬停添加更新按钮
     addHoverDom (treeId, treeNode) {
+      var self = this
       // 获取悬停的span
       var sObj = window.$('#' + treeNode.tId + '_span')
       if (treeNode.editNameFlag || window.$('#addBtn_' + treeNode.tId).length > 0) {
@@ -79,13 +79,9 @@ export default {
       var btn = window.$('#addBtn_' + treeNode.tId)
       if (btn) {
         btn.bind('click', function () {
-          // TODO
-          console.log('add button clicked')
-          console.log(treeNode)
-          this.$emit('addTreeNode', treeNode)
-          // 这里是原来的方式添加tree，我们这里可以在修改后重新获取tree的信息更新
-          // var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-          // zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+          setTimeout(function () {
+            self.$emit('addTreeNode', treeNode)
+          }, 0)
           return false
         })
       }
@@ -110,50 +106,29 @@ export default {
       return false
     },
     beforeEditName (treeId, treeNode) {
-      // this.className = (this.className === 'dark' ? '' : 'dark')
-      // showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name)
+      var self = this
       var zTree = window.$.fn.zTree.getZTreeObj('zTree')
       zTree.selectNode(treeNode)
       setTimeout(function () {
-        if (confirm('进入节点 -- ' + treeNode.name + '的编辑状态吗？')) {
-          setTimeout(function () {
-            zTree.editName(treeNode)
-          }, 0)
-        }
+        self.$emit('renameTreeNode', treeNode)
       }, 0)
       return false
     },
     beforeRemove (treeId, treeNode) {
-      // this.className = (this.className === 'dark' ? '' : 'dark')
-      // showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name)
+      var self = this
       var zTree = window.$.fn.zTree.getZTreeObj('zTree')
       zTree.selectNode(treeNode)
-      return confirm('确认删除 节点 -- ' + treeNode.name + ' 吗？')
+      setTimeout(function () {
+        self.$emit('deleteTreeNode', treeNode)
+      }, 0)
+      return false
     },
     beforeRename (treeId, treeNode, newName, isCancel) {
-      // this.className = (this.className === 'dark' ? '' : 'dark')
-      // showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""))
-      if (newName.length === 0) {
-        setTimeout(function () {
-          var zTree = window.$.fn.zTree.getZTreeObj('zTree')
-          zTree.cancelEditName()
-          this.$global.showMessage('节点名称不能为空.')
-        }, 0)
-        return false
-      }
-      return true
+      return false
     },
     onRemove (e, treeId, treeNode) {
-      // showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name)
-      console.log(e, treeNode)
-      console.log('真正的删除操作')
-      this.$emit('deleteTreeNode', treeNode)
     },
     onRename (e, treeId, treeNode, isCancel) {
-      // showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""))
-      console.log(e, treeNode)
-      console.log('真正的更新操作')
-      this.$emit('renameTreeNode', treeNode)
     },
     onClick (e, treeId, treeNode, isCancel) {
       console.log(treeNode)

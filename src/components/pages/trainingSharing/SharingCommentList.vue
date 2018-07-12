@@ -28,11 +28,11 @@
             </div>
           </div>
         </div>
-        <div v-if="scrollFlag" class="placeholder">
+        <div v-if="scrollFlag" class="ending">
           <div v-if="hasNext" class="text-center endRemind">正在加载...</div>
           <div v-else class="text-center endRemind">没有更多的数据了</div>
         </div>
-        <div v-else class="placeholder"></div>
+        <div v-else class="ending"></div>
       </div>
       <div class="box-fixed">
         <div class="center">
@@ -164,8 +164,9 @@ export default {
 </script>
 
 <style scoped>
-  div.placeholder {
+  div.ending {
     height: 30px;
+    width: 100%;
   }
   div.commentHeading {
     margin: 10px 0px;

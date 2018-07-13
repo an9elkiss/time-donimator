@@ -242,7 +242,6 @@ export default {
         // 选中这么多人大概需要多少行
         var totalLines = Math.ceil(selectPersonCount * 1.0 / displayPersonsCountInLine) + 2
         mediaOption.option.grid.top = totalLines * 25 + 'px'
-        console.log(displayPersonsCountInLine, totalLines, mediaOption.query.maxWidth, mediaOption.option.grid.top)
         detailChartsOptionMedia.push(mediaOption)
       }
       return detailChartsOptionMedia
@@ -344,7 +343,6 @@ export default {
         return person.sery
       })
       this.detailChartOption.media = this.getDetailChartsOptionMedia()
-      console.log(this.detailChartOption.media)
     },
     async yearChanged () {
       await this.initialTotalChartOption()

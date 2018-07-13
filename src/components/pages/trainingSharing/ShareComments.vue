@@ -4,7 +4,9 @@
       <div class="panel panel-default">
         <div class="col-md-12">
           <div class="panel">
-            <div class="panel-heading panel-heading-divider">{{sharingComment.title}}<span class="panel-subtitle">{{sharingComment.userName}} {{sharingComment.shareTime.substr(0, 10)}}</span>
+            <div class="panel-heading panel-heading-divider">
+              {{sharingComment.title}}
+              <span class="panel-subtitle">{{sharingComment.userName}} {{sharingComment.shareTime.substr(0, 10)}}</span>
             </div>
             <div class="panel-body">
               <label style="color: #101010">标签： </label>&nbsp;&nbsp;
@@ -187,6 +189,9 @@ export default {
   .panel-heading-divider {
     text-align: center;
     border-bottom: 0px;
+  }
+  .panel-heading-divider > .panel-subtitle {
+    text-align: center;
   }
   .panel {
     box-shadow: none;

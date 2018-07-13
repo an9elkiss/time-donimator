@@ -19,9 +19,9 @@
       <div class="panel panel-default">
         <div v-if="reviews.length > 0" class="panel-body p-b-0">
           <div v-for="review of reviews" :key="review.id" class="code-review-brief">
-            <p class="flexBox boxPackJustify" @click="reviewClicked(review)">
-              <span class="heading boxFlex_1">{{ review.userLabel }}</span>
-              <span class="boxFlex_0 date">
+            <p class="cfix" @click="reviewClicked(review)">
+              <span class="heading fLeft">{{ review.userLabel }}</span>
+              <span class="fRight">
                 {{ review.codeReviewTime }}<i class="mdi mdi-chevron-right detail"></i>
               </span>
             </p>

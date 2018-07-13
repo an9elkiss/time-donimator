@@ -144,5 +144,12 @@ export default {
 </script>
 
 <style scoped>
-
+.be-left-sidebar{
+  position: fixed;
+}
+@media (max-width: 767px){
+  .be-left-sidebar {
+    position: relative;
+  }
+}
 </style>

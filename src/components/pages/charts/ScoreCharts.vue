@@ -46,10 +46,13 @@
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">贡献值统计</div>
+        <div class="panel-heading panel-heading-divider">{{detailChartOptionTitle}}</div>
         <div class="panel-body">
           <div id="detailChart" class="charts"></div>
         </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">{{totalChartOptionTitle}}</div>
         <div class="panel-body">
           <div id="totalChart" class="charts"></div>
         </div>
@@ -83,49 +86,41 @@ export default {
       selectedType: 'true',
       monthEnabled: false,
       persons: [],
+      detailChartOptionTitle: '',
       detailChartOption: {
-        title: {
-          text: '',
-          left: 'center',
-          bottom: 1
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          selectedMode: false,
-          data: [],
-          x: 'right'
-        },
-        grid: {
-          left: '0',
-          right: '50px',
-          bottom: '9%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          name: '',
-          boundaryGap: true,
-          splitLine: {show: true},
-          axisLabel: {
-            interval: 0,
-            rotate: 40
+        baseOption: {
+          tooltip: {
+            trigger: 'axis'
           },
-          data: []
+          legend: {
+            selectedMode: false,
+            data: [],
+            x: 'center'
+          },
+          grid: {
+            left: '5px',
+            right: '30px',
+            top: '50px',
+            bottom: '10px',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            name: '',
+            boundaryGap: true,
+            splitLine: {show: true},
+            data: []
+          },
+          yAxis: {
+            type: 'value',
+            name: '贡献值'
+          },
+          series: []
         },
-        yAxis: {
-          type: 'value',
-          name: '贡献值'
-        },
-        series: []
+        media: []
       },
+      totalChartOptionTitle: '',
       totalChartOption: {
-        title: {
-          text: '',
-          left: 'center',
-          bottom: 'bottom'
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -134,8 +129,9 @@ export default {
         },
         grid: {
           left: '0',
-          right: '50px',
-          bottom: '9%',
+          right: '60px',
+          top: '50px',
+          bottom: '10px',
           containLabel: true
         },
         yAxis: {
@@ -151,12 +147,12 @@ export default {
         series: [{
           data: [],
           type: 'bar',
-          color: '#2572f2',
           barMaxWidth: 50,
+          color: '#4285f4',
           label: {
             normal: {
               show: true,
-              position: 'inside'
+              position: 'right'
             }
           }
         }]
@@ -217,6 +213,39 @@ export default {
       })
       this.updateDetailChartOption()
       this.detailChartSetOption()
+      this.updateTotalChartOption()
+      this.totalChartSetOption()
+    },
+    getDetailChartsOptionMedia () {
+      var detailChartsOptionMedia = []
+      var selectPersonCount = this.selectedPersons.length
+      for (var maxWidth = (selectPersonCount + 7) * 50; maxWidth >= 350; maxWidth = maxWidth - 50) {
+        var mediaOption = {
+          query: {
+            maxWidth: 0
+          },
+          option: {
+            grid: {
+              top: ''
+            },
+            xAxis: {
+              axisLabel: {
+                interval: 0,
+                rotate: 40
+              }
+            }
+          }
+        }
+        mediaOption.query.maxWidth = maxWidth
+        // 一行大概可以显示多少个legend
+        var displayPersonsCountInLine = Math.ceil(maxWidth * 1.0 / 50) - 4
+        // 选中这么多人大概需要多少行
+        var totalLines = Math.ceil(selectPersonCount * 1.0 / displayPersonsCountInLine) + 2
+        mediaOption.option.grid.top = totalLines * 25 + 'px'
+        console.log(displayPersonsCountInLine, totalLines, mediaOption.query.maxWidth, mediaOption.option.grid.top)
+        detailChartsOptionMedia.push(mediaOption)
+      }
+      return detailChartsOptionMedia
     },
     async initialYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
@@ -263,24 +292,24 @@ export default {
       })
       queryString = queryString + (selectedPersonsList.toString())
       var result = await this.$api(Global.url.apiGetScoreData + queryString, '', 'GET')
-      this.detailChartOption.xAxis.data = []
+      this.detailChartOption.baseOption.xAxis.data = []
       if (result.data && result.data.code === 200) {
         if (this.selectedType === 'true') {
           // 选中年份
           var monthCount = result.data.data.abscissa.year.length
           for (var monthIndex = 1; monthIndex <= monthCount; monthIndex++) {
-            this.detailChartOption.xAxis.data.push(monthIndex + '月')
+            this.detailChartOption.baseOption.xAxis.data.push(monthIndex + '月')
           }
-          this.detailChartOption.title.text = this.year + '年每月贡献值统计'
-          this.detailChartOption.xAxis.name = '月'
+          this.detailChartOptionTitle = this.year + '年每月贡献值统计'
+          this.detailChartOption.baseOption.xAxis.name = '月'
         } else {
           // 选中月份
           var weekCount = result.data.data.abscissa.month.length
           for (var weekIndex = 1; weekIndex <= weekCount; weekIndex++) {
-            this.detailChartOption.xAxis.data.push('第' + weekIndex + '周')
+            this.detailChartOption.baseOption.xAxis.data.push('第' + weekIndex + '周')
           }
-          this.detailChartOption.title.text = this.year + '年' + this.month + '月每周贡献值统计'
-          this.detailChartOption.xAxis.name = '周'
+          this.detailChartOptionTitle = this.year + '年' + this.month + '月每周贡献值统计'
+          this.detailChartOption.baseOption.xAxis.name = '周'
         }
         for (var person in this.persons) {
           this.persons[person].sery = {
@@ -293,11 +322,14 @@ export default {
       }
     },
     updateTotalChartOption () {
-      this.totalChartOption.title.text = this.year + '年贡献值总计统计'
-      this.totalChartOption.yAxis.data = this.selectedPersons.map(person => {
+      this.totalChartOptionTitle = this.year + '年贡献值总计统计'
+      let orderedSelectedPersonByTotalScore = this.selectedPersons.sort(function (begin, last) {
+        return begin.totalScore - last.totalScore
+      })
+      this.totalChartOption.yAxis.data = orderedSelectedPersonByTotalScore.map(person => {
         return person.name
       })
-      this.totalChartOption.series[0].data = this.selectedPersons.map(person => {
+      this.totalChartOption.series[0].data = orderedSelectedPersonByTotalScore.map(person => {
         if (person.totalScore === 0) {
           return null
         }
@@ -305,12 +337,14 @@ export default {
       })
     },
     updateDetailChartOption () {
-      this.detailChartOption.legend.data = this.selectedPersons.map(person => {
+      this.detailChartOption.baseOption.legend.data = this.selectedPersons.map(person => {
         return person.name
       })
-      this.detailChartOption.series = this.selectedPersons.map(person => {
+      this.detailChartOption.baseOption.series = this.selectedPersons.map(person => {
         return person.sery
       })
+      this.detailChartOption.media = this.getDetailChartsOptionMedia()
+      console.log(this.detailChartOption.media)
     },
     async yearChanged () {
       await this.initialTotalChartOption()
@@ -321,14 +355,6 @@ export default {
     async monthChanged () {
       await this.initialDetailChartOption()
       this.detailChartSetOption()
-    },
-    getNameFromPersonId (id) {
-      for (var index in this.persons) {
-        if (this.persons[index].id + '' === id) {
-          return this.persons[index].name
-        }
-      }
-      return ''
     },
     totalChartSetOption () {
       var totalChart = echarts.init(document.getElementById('totalChart'))
@@ -342,6 +368,8 @@ export default {
       this.persons[index].selected = !this.persons[index].selected
       this.updateDetailChartOption()
       this.detailChartSetOption()
+      this.updateTotalChartOption()
+      this.totalChartSetOption()
     }
   }
 }

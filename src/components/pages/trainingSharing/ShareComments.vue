@@ -237,4 +237,7 @@ export default {
       width: 100%;
     }
   }
+  .panel-subtitle {
+    text-align: center;
+  }
 </style>

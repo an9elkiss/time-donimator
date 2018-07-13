@@ -98,9 +98,9 @@ export default {
             x: 'center'
           },
           grid: {
-            left: '0',
+            left: '5px',
             right: '30px',
-            top: '75px',
+            top: '50px',
             bottom: '10px',
             containLabel: true
           },
@@ -117,24 +117,7 @@ export default {
           },
           series: []
         },
-        media: [
-          {
-            query: {
-              maxAspectRatio: 1.5
-            },
-            option: {
-              grid: {
-                top: '130px'
-              },
-              xAxis: {
-                axisLabel: {
-                  interval: 0,
-                  rotate: 40
-                }
-              }
-            }
-          }
-        ]
+        media: []
       },
       totalChartOptionTitle: '',
       totalChartOption: {
@@ -233,6 +216,37 @@ export default {
       this.updateTotalChartOption()
       this.totalChartSetOption()
     },
+    getDetailChartsOptionMedia () {
+      var detailChartsOptionMedia = []
+      var selectPersonCount = this.selectedPersons.length
+      for (var maxWidth = (selectPersonCount + 7) * 50; maxWidth >= 350; maxWidth = maxWidth - 50) {
+        var mediaOption = {
+          query: {
+            maxWidth: 0
+          },
+          option: {
+            grid: {
+              top: ''
+            },
+            xAxis: {
+              axisLabel: {
+                interval: 0,
+                rotate: 40
+              }
+            }
+          }
+        }
+        mediaOption.query.maxWidth = maxWidth
+        // 一行大概可以显示多少个legend
+        var displayPersonsCountInLine = Math.ceil(maxWidth * 1.0 / 50) - 4
+        // 选中这么多人大概需要多少行
+        var totalLines = Math.ceil(selectPersonCount * 1.0 / displayPersonsCountInLine) + 2
+        mediaOption.option.grid.top = totalLines * 25 + 'px'
+        console.log(displayPersonsCountInLine, totalLines, mediaOption.query.maxWidth, mediaOption.option.grid.top)
+        detailChartsOptionMedia.push(mediaOption)
+      }
+      return detailChartsOptionMedia
+    },
     async initialYearAndMonth () {
       var result = await this.$api(Global.url.apiGetWeek, '', 'GET')
       if (result.data && result.data.code === 200) {
@@ -329,6 +343,8 @@ export default {
       this.detailChartOption.baseOption.series = this.selectedPersons.map(person => {
         return person.sery
       })
+      this.detailChartOption.media = this.getDetailChartsOptionMedia()
+      console.log(this.detailChartOption.media)
     },
     async yearChanged () {
       await this.initialTotalChartOption()
@@ -339,14 +355,6 @@ export default {
     async monthChanged () {
       await this.initialDetailChartOption()
       this.detailChartSetOption()
-    },
-    getNameFromPersonId (id) {
-      for (var index in this.persons) {
-        if (this.persons[index].id + '' === id) {
-          return this.persons[index].name
-        }
-      }
-      return ''
     },
     totalChartSetOption () {
       var totalChart = echarts.init(document.getElementById('totalChart'))

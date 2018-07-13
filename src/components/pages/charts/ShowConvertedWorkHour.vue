@@ -388,10 +388,4 @@ export default {
     padding-left: 8px;
     padding-right: 8px;
   }
-  div.note-editable > ul {
-    list-style-type: disc;
-  }
-  div.note-editable > ol {
-    list-style-type: decimal;
-  }
 </style>

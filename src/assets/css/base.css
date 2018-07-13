@@ -151,4 +151,10 @@
   background-position: -144px 0;
   vertical-align: top;
 }
+.note-editable.panel-body ul{
+  list-style-type: disc;
+}
+.note-editable.panel-body ol{
+  list-style-type: decimal;
+}
 

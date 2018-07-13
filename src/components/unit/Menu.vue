@@ -37,10 +37,10 @@
                   <sub-menu v-show="menuBtn.m402" id="sm_8" path="/sharing-comment-list" name="分享列表" />
                 </ul>
               </li>
-              <li v-show="menuBtn.m400" class="parent">
+              <li v-show="menuBtn.m501" class="parent">
                 <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m401" id="sm_7" path="/edit-content-page" name="文件列表" />
+                  <sub-menu v-show="menuBtn.m502" id="sm_7" path="/edit-content-page" name="文件列表" />
                 </ul>
               </li>
             </ul>
@@ -76,7 +76,9 @@ export default {
         m303: false,
         m400: false,
         m401: false,
-        m402: false
+        m402: false,
+        m501: false,
+        m502: false
       }
     }
   },
@@ -132,6 +134,10 @@ export default {
               this.menuBtn.m401 = true
             } else if (item.menuId === 402) {
               this.menuBtn.m402 = true
+            } else if (item.menuId === 501) {
+              this.menuBtn.m501 = true
+            } else if (item.menuId === 502) {
+              this.menuBtn.m502 = true
             }
           })
         }

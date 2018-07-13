@@ -38,7 +38,7 @@
                 </ul>
               </li>
               <li v-show="menuBtn.m400" class="parent">
-                <a href="#"><i class="icon mdi mdi-vk"></i><span>文件列表</span></a>
+                <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m401" id="sm_7" path="/edit-content-page" name="文件列表" />
                 </ul>

@@ -44,7 +44,7 @@
       </div>
       <div class="panel panel-default">
           <div class="panel-heading panel-heading-divider">一周计划统计</div>
-        <div class="panel-body flexBox">
+        <div class="panel-body">
           <div id="container" class="container" style="height: 500px; width: 100%"></div>
         </div>
       </div>
@@ -387,5 +387,11 @@ export default {
     margin-left: auto;
     padding-left: 8px;
     padding-right: 8px;
+  }
+  div.note-editable > ul {
+    list-style-type: disc;
+  }
+  div.note-editable > ol {
+    list-style-type: decimal;
   }
 </style>

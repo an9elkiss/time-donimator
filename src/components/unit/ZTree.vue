@@ -131,8 +131,6 @@ export default {
     onRename (e, treeId, treeNode, isCancel) {
     },
     onClick (e, treeId, treeNode, isCancel) {
-      console.log(treeNode)
-      console.log('我被点击了')
       this.$emit('clickTreeNode', treeNode)
     }
   }
@@ -140,7 +138,5 @@ export default {
 </script>
 
 <style scoped>
-.ztree {
-  height: 500px;
-}
+
 </style>

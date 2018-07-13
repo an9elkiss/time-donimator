@@ -186,7 +186,6 @@ export default {
     async submitTask () {
       this.taskCommand.description = window.$('#email-editor').summernote('code')
       if (this.validateForm()) {
-        console.log(this.taskCommand)
         let result = await this.$api(Global.url.apiPostNodeContent, this.taskCommand, 'POST')
         if (result.data && result.data.code === 200) {
           this.getZNodes()
@@ -212,7 +211,6 @@ export default {
       let result = await this.$api(Global.url.apiGetDetailContent + '?id=' + id, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.contentData = result.data.data
-        console.log(this.contentData)
       }
     },
     treeNodeClicked ({id, fileType, name}) {

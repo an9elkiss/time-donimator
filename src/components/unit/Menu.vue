@@ -37,6 +37,12 @@
                   <sub-menu v-show="menuBtn.m402" id="sm_8" path="/sharing-comment-list" name="分享列表" />
                 </ul>
               </li>
+              <li v-show="menuBtn.m400" class="parent">
+                <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
+                <ul class="sub-menu">
+                  <sub-menu v-show="menuBtn.m401" id="sm_7" path="/edit-content-page" name="文件列表" />
+                </ul>
+              </li>
             </ul>
           </div>
         </div>

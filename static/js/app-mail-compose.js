@@ -5,7 +5,7 @@ var App = (function () {
     // Summernote
     $('#email-editor').summernote({
       styleWithSpan: false,
-      height: 200,
+      height: 470,
       focus: false,
       callbacks: {
         onImageUpload: function (files) {
@@ -20,7 +20,6 @@ var App = (function () {
             processData: false,
             type: 'POST',
             success: function (data) {
-              console.log(data.data)
               var dataUrl = imgurl + data.data
               $('#email-editor').summernote('insertImage', dataUrl, function ($image) {
                 $image.attr('src', dataUrl)

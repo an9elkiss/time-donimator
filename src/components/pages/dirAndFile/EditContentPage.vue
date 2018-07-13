@@ -193,6 +193,8 @@ export default {
           this.taskCommand.name = ''
           this.taskCommand.fileTime = ''
           window.$('#email-editor').summernote('code', '')
+        } else if (result.data.code === 401) {
+          this.$global.showMessage(result.data.message)
         }
       }
     },
@@ -286,6 +288,8 @@ export default {
         message: '确认删除 ' + targetNode.name + ' 吗？'
       }).then(async () => {
         if (await this.deleteTreeNode() === 200) {
+          this.pageStatus.detailPage = false
+          this.pageStatus.editPage = false
           this.getZNodes()
         }
       }).catch(() => {

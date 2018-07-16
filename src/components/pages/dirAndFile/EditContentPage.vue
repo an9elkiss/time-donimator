@@ -31,14 +31,14 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">名称</label>
             <div class="col-sm-8">
-              <input type="text" required="" v-model="taskCommand.name" :placeholder="placeName" class="form-control input-sm">
+              <input type="text" v-model="taskCommand.name" :placeholder="placeName" class="form-control input-sm">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">时间</label>
             <div class="col-sm-8">
               <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
-                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" required="" v-model="taskCommand.fileTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" autocomplete="off" @keydown.enter.prevent>
+                <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span><input size="16" type="text" v-model="taskCommand.fileTime" ref="inputTimer" id="dateInput" value="" class="form-control input-sm" style="z-index: 0" autocomplete="off" @keydown.enter.prevent>
               </div>
             </div>
           </div>
@@ -47,8 +47,10 @@
         <div class="email editor">
           <div id="email-editor"></div>
           <div class="form-group">
-            <button @click="submitTask" type="button" class="btn btn-primary btn-space"><i class="icon s7-mail"></i> 提交</button>
-            <button type="button" class="btn btn-default btn-space"><i class="icon s7-close"></i> 取消</button>
+            <button v-if="pageStatus.submitBtn" @click="submitTask" type="button" class="btn btn-primary btn-space"><i class="icon s7-mail"></i> 提交</button>
+            <button v-if="pageStatus.updateBtn" @click="updateTask" type="button" class="btn btn-primary btn-space"><i class="icon s7-mail"></i> 提交更新</button>
+            <button v-if="pageStatus.deleteBtn" @click="deleteTask" type="button" class="btn btn-default btn-space"><i class="icon s7-close"></i> 删除</button>
+            <button @click="resetTask" type="button" class="btn btn-default btn-space"><i class="icon s7-close"></i> 重置内容</button>
           </div>
         </div>
       </div>
@@ -112,7 +114,8 @@ export default {
         percent: '',
         level: '',
         userId: '',
-        userName: ''
+        userName: '',
+        id: ''
       },
       confirmFlag: false,
       addOrReNameConfirmFlag: '',
@@ -121,7 +124,10 @@ export default {
       zNodes: [],
       pageStatus: {
         detailPage: false,
-        editPage: true
+        editPage: true,
+        deleteBtn: false,
+        submitBtn: true,
+        updateBtn: false
       },
       contentData: {}
     }
@@ -221,6 +227,13 @@ export default {
         this.taskCommand.fileType = fileType
         this.getPageDetailById(id)
       } else {
+        this.pageStatus.submitBtn = true
+        this.pageStatus.deleteBtn = false
+        this.pageStatus.updateBtn = false
+        this.taskCommand.description = ''
+        window.$('#email-editor').summernote('code', '')
+        this.taskCommand.fileTime = ''
+        this.taskCommand.name = ''
         if (this.pageStatus.editPage === true && this.pageStatus.detailPage === false) {
           this.placeName = name
           this.taskCommand.parentId = id
@@ -277,7 +290,73 @@ export default {
     renameTreeNodeHandler (targetNode) {
       this.addOrReNameConfirmFlag = 'rename'
       this.targetNode = targetNode
-      this.confirmFlag = true
+      if (targetNode.fileType !== 43) {
+        this.confirmFlag = true
+      }
+      if (targetNode.fileType === 43) {
+        this.editPage(targetNode.id)
+      }
+    },
+    async editPage (id) {
+      this.pageStatus.detailPage = false
+      this.pageStatus.editPage = true
+      setTimeout(function () {
+        window.App.mailCompose(null, null, null)
+      }, 0)
+      let result = await this.$api(Global.url.apiGetDetailContent + '?id=' + id, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.taskCommand = {}
+        this.contentData = result.data.data
+        this.taskCommand.description = this.contentData.description
+        this.taskCommand.fileType = this.contentData.fileType
+        this.taskCommand.fileTime = this.contentData.fileTime.substr(0, 10)
+        this.taskCommand.level = this.contentData.level
+        this.taskCommand.userId = this.contentData.userId
+        this.taskCommand.userName = this.contentData.userName
+        this.taskCommand.parentId = this.contentData.parentId
+        this.taskCommand.name = this.contentData.name
+        this.taskCommand.id = this.contentData.id
+        window.$('#email-editor').summernote('code', '')
+        window.$('#email-editor').summernote('code', this.contentData.description)
+        this.pageStatus.deleteBtn = true
+        this.pageStatus.submitBtn = false
+        this.pageStatus.updateBtn = true
+      }
+    },
+    async deleteTask () {
+      Dialog.confirm({
+        title: '警告',
+        message: '确认删除 ' + this.taskCommand.name + ' 吗？'
+      }).then(async () => {
+        let result = await this.$api(Global.url.apiPostNodeContent + '/' + this.taskCommand.id, '', 'DELETE')
+        if (result.data.code === 200) {
+          this.pageStatus.detailPage = false
+          this.pageStatus.editPage = false
+          this.getZNodes()
+        }
+      }).catch(() => {
+
+      })
+    },
+    async updateTask () {
+      this.taskCommand.description = window.$('#email-editor').summernote('code')
+      let result = await this.$api(Global.url.apiPostNodeContent + '/' + this.targetNode.id, this.taskCommand, 'POST')
+      console.log(this.taskCommand.description)
+      if (result.data && result.data.code === 200) {
+        this.getZNodes()
+        this.$global.showMessage('更新成功！')
+      }
+    },
+    resetTask () {
+      Dialog.confirm({
+        title: '警告',
+        message: '确认重置富文本内容吗？'
+      }).then(async () => {
+        this.taskCommand.description = ''
+        window.$('#email-editor').summernote('code', '')
+      }).catch(() => {
+
+      })
     },
     deleteTreeNodeHandler (targetNode) {
       this.targetNode = targetNode

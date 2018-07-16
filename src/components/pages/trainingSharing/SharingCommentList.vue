@@ -3,9 +3,10 @@
     <div class="main-content container-fluid">
       <div class="panel panel-default">
         <div v-for="comment in historyComments" :key="comment.id" class="panel-body sharingComment">
-          <div @click="toShareComments(comment)" class="commentHeading cfix">
+          <div class="commentHeading cfix">
             <div class="fLeft">
               <div class="circle"></div>{{comment.title}}
+              <button @click="toTrainingContent(comment)" class="inline-button"><span class="mdi mdi-edit"></span></button>
             </div>
             <div v-if="comment.shareLabel" class="fRight">
               标签：{{comment.shareLabel}}
@@ -94,6 +95,16 @@ export default {
       this.$store.commit('setSharingComment', comment)
       this.$router.push({name: 'ShareComments'})
     },
+    toTrainingContent (comment) {
+      window.removeEventListener('scroll', this.handleScroll)
+      this.$store.commit('setSharingComment', comment)
+      this.$router.push({
+        name: 'TrainingContent',
+        query: {
+          id: comment.id
+        }
+      })
+    },
     getUrl (fileUrl, fileName) {
       return Global.url.apiGetSharingFileDownload + '?filename=' + fileName + '&fileUrl=' + fileUrl + '&token=' + this.personMsg.token
     },
@@ -170,7 +181,6 @@ export default {
   }
   div.commentHeading {
     margin: 10px 0px;
-    cursor: pointer;
   }
   div.commentBody {
     background-color: #eee;
@@ -226,5 +236,13 @@ export default {
     display: inline;
     content: "...";
     font-size: 13px;
+  }
+  button.inline-button {
+    height: 18px;
+    width: 18px;
+    padding: 0px;
+    margin: 0px;
+    border: 1px;
+    background-color: #FFFFFF;
   }
 </style>

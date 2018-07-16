@@ -30,11 +30,11 @@
                   <sub-menu v-show="menuBtn.m303" id="sm_6" path="/score-charts" name="贡献值" />
                 </ul>
               </li>
-              <li v-show="menuBtn.m400" class="parent">
+              <li v-show="menuBtn.m401" class="parent">
                 <a href="#"><i class="icon mdi mdi-developer-board"></i><span>培训分享</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m401" id="sm_7" path="/training-content" name="我要分享" />
-                  <sub-menu v-show="menuBtn.m402" id="sm_8" path="/sharing-comment-list" name="分享列表" />
+                  <sub-menu v-show="menuBtn.m402" id="sm_7" path="/training-content" name="我要分享" />
+                  <sub-menu v-show="menuBtn.m403" id="sm_8" path="/sharing-comment-list" name="分享列表" />
                 </ul>
               </li>
               <li v-show="menuBtn.m501" class="parent">
@@ -74,9 +74,9 @@ export default {
         m301: false,
         m302: false,
         m303: false,
-        m400: false,
         m401: false,
         m402: false,
+        m403: false,
         m501: false,
         m502: false
       }
@@ -128,12 +128,12 @@ export default {
               this.menuBtn.m302 = true
             } else if (item.menuId === 303) {
               this.menuBtn.m303 = true
-            } else if (item.menuId === 400) {
-              this.menuBtn.m400 = true
             } else if (item.menuId === 401) {
               this.menuBtn.m401 = true
             } else if (item.menuId === 402) {
               this.menuBtn.m402 = true
+            } else if (item.menuId === 403) {
+              this.menuBtn.m403 = true
             } else if (item.menuId === 501) {
               this.menuBtn.m501 = true
             } else if (item.menuId === 502) {

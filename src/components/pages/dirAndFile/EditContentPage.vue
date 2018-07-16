@@ -59,7 +59,7 @@
           <div class="col-md-12">
             <div class="panel">
               <div class="panel-heading panel-heading-divider detailPage">{{contentData.name}}<span class="panel-subtitle">{{contentData.userName}}&nbsp;&nbsp;{{contentData.hasOwnProperty('fileTime')?contentData.fileTime.substr(0, 10):''}}</span></div>
-              <div v-html="contentData.description" class="panel-body"></div>
+              <div v-html="contentData.description" class="note-editable panel-body"></div>
             </div>
           </div>
           <div class="box-fixed center">

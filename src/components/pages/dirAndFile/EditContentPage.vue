@@ -341,7 +341,6 @@ export default {
     async updateTask () {
       this.taskCommand.description = window.$('#email-editor').summernote('code')
       let result = await this.$api(Global.url.apiPostNodeContent + '/' + this.targetNode.id, this.taskCommand, 'POST')
-      console.log(this.taskCommand.description)
       if (result.data && result.data.code === 200) {
         this.getZNodes()
         this.$global.showMessage('更新成功！')

@@ -32,6 +32,7 @@
         </div>
         <div class="box-fixed center">
           <a class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="canShowCreateFromState" @click="addNewCodeReviewFromState">{{ temporaryCodeReview.submitType==='add'?'从缓存创建':'从缓存更新' }}</a>
         </div>
       </div>
     </div>
@@ -63,7 +64,8 @@ export default {
   computed: {
     ...mapState({
       personMsg: 'user',
-      codeReviewPerson: 'codeReviewPerson'
+      codeReviewPerson: 'codeReviewPerson',
+      temporaryCodeReview: 'temporaryCodeReview'
     }),
     selectedPerson: function () {
       if (!this.selectedPersonId) {
@@ -80,6 +82,10 @@ export default {
       return this.persons.map(person => {
         return person.name
       })
+    },
+    canShowCreateFromState () {
+      let userFlag = this.temporaryCodeReview.hasOwnProperty('codeReviewPerson') && this.temporaryCodeReview.codeReviewPerson.userId === this.selectedPersonId
+      return userFlag && this.temporaryCodeReview.submitType !== ''
     }
   },
   methods: {
@@ -91,6 +97,7 @@ export default {
       }
       this.getReviewsBySelectedPerson()
       this.$store.commit('setCodeReviewPerson', this.selectedPerson)
+      // this.$store.commit('setTemporaryCodeReviewPerson', this.selectedPerson)
     },
     async getPersons () {
       let result = await this.$api(Global.url.apiPersons, '', 'GET')
@@ -112,6 +119,7 @@ export default {
     },
     handleSelectedPersonChange () {
       this.$store.commit('setCodeReviewPerson', this.selectedPerson)
+      // this.$store.commit('setTemporaryCodeReviewPerson', this.selectedPerson)
       this.getReviewsBySelectedPerson()
     },
     reviewClicked (review) {
@@ -119,6 +127,7 @@ export default {
         return
       }
       this.$store.commit('setCodeReview', review)
+      // this.$store.commit('setTemporaryCodeReviewContent', review)
       this.$router.push({
         name: 'CodeReviewDetail',
         params: {
@@ -132,6 +141,14 @@ export default {
       }
       this.$router.push({
         name: 'CodeReviewForm'
+      })
+    },
+    addNewCodeReviewFromState () {
+      this.$router.push({
+        name: 'CodeReviewForm',
+        query: {
+          type: 'history'
+        }
       })
     }
   }

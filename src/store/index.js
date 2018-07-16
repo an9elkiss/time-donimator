@@ -18,6 +18,11 @@ export default new Vuex.Store({
     codeReviewPerson: {},
     codeReview: {},
     codeReviewDetail: {},
+    temporaryCodeReview: {
+      submitType: '',
+      codeReviewPerson: {},
+      codeReview: {}
+    },
     taskList: [],
     sharingComment: {}
   },
@@ -61,6 +66,15 @@ export default new Vuex.Store({
     },
     setSharingComment (state, sharingComment) {
       state.sharingComment = sharingComment
+    },
+    setTemporaryCodeReviewType (state, type) {
+      state.temporaryCodeReview.submitType = type
+    },
+    setTemporaryCodeReviewPerson (state, person) {
+      state.temporaryCodeReview.codeReviewPerson = person
+    },
+    setTemporaryCodeReviewContent (state, content) {
+      state.temporaryCodeReview.codeReview = content
     }
   },
 

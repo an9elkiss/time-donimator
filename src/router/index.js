@@ -16,6 +16,7 @@ import TrainingContent from '@/components/pages/trainingSharing/TrainingContent'
 import ShareComments from '@/components/pages/trainingSharing/ShareComments'
 import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
 import EditContentPage from '@/components/pages/dirAndFile/EditContentPage'
+import ReportForm from '@/components/pages/dirAndFile/ReportForm'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -154,6 +155,15 @@ export default new Router({
             keepAlive: false
           },
           component: EditContentPage
+        },
+        {
+          path: 'report-form-page',
+          name: 'ReportForm',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: ReportForm
         }
       ]
     }

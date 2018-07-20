@@ -16,7 +16,7 @@
               <div class="col-xs-10">
                 <div data-min-view="2" data-date-format="yyyy-mm-dd" class="input-group date datetimepicker" id="datePicker">
                   <span class="input-group-addon btn btn-primary"><i class="icon-th mdi mdi-calendar"></i></span>
-                  <input class="form-control input-sm" ref="inputDateRef" v-model="codeReviewCommand.codeReviewTime" id="dateInput" autocomplete="false"/>
+                  <input class="form-control input-sm" ref="inputDateRef" v-model="codeReviewCommand.codeReviewTime" id="dateInput" autocomplete="off"/>
                 </div>
               </div>
             </div>

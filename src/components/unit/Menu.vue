@@ -41,6 +41,7 @@
                 <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m502" id="sm_7" path="/edit-content-page" name="文件列表" />
+                  <sub-menu v-show="menuBtn.m502" id="sm_7" path="/report-form-page" name="每月报表" />
                 </ul>
               </li>
             </ul>

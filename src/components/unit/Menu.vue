@@ -28,6 +28,7 @@
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m302" id="sm_5" path="/show-converted-work-hour" name="一周计划" />
                   <sub-menu v-show="menuBtn.m303" id="sm_6" path="/score-charts" name="贡献值" />
+                  <sub-menu v-show="menuBtn.m304" id="sm_7" path="/report-form-page" name="每月报表" />
                 </ul>
               </li>
               <li v-show="menuBtn.m401" class="parent">
@@ -41,7 +42,6 @@
                 <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m502" id="sm_7" path="/edit-content-page" name="文件列表" />
-                  <sub-menu v-show="menuBtn.m502" id="sm_7" path="/report-form-page" name="每月报表" />
                 </ul>
               </li>
             </ul>
@@ -75,6 +75,7 @@ export default {
         m301: false,
         m302: false,
         m303: false,
+        m304: false,
         m401: false,
         m402: false,
         m403: false,
@@ -129,6 +130,8 @@ export default {
               this.menuBtn.m302 = true
             } else if (item.menuId === 303) {
               this.menuBtn.m303 = true
+            } else if (item.menuId === 304) {
+              this.menuBtn.m304 = true
             } else if (item.menuId === 401) {
               this.menuBtn.m401 = true
             } else if (item.menuId === 402) {

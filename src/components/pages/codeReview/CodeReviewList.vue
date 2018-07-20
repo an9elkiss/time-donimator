@@ -32,7 +32,7 @@
         </div>
         <div class="box-fixed center">
           <a class="btn btn-space btn-primary btn-add" @click="addNewCodeReview">创建</a>
-          <a class="btn btn-space btn-primary btn-add" v-if="canShowCreateFromState" @click="addNewCodeReviewFromState">{{ temporaryCodeReview.submitType==='add'?'从缓存创建':'从缓存更新' }}</a>
+          <!--<a class="btn btn-space btn-primary btn-add" v-if="canShowCreateFromState" @click="addNewCodeReviewFromState">{{ temporaryCodeReview.submitType==='add'?'从缓存创建':'从缓存更新' }}</a>-->
         </div>
       </div>
     </div>
@@ -82,11 +82,11 @@ export default {
       return this.persons.map(person => {
         return person.name
       })
-    },
-    canShowCreateFromState () {
-      let userFlag = this.temporaryCodeReview.hasOwnProperty('codeReviewPerson') && this.temporaryCodeReview.codeReviewPerson.userId === this.selectedPersonId
-      return userFlag && this.temporaryCodeReview.submitType !== ''
     }
+    // canShowCreateFromState () {
+    //   let userFlag = this.temporaryCodeReview.hasOwnProperty('codeReviewPerson') && this.temporaryCodeReview.codeReviewPerson.userId === this.selectedPersonId
+    //   return userFlag && this.temporaryCodeReview.submitType !== ''
+    // }
   },
   methods: {
     async codeReviewInit () {
@@ -142,15 +142,15 @@ export default {
       this.$router.push({
         name: 'CodeReviewForm'
       })
-    },
-    addNewCodeReviewFromState () {
-      this.$router.push({
-        name: 'CodeReviewForm',
-        query: {
-          type: 'history'
-        }
-      })
     }
+    // addNewCodeReviewFromState () {
+    //   this.$router.push({
+    //     name: 'CodeReviewForm',
+    //     query: {
+    //       type: 'history'
+    //     }
+    //   })
+    // }
   }
 }
 </script>

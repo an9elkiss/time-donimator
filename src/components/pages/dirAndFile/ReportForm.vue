@@ -1,21 +1,23 @@
 <template>
   <div class="be-content">
-    <div class="panel panel-default">
-      <div class="panel-heading panel-heading-divider">Code Reviev</div>
-      <div class="panel-body">
-        <div id="codeReview" class="charts"></div>
+    <div class="main-content container-fluid">
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">Code Reviev</div>
+        <div class="panel-body">
+          <div id="codeReview" class="charts"></div>
+        </div>
       </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading panel-heading-divider">持续改进</div>
-      <div class="panel-body">
-        <div id="improvement" class="charts"></div>
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">持续改进</div>
+        <div class="panel-body">
+          <div id="improvement" class="charts"></div>
+        </div>
       </div>
-    </div>
-    <div class="panel panel-default">
-      <div class="panel-heading panel-heading-divider">分享</div>
-      <div class="panel-body">
-        <div id="share" class="charts"></div>
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-divider">分享</div>
+        <div class="panel-body">
+          <div id="share" class="charts"></div>
+        </div>
       </div>
     </div>
   </div>

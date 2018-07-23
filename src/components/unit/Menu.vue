@@ -28,7 +28,7 @@
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m302" id="sm_5" path="/show-converted-work-hour" name="一周计划" />
                   <sub-menu v-show="menuBtn.m303" id="sm_6" path="/score-charts" name="贡献值" />
-                  <sub-menu v-show="menuBtn.m304" id="sm_7" path="/report-form-page" name="每月报表" />
+                  <sub-menu v-show="menuBtn.m304" id="sm_7" path="/report-form-page" name="团队管理" />
                 </ul>
               </li>
               <li v-show="menuBtn.m401" class="parent">

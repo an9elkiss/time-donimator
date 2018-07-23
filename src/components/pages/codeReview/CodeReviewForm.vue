@@ -104,29 +104,27 @@ export default {
           self.codeReviewToState()
         })
     })
-    // 初始化缓存数据
-    this.$store.commit('setTemporaryCodeReviewPerson', this.selectedPerson)
-    // this.codeReviewToState()
-    if (this.$route.query.id) {
-      let codeReview = Object.assign({brief: this.codeReview}, {detail: this.codeReviewDetail})
-      this.$store.commit('setTemporaryCodeReviewContent', codeReview)
-    }
-
-    // edit codeReview
-    if (this.$route.query.id) {
-      this.codeReviewInfoList = this.codeReviewDetail
-      this.codeReviewCommand.userLabel = this.codeReview.userLabel
-      this.codeReviewCommand.id = this.codeReview.id
-      this.codeReviewCommand.codeReviewTime = this.codeReview.codeReviewTime
-    }
-    // 从state中获取
-    if (this.$route.query.type === 'history') {
+    // 判断 缓存中是否有值（有提交方式）并且是否可以输出（被检查人一样、更新时条目id一样）
+    if (this.temporaryCodeReview.submitType && this.temporaryCodeReview.hasOwnProperty('codeReviewPerson') && this.temporaryCodeReview.codeReviewPerson.userId === this.selectedPerson.userId) {
       if (this.temporaryCodeReview.submitType === 'update') {
-        this.codeReviewInfoList = this.temporaryCodeReview.codeReview.detail
-        this.codeReviewCommand.userLabel = this.temporaryCodeReview.codeReview.brief.userLabel
-        this.codeReviewCommand.codeReviewTime = this.temporaryCodeReview.codeReview.brief.codeReviewTime
-        this.codeReviewCommand.id = this.temporaryCodeReview.codeReview.brief.id
-      } else {
+        // 更新时 从缓存读入
+        if (this.temporaryCodeReview.codeReview.brief && this.temporaryCodeReview.codeReview.brief.id === this.$route.query.id) {
+          this.codeReviewInfoList = this.temporaryCodeReview.codeReview.detail
+          this.codeReviewCommand.userLabel = this.temporaryCodeReview.codeReview.brief.userLabel
+          this.codeReviewCommand.codeReviewTime = this.temporaryCodeReview.codeReview.brief.codeReviewTime
+          this.codeReviewCommand.id = this.temporaryCodeReview.codeReview.brief.id
+        } else {
+          // 更新时 更新缓存中的code review
+          let codeReview = Object.assign({brief: this.codeReview}, {detail: this.codeReviewDetail})
+          this.$store.commit('setTemporaryCodeReviewContent', codeReview)
+          // 更新时 codeReview 的赋值
+          this.codeReviewInfoList = this.codeReviewDetail
+          this.codeReviewCommand.userLabel = this.codeReview.userLabel
+          this.codeReviewCommand.id = this.codeReview.id
+          this.codeReviewCommand.codeReviewTime = this.codeReview.codeReviewTime
+        }
+      } else if (this.temporaryCodeReview.submitType === 'add') {
+        // 新增时 从缓存读入
         if (this.temporaryCodeReview.codeReview.hasOwnProperty('userLabel')) {
           this.codeReviewCommand.userLabel = this.temporaryCodeReview.codeReview.userLabel
         }
@@ -137,18 +135,34 @@ export default {
           this.codeReviewCommand.codeReviewTime = this.temporaryCodeReview.codeReview.codeReviewTime
         }
       }
+    } else {
+      // 缓存没有记录，更新
+      // 初始化缓存数据 （被检查人）
+      this.$store.commit('setTemporaryCodeReviewPerson', this.selectedPerson)
+      this.$store.commit('setTemporaryCodeReviewContent', {})
+      if (this.$route.query.id) {
+        // 更新时 更新缓存中的code review
+        let codeReview = Object.assign({brief: this.codeReview}, {detail: this.codeReviewDetail})
+        this.$store.commit('setTemporaryCodeReviewContent', codeReview)
+
+        // 更新时 codeReview 的赋值
+        this.codeReviewInfoList = this.codeReviewDetail
+        this.codeReviewCommand.userLabel = this.codeReview.userLabel
+        this.codeReviewCommand.id = this.codeReview.id
+        this.codeReviewCommand.codeReviewTime = this.codeReview.codeReviewTime
+      }
     }
   },
   methods: {
     handleRouterParams () {
       // 判断state中是否存在code Review的被检查者
-      if (this.$route.query.type === 'history') {
-        // 从缓存中得到数据
-        if (this.temporaryCodeReview.codeReviewPerson && this.temporaryCodeReview.codeReviewPerson.hasOwnProperty('userId')) {
-          this.codeReviewCommand.userId = this.temporaryCodeReview.codeReviewPerson.userId
-          return
-        }
-      }
+      // if (this.$route.query.type === 'history') {
+      //   // 从缓存中得到数据
+      //   if (this.temporaryCodeReview.codeReviewPerson && this.temporaryCodeReview.codeReviewPerson.hasOwnProperty('userId')) {
+      //     this.codeReviewCommand.userId = this.temporaryCodeReview.codeReviewPerson.userId
+      //     return
+      //   }
+      // }
       // 更新和新增时，把被检查者的ID赋值
       if (this.selectedPerson && this.selectedPerson.hasOwnProperty('userId')) {
         this.codeReviewCommand.userId = this.selectedPerson.userId
@@ -229,17 +243,17 @@ export default {
       this.$router.go(-1)
     },
     codeReviewToState () {
-      if (this.$route.query.type === 'history') {
-        if (this.temporaryCodeReview.submitType === 'add') {
-          this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewInfoList)
-          this.$store.commit('setTemporaryCodeReviewContent', this.codeReviewCommand)
-        } else {
-          this.temporaryCodeReview.codeReview.detail = this.codeReviewInfoList
-          this.temporaryCodeReview.codeReview.brief.userLabel = this.codeReviewCommand.userLabel
-          this.temporaryCodeReview.codeReview.brief.codeReviewTime = this.codeReviewCommand.codeReviewTime
-          this.$store.commit('setTemporaryCodeReviewContent', Object.assign({brief: this.temporaryCodeReview.codeReview.brief}, {detail: this.temporaryCodeReview.codeReview.detail}))
-        }
+      // if (this.$route.query.type === 'history') {
+      if (this.temporaryCodeReview.submitType === 'add') {
+        this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewInfoList)
+        this.$store.commit('setTemporaryCodeReviewContent', this.codeReviewCommand)
+      } else if (this.temporaryCodeReview.submitType === 'update') {
+        this.temporaryCodeReview.codeReview.detail = this.codeReviewInfoList
+        this.temporaryCodeReview.codeReview.brief.userLabel = this.codeReviewCommand.userLabel
+        this.temporaryCodeReview.codeReview.brief.codeReviewTime = this.codeReviewCommand.codeReviewTime
+        this.$store.commit('setTemporaryCodeReviewContent', Object.assign({brief: this.temporaryCodeReview.codeReview.brief}, {detail: this.temporaryCodeReview.codeReview.detail}))
       }
+      // }
     }
   }
 }

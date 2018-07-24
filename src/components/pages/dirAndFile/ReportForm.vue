@@ -187,11 +187,11 @@ export default {
       let monthData = 0
       if (result.data && result.data.code === 200) {
         for (var key in result.data.data) { // 通过定义一个局部变量key遍历获取map里面的所有key值
-          this.optionCodeReview.legend.data.push(key)
+          this.optionCodeReview.legend.data.push(JSON.parse(key).name)
           // 获取今年过了几个月份
           monthData = result.data.data[key].length
           var sery = {
-            name: key,
+            name: JSON.parse(key).name,
             type: 'bar',
             barGap: 0,
             label: true,
@@ -228,11 +228,11 @@ export default {
       let monthData = 0
       if (result.data && result.data.code === 200) {
         for (var key in result.data.data) { // 通过定义一个局部变量key遍历获取map里面的所有key值
-          this.optionImprovement.legend.data.push(key)
+          this.optionImprovement.legend.data.push(JSON.parse(key).name)
           // 获取今年过了几个月份
           monthData = result.data.data[key].length
           var sery = {
-            name: key,
+            name: JSON.parse(key).name,
             type: 'bar',
             barGap: 0,
             label: true,
@@ -267,11 +267,11 @@ export default {
       let monthData = 0
       if (result.data && result.data.code === 200) {
         for (var key in result.data.data) {
-          this.optionShare.legend.data.push(key)
+          this.optionShare.legend.data.push(JSON.parse(key).name)
           // 获取今年过了几个月份
           monthData = result.data.data[key].length
           var sery = {
-            name: key,
+            name: JSON.parse(key).name,
             type: 'bar',
             barGap: 0,
             label: true,

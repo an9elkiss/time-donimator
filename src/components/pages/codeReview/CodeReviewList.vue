@@ -20,7 +20,7 @@
         <div v-if="reviews.length > 0" class="panel-body p-b-0">
           <div v-for="review of reviews" :key="review.id" class="code-review-brief">
             <p class="cfix" @click="reviewClicked(review)">
-              <span class="heading fLeft">{{ review.userLabel }}</span>
+              <span class="heading fLeft">{{ review.userLabel }}</span><span class="heading fLeft total-score" v-if="review.totalScore > 0">(得分: {{ review.totalScore }})</span>
               <span class="fRight">
                 {{ review.codeReviewTime }}<i class="mdi mdi-chevron-right detail"></i>
               </span>
@@ -193,5 +193,9 @@ export default {
 }
 .m-b-0{
   margin-bottom: 0;
+}
+.total-score{
+  margin-left: 15px;
+  color: #3C93EA;
 }
 </style>

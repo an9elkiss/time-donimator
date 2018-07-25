@@ -16,7 +16,7 @@ import TrainingContent from '@/components/pages/trainingSharing/TrainingContent'
 import ShareComments from '@/components/pages/trainingSharing/ShareComments'
 import SharingCommentList from '@/components/pages/trainingSharing/SharingCommentList'
 import EditContentPage from '@/components/pages/dirAndFile/EditContentPage'
-import ReportForm from '@/components/pages/dirAndFile/ReportForm'
+import ReportForm from '@/components/pages/charts/ReportForm'
 
 Vue.use(VueResource)
 Vue.use(Router)

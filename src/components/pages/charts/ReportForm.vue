@@ -83,13 +83,13 @@ export default {
     }
   },
   mounted () {
-    this.getChartData(this.optionCodeReview, Global.url.apiGetCodeReviewEveryMonthData, 'GET', 'codeReview')
-    this.getChartData(this.optionCodeReview, Global.url.apiGetImprovementMonthData, 'GET', 'improvement')
-    this.getChartData(this.optionCodeReview, Global.url.apiGetShareMonthData, 'GET', 'share')
+    this.getChartData(this.optionCodeReview, Global.url.apiGetCodeReviewEveryMonthData, 'GET', 'codeReview', this.title[0])
+    this.getChartData(this.optionCodeReview, Global.url.apiGetImprovementMonthData, 'GET', 'improvement', this.title[1])
+    this.getChartData(this.optionCodeReview, Global.url.apiGetShareMonthData, 'GET', 'share', this.title[2])
   },
   methods: {
     // 获取每月 Code Review 数据
-    async getChartData (option, url, type, id) {
+    async getChartData (option, url, type, id, title) {
       let result = await this.$api(url, '', type)
       option = this.publicAttrs
       let monthData = 0
@@ -111,7 +111,7 @@ export default {
       }
       // 给数据x轴进行赋值(月份显示)
       option.xAxis[0].data = this.month.slice(0, monthData)
-      option.title.text = this.title[0]
+      option.title.text = title
       this.drowChart(option, id)
     },
     drowChart (option, id) {

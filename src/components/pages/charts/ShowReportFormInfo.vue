@@ -132,9 +132,6 @@ export default {
           this.chartDataInfo = result.data.data[key]
         }
       }
-      // //////
-      // ///////
-      // /////////
       if (forwordInformation.flag === this.differentFlags[0]) {
         let allpersonData = await this.$api(Global.url.apiGetAllPersons, '', 'GET')
         if (allpersonData.data && allpersonData.data.code === 200) {

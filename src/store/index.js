@@ -24,7 +24,8 @@ export default new Vuex.Store({
       codeReview: {}
     },
     taskList: [],
-    sharingComment: {}
+    sharingComment: {},
+    forwordInformation: {}
   },
   mutations: {
     login (state, data) {
@@ -75,6 +76,9 @@ export default new Vuex.Store({
     },
     setTemporaryCodeReviewContent (state, content) {
       state.temporaryCodeReview.codeReview = content
+    },
+    setForwordInformation (state, forwordInformation) {
+      state.forwordInformation = forwordInformation
     }
   },
 
@@ -105,6 +109,9 @@ export default new Vuex.Store({
     },
     getSharingComment (state) {
       return state.sharingComment
+    },
+    getForwordInformation (state) {
+      return state.forwordInformation
     }
   },
 

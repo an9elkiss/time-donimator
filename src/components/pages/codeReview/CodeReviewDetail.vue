@@ -5,9 +5,25 @@
         <div class="panel panel-default code-review-header">
           <div class="panel-heading center">{{ codeReview.userLabel }}<span class="panel-subtitle">{{ codeReview.codeReviewTime }}</span></div>
           <div class="panel-body">
-            <div v-if="isFlagScore">
-              <p>评委：{{ this.codeReview.codeReviewJudges }}</p>
-              <p>得分：{{ this.codeReview.totalScore }}</p>
+            <div v-if="myflag">
+              <p v-if="codeReview.codeReviewJudges != null">评委：{{ codeReview.codeReviewJudges }}</p>
+              <div v-if="isEditable" class="chooseCodeReviewlevel">
+                <span>程度：</span>
+                <div class="btn-group btn-space">
+                  <button type="button" class="btn btn-default">{{ codeReviewCommand.codeReviewlevel.length > 0 ? codeReviewCommand.codeReviewlevel : '难度' }}</button>
+                  <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+                    <span class="mdi mdi-chevron-down"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul role="menu" class="dropdown-menu">
+                    <li><a href="#" @click="monthSelected(1)">简单</a></li>
+                    <li><a href="#" @click="monthSelected(2)">普通</a></li>
+                    <li><a href="#" @click="monthSelected(3)">复杂</a></li>
+                  </ul>
+                </div>
+              </div>
+              <p v-if="!isEditable">程度：{{ codeReview.codeReviewlevel }}</p>
+              <p v-if="codeReview.totalScore != null">得分：{{ codeReview.totalScore }}</p>
             </div>
             <p class="code-review-tip cfix"><span class="fLeft dis-block">注：</span><span class="overflow-hidden dis-block">得分项为【优秀】【良好】【基本合格】【不合格】【无】，加分项酌情加5~20分；<br>*表示重点整治的问题，请加强重视，不要重犯；</span></p>
           </div>
@@ -39,7 +55,7 @@
           </div>
         </div>
         <div class="center box-fixed">
-          <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="isEditable = !isEditable">评分</a>
+          <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="changeStatus">评分</a>
           <a class="btn btn-space btn-primary btn-add" v-if="isEditable" @click="codeReviewPut">提交</a>
           <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="codeReviewEdit">编辑</a>
           <a class="btn btn-space btn-primary btn-add" v-if="!isEditable" @click="codeReviewDelete">删除</a>
@@ -64,12 +80,15 @@ export default {
         userLabel: '',
         codeReviewInfos: '',
         codeReviewJudges: '',
-        totalScore: 0
+        totalScore: 0,
+        codeReviewlevel: ''
       },
       loginUserChineseName: '',
       codeReviewDetailModules: [],
       isFlagScore: false,
-      isEditable: false
+      isEditable: false,
+      // 自定义一个 flag 用来标记是否进入评分或者展示评分之后的页面
+      myflag: false
     }
   },
   computed: {
@@ -93,7 +112,12 @@ export default {
   },
   methods: {
     codeReviewInit () {
-      this.isFlagScore = this.codeReview.flagScore
+      if (this.codeReview.codeReviewlevel !== null) {
+        this.myflag = true
+        this.codeReviewCommand.codeReviewlevel = this.codeReview.codeReviewlevel
+      } else {
+        this.myflag = false
+      }
     },
     async initialLoginUserName () {
       while (this.loginUserChineseName === '') {
@@ -123,6 +147,7 @@ export default {
       if (result.data && result.data.code === 200) {
         this.codeReview.codeReviewJudges = result.data.data.codeReviewJudges
         this.codeReview.totalScore = result.data.data.totalScore
+        this.codeReview.codeReviewlevel = result.data.data.codeReviewlevel
         this.$store.commit('setCodeReview', this.codeReview)
         this.updateCodeReviewDetailModules(result.data)
         this.isFlagScore = true
@@ -174,6 +199,19 @@ export default {
     },
     goBack () {
       this.$router.push({name: 'CodeReviewList'})
+    },
+    monthSelected (level) {
+      if (level === 1) {
+        this.codeReviewCommand.codeReviewlevel = '简单'
+      } else if (level === 2) {
+        this.codeReviewCommand.codeReviewlevel = '普通'
+      } else if (level === 3) {
+        this.codeReviewCommand.codeReviewlevel = '复杂'
+      }
+    },
+    changeStatus () {
+      this.isEditable = !this.isEditable
+      this.myflag = true
     }
   }
 }
@@ -225,5 +263,18 @@ export default {
   .code-review-block .form-horizontal .form-group label{
     text-align: left;
     width: 56px;
+  }
+  .btn-group{
+    width: 218px;
+    margin-top: 5px;
+  }
+  .dropdown-menu {
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+    padding: 7px 0px;
+    min-width: 73px;
+  }
+  .chooseCodeReviewlevel{
+    margin: 10px 0 0;
   }
 </style>

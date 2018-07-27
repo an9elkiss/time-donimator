@@ -51,7 +51,10 @@ const url = {
   apiGetImageUrl: managerApiBase + '/api-super-manager/1.0.0/',
   apiGetCodeReviewEveryMonthData: managerApiBase + '/api-super-manager/1.0.0/codeReview/statistical/group',
   apiGetImprovementMonthData: managerApiBase + '/api-super-manager/1.0.0/task/statistical/makebetter/group',
-  apiGetShareMonthData: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group'
+  apiGetShareMonthData: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group',
+  apiGetCodeReviewEveryMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/codeReview/statistical/group/info',
+  apiGetImprovementMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/task/statistical/group/info',
+  apiGetShareMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group/info'
 }
 
 const event = {

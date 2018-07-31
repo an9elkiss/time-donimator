@@ -21,6 +21,7 @@
           <div v-for="review of reviews" :key="review.id" class="code-review-brief">
             <p class="cfix" @click="reviewClicked(review)">
               <span class="heading fLeft">{{ review.userLabel }}</span><span class="heading fLeft total-score" v-if="review.totalScore > 0">(得分: {{ review.totalScore }})</span>
+              <span class="heading fLeft total-score" v-if="review.codeReviewlevel">(难度: {{ review.codeReviewlevel }})</span>
               <span class="fRight">
                 {{ review.codeReviewTime }}<i class="mdi mdi-chevron-right detail"></i>
               </span>

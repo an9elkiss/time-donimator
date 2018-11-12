@@ -377,6 +377,10 @@ export default {
 </script>
 
 <style scoped>
+  .aside-content {
+    height: 100%;
+    overflow: auto;
+  }
   div.be-wrapper.be-aside.be-fixed-sidebar {
     padding-top: 0px;
   }

@@ -34,6 +34,13 @@
                     <option value="">未选择</option>
                     <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
                   </select>
+                  <input v-if="!(isDisabled && taskCommand.parentTitle)" v-model="filter" @focus="searchInputFocus" @keydown="searchInputFocus" @blur="getNull" class="form-control input-sm transfrom">
+                  <div v-if="!(isDisabled && taskCommand.parentTitle)" class="triangle"></div>
+                  <div v-if="!(isDisabled && taskCommand.parentTitle)" @mouseover="isIn = true" @mouseleave="dropdownLoosePoint" :class="dropdownShow?'is-active':''" class="select-dropdown">
+                    <ul>
+                      <li v-for="(project, index) of filterParentProject" :key="index" @click="setParentId(project)" @mouseover="moveIndex = index" :class="{'is-on': moveIndex==index}">&nbsp;&nbsp;&nbsp;&nbsp;{{project.title}}</li>
+                    </ul>
+                  </div>
                 </div>
                 <div class="mobPart">
                   <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
@@ -236,7 +243,11 @@ export default {
       taskWeekId: 0,
       isClicked: false,
       isTrue: false,
-      isDisabled: false
+      isDisabled: false,
+      dropdownShow: false,
+      filter: '未选择',
+      moveIndex: null,
+      isIn: false
     }
   },
   components: {
@@ -271,6 +282,13 @@ export default {
       })
       list.splice(0, 0, {text: '未选择', disabled: true})
       return list
+    },
+    filterParentProject () {
+      let projects = this.task.parentProject.filter(project => {
+        return project.title.toLowerCase().includes(this.filter.toLowerCase())
+      })
+      projects.splice(0, 0, {value: '', title: '未选择'})
+      return projects
     }
   },
   mounted () {
@@ -337,6 +355,8 @@ export default {
             this.taskCommand.project = this.task.parentProject[index].project
           }
         }
+      } else {
+        this.taskCommand.project = ''
       }
     },
     buttonClicked (index) {
@@ -537,6 +557,29 @@ export default {
       return list.find(ele => {
         return Number(ele.id) === Number(id)
       })
+    },
+    searchInputFocus () {
+      this.filter = ''
+      this.dropdownShow = true
+    },
+    setParentId (project) {
+      this.filter = project.title
+      this.taskCommand.parentId = project.id
+      this.isIn = false
+      this.dropdownShow = false
+      this.parentTaskChange()
+    },
+    dropdownLoosePoint () {
+      this.isIn = false
+      this.dropdownShow = false
+    },
+    getNull () {
+      if (!this.isIn) {
+        this.taskCommand.parentId = null
+        this.filter = '未选择'
+        this.dropdownShow = false
+        this.parentTaskChange()
+      }
     }
   },
   watch: {
@@ -558,6 +601,38 @@ export default {
 
 </script>
 <style>
+  .transfrom{
+    position: absolute;
+    top: 0;
+  }
+  .triangle{
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 6px solid #333;
+    position: absolute;
+    right: 7px;
+    top: 50%;
+  }
+  .select-dropdown{
+    position: absolute;
+    min-width: 100%;
+    max-height: 300px;
+    display: none;
+    z-index: 50;
+    background: #FFF;
+    border: 1px solid #333;
+    overflow: auto;
+    white-space: nowrap;
+  }
+  .select-dropdown.is-active {
+    display: block;
+    border: 1px solid #4285f4;
+  }
+  .select-dropdown li {
+    cursor: default;
+  }
   div.form-group{
     padding: 15px 0 0 0;
   }
@@ -627,5 +702,9 @@ export default {
     padding-left: 0px;
     padding-right: 0px;
     margin: auto 15px;
+  }
+  .is-on{
+    background: #4286f4e1;
+    color: #FFF;
   }
 </style>

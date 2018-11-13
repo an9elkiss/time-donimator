@@ -34,7 +34,7 @@
                     <option value="">未选择</option>
                     <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
                   </select>
-                  <input v-if="!(isDisabled && taskCommand.parentTitle)" v-model="filter" @focus="searchInputFocus" @keydown="searchInputFocus" @blur="getNull" class="form-control input-sm transfrom">
+                  <input v-if="!(isDisabled && taskCommand.parentTitle)" v-model="filter" @focus="searchInputFocus" @keydown="dropdownShow = true" @blur="getNull" class="form-control input-sm transfrom">
                   <div v-if="!(isDisabled && taskCommand.parentTitle)" class="triangle"></div>
                   <div v-if="!(isDisabled && taskCommand.parentTitle)" @mouseover="isIn = true" @mouseleave="dropdownLoosePoint" :class="dropdownShow?'is-active':''" class="select-dropdown">
                     <ul>

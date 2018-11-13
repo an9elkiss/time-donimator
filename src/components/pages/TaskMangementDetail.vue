@@ -574,6 +574,14 @@ export default {
       this.dropdownShow = false
     },
     getNull () {
+      if (this.filterParentProject.length === 2) {
+        let project = this.filterParentProject[1]
+        this.filter = project.title
+        this.taskCommand.parentId = project.id
+        this.dropdownShow = false
+        this.parentTaskChange()
+        return
+      }
       if (!this.isIn) {
         this.taskCommand.parentId = null
         this.filter = '未选择'

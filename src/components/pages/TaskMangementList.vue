@@ -8,7 +8,7 @@
           <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
             <div class="pcPart">
               <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
-                <option value="2018">2018年</option>
+                <option v-for="year in timeFilter.years" :key="year.id" :value="year.id">{{year.value}}</option>
               </select>
             </div>
             <div class="mobPart">
@@ -42,7 +42,7 @@
         <div class="panel-body">
           <div id="accordion1" class="panel-group accordion">
             <div class="panel panel-default cfix" v-for="(item,index_1) in tabLists" :key="index_1">
-              <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1,)">
+              <div class="panel-heading" @click="getTasks(item.userId, timeFilter.year, timeFilter.month, timeFilter.week, index_1)">
                 <h4 class="panel-title cfix" @click="infoSave(item)"><a data-toggle="collapse" data-parent="#accordion1" :href="'#collapse'+index_1" class="collapsed"><i class="icon mdi mdi-chevron-down"></i>{{item.name}}<span class="fRight">折算工时：{{item.taskResource.percentHoursTotal}}小时</span><span class="fRight">贡献值：{{item.taskResource.planScoreTotal}}</span></a></h4>
               </div>
               <div v-if="item.taskLists" :id="'collapse'+index_1" class="panel-collapse collapse" style="padding-bottom:15px;">
@@ -208,6 +208,7 @@ export default {
   async created () {
     var now = new Date()
     this.timeFilter.year = now.getFullYear()
+    this.initTimeFilterYears(this.timeFilter.year)
     await this.initialWeek()
     this.timeFilter.month = this.selectedMonth
     this.timeFilter.week = this.selectedWeek
@@ -233,6 +234,16 @@ export default {
     weekSelectChange (index) {
       this.timeFilter.week = this.timeFilter.weeks[index].id
       this.changeSelect()
+    },
+    initTimeFilterYears (nowYear) {
+      let startYear = this.timeFilter.years[0].id
+      while (startYear <= nowYear) {
+        startYear += 1
+        this.timeFilter.years.push({
+          id: startYear,
+          value: startYear + '年'
+        })
+      }
     },
     async loadPersons () {
       var t = this

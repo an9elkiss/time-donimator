@@ -336,6 +336,7 @@ export default {
       if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
         this.timeFilter.month = result.data.data.month
+        this.timeFilter.year = result.data.data.year
         this.selectedDateCommitStore()
         this.initialWeekFromYearAndMonth()
       }

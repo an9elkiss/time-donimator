@@ -13,8 +13,7 @@
             <div class="inline">
               <div class="pcPart">
                 <select class="form-control input-sm" v-model="year" @change="yearChanged">
-                  <!--<option v-for="n in 6" :value="year - 5 + n" :key="year - 5 + n">{{  year - 5 + n}}</option>-->
-                  <option value="2018">2018</option>
+                   <option v-for="year in years" :key="year.id" :value="year.id">{{year.value}}</option>
                 </select>
               </div>
               <div class="mobPart">
@@ -160,6 +159,8 @@ export default {
     }
   },
   async mounted () {
+    let year = new Date().getFullYear()
+    this.initTimeFilterYears(year)
     await this.initialYearAndMonth()
     await this.initialPersons()
     await this.initialTotalChartOption()
@@ -368,6 +369,16 @@ export default {
       this.detailChartSetOption()
       this.updateTotalChartOption()
       this.totalChartSetOption()
+    },
+    initTimeFilterYears (nowYear) {
+      let startYear = this.years[0].id
+      while (startYear <= nowYear) {
+        startYear += 1
+        this.years.push({
+          id: startYear,
+          value: startYear + '年'
+        })
+      }
     }
   }
 }

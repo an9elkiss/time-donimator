@@ -2,7 +2,7 @@
   <div class="be-content">
     <div class="main-content showReportFormInfo">
       <div v-if="codeReviewState" class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">Code Reviev (组别：{{ groupLeader.name }})</div>
+        <div class="panel-heading panel-heading-divider">Code Review (组别：{{ groupLeader.name }})</div>
         <div class="panel-body">
           <div v-for="(item) of chartDataInfo" :key="item.id" class="task-block">
             <h2 class="cfix">

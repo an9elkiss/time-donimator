@@ -2,7 +2,7 @@
   <div class="be-content">
     <div class="main-content container-fluid">
       <div class="panel panel-default">
-        <div class="panel-heading panel-heading-divider">Code Reviev</div>
+        <div class="panel-heading panel-heading-divider">Code Review</div>
         <div class="panel-body">
           <div id="codeReview" class="charts"></div>
         </div>

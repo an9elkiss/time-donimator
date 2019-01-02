@@ -8,7 +8,7 @@
           <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
             <div class="pcPart">
               <select class="form-control input-sm" v-model="timeFilter.year" @change="changeYearOrMonth()">
-                <option value="2018">2018年</option>
+                <option v-for="year in timeFilter.years" :key="year.id" :value="year.id">{{year.value}}</option>
               </select>
             </div>
             <div class="mobPart">
@@ -176,6 +176,7 @@ export default {
   created () {
     var now = new Date()
     this.timeFilter.year = now.getFullYear()
+    this.initTimeFilterYears(this.timeFilter.year)
     this.initialWeek()
     this.timeFilter.month = this.selectedMonth
     this.timeFilter.week = this.selectedWeek
@@ -256,6 +257,7 @@ export default {
       if (result.data && result.data.code === 200) {
         this.timeFilter.week = result.data.data.week
         this.timeFilter.month = result.data.data.month
+        this.timeFilter.year = result.data.data.year
         this.selectedDateCommitStore()
         this.initialWeekFromYearAndMonth()
       }
@@ -362,6 +364,16 @@ export default {
         return
       }
       this.getPersonsData()
+    },
+    initTimeFilterYears (nowYear) {
+      let startYear = this.timeFilter.years[0].id
+      while (startYear <= nowYear) {
+        startYear += 1
+        this.timeFilter.years.push({
+          id: startYear,
+          value: startYear + '年'
+        })
+      }
     }
   }
 }

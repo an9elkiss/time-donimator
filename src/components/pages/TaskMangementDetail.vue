@@ -700,9 +700,6 @@ export default {
   div.plan {
     border: solid #34a853;
   }
-  .error {
-    border: 1px solid #ea4335;
-  }
   .errorSpan {
     color: #ea4335;
   }

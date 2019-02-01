@@ -54,7 +54,11 @@ const url = {
   apiGetShareMonthData: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group',
   apiGetCodeReviewEveryMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/codeReview/statistical/group/info',
   apiGetImprovementMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/task/statistical/group/info',
-  apiGetShareMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group/info'
+  apiGetShareMonthDataInfo: managerApiBase + '/api-super-manager/1.0.0/share/statistical/group/info',
+  apiProjectPlanTracking: managerApiBase + '/api-super-manager/1.0.0/projectplan',
+  apiQueryProjectPlanTracking: managerApiBase + '/api-super-manager/1.0.0/projectplans',
+  apiProjectPlanPhase: managerApiBase + '/api-super-manager/1.0.0/projectplanphase',
+  apiProjectPlanPhaseCheck: managerApiBase + '/api-super-manager/1.0.0/projectplanphasecheck'
 }
 
 const event = {

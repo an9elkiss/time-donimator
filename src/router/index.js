@@ -18,6 +18,8 @@ import SharingCommentList from '@/components/pages/trainingSharing/SharingCommen
 import EditContentPage from '@/components/pages/dirAndFile/EditContentPage'
 import ReportForm from '@/components/pages/charts/ReportForm'
 import ShowReportFormInfo from '@/components/pages/charts/ShowReportFormInfo'
+import ProjectPlanTracking from '@/components/pages/projectPlan/ProjectPlanTracking'
+import EditProjectPlanTracking from '@/components/pages/projectPlan/EditProjectPlanTracking'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -174,6 +176,24 @@ export default new Router({
             keepAlive: false
           },
           component: ShowReportFormInfo
+        },
+        {
+          path: 'project-plan-tracking',
+          name: 'projectPlanTracking',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: ProjectPlanTracking
+        },
+        {
+          path: 'edit-project-plan-tracking',
+          name: 'editProjectPlanTracking',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: EditProjectPlanTracking
         }
       ]
     }

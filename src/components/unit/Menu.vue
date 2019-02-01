@@ -21,27 +21,28 @@
                 <ul class="sub-menu">
                   <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
                   <sub-menu v-show="menuBtn.m203" id="sm_4" path="/code-review-list" name="代码审核" />
+                  <sub-menu v-show="menuBtn.m204" id="sm_5" path="/project-plan-tracking" name="任务计划" />
                 </ul>
               </li>
               <li v-show="menuBtn.m301" class="parent">
                 <a href="#"><i class="icon mdi mdi-chart"></i><span>报表管理</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m302" id="sm_5" path="/show-converted-work-hour" name="一周计划" />
-                  <sub-menu v-show="menuBtn.m303" id="sm_6" path="/score-charts" name="贡献值" />
-                  <sub-menu v-show="menuBtn.m304" id="sm_7" path="/report-form-page" name="团队管理" />
+                  <sub-menu v-show="menuBtn.m302" id="sm_6" path="/show-converted-work-hour" name="一周计划" />
+                  <sub-menu v-show="menuBtn.m303" id="sm_7" path="/score-charts" name="贡献值" />
+                  <sub-menu v-show="menuBtn.m304" id="sm_8" path="/report-form-page" name="团队管理" />
                 </ul>
               </li>
               <li v-show="menuBtn.m401" class="parent">
                 <a href="#"><i class="icon mdi mdi-developer-board"></i><span>培训分享</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m402" id="sm_7" path="/training-content" name="我要分享" />
-                  <sub-menu v-show="menuBtn.m403" id="sm_8" path="/sharing-comment-list" name="分享列表" />
+                  <sub-menu v-show="menuBtn.m402" id="sm_9" path="/training-content" name="我要分享" />
+                  <sub-menu v-show="menuBtn.m403" id="sm_10" path="/sharing-comment-list" name="分享列表" />
                 </ul>
               </li>
               <li v-show="menuBtn.m501" class="parent">
                 <a href="#"><i class="icon mdi mdi-vk"></i><span>文件管理</span></a>
                 <ul class="sub-menu">
-                  <sub-menu v-show="menuBtn.m502" id="sm_7" path="/edit-content-page" name="文件列表" />
+                  <sub-menu v-show="menuBtn.m502" id="sm_11" path="/edit-content-page" name="文件列表" />
                 </ul>
               </li>
             </ul>
@@ -72,6 +73,7 @@ export default {
         m201: false,
         m202: false,
         m203: false,
+        m204: false,
         m301: false,
         m302: false,
         m303: false,
@@ -124,6 +126,8 @@ export default {
               this.menuBtn.m202 = true
             } else if (item.menuId === 203) {
               this.menuBtn.m203 = true
+            } else if (item.menuId === 204) {
+              this.menuBtn.m204 = true
             } else if (item.menuId === 301) {
               this.menuBtn.m301 = true
             } else if (item.menuId === 302) {

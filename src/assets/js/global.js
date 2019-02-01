@@ -34,6 +34,20 @@ const timeEntryType = {
   childEducation: 6
 }
 
+const projectPlanPhaseType = {
+  1: '开发',
+  2: 'sta测试',
+  3: 'pro测试'
+}
+
+const projectPlanPhaseCheckStatusType = {
+  1: '30%',
+  2: '50%',
+  3: '80%',
+  4: '100%',
+  5: '完成自测'
+}
+
 export const goNext = (t, x) => {
   t.$router.push({name: x})
 }
@@ -44,6 +58,20 @@ export const format = (data) => {
     // data = data.replace(/[\n]/g, '<br/>')
     return data.replace(/\r?\n/g, '<br />')
   }
+}
+
+export const transformDateString = (val) => {
+  if (val === null) {
+    return null
+  }
+  let date = val
+  if (typeof val === 'string' || typeof val === 'number') {
+    date = new Date(val)
+  }
+  let year = date.getFullYear()
+  let month = date.getMonth() + 1
+  let day = date.getDate()
+  return year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day
 }
 
 export const showResult = (result) => {
@@ -74,6 +102,9 @@ export default {
   url,
   event,
   timeEntryType,
+  projectPlanPhaseType,
+  projectPlanPhaseCheckStatusType,
+  transformDateString,
   format,
   goNext,
   showResult,

@@ -161,3 +161,36 @@
   list-style-type: decimal;
 }
 
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 计划任务筛选样式 */
+@media (min-width: 768px) {
+  .filter {
+    display: flex;
+    justify-content: space-between;
+  }
+  .form-inline {
+    width: 90%;
+  }
+  .filter .form-group {
+    width: 19%;
+  }
+  .form-inline .form-control {
+    min-width: 65%;
+  }
+}
+.text-right {
+  text-align: right;
+}
+.datetimepicker table tbody tr td.day.disabled {
+  color: #e0e0e0;
+}
+.error {
+  border: 1px solid #ea4335;
+}
+.inline {
+  display: inline;
+}

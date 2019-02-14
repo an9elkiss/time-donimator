@@ -137,6 +137,7 @@ export default {
       postObject.description = this.updateForm.description
       if (this.updateForm.type === 0) {
         // 检查点
+        postObject.planCheckTime = this.updateForm.planCheckTime
         postObject.actualCheckTime = this.updateForm.actualCheckTime
         postObject.actualStatus = this.updateForm.actualStatus
         if (!this.validateForm(postObject, 0)) {
@@ -147,6 +148,8 @@ export default {
       }
       // 计划阶段
       type = 'phase'
+      postObject.planStartTime = this.updateForm.planStartTime
+      postObject.planEndTime = this.updateForm.planEndTime
       postObject.actualStartTime = this.updateForm.actualStartTime
       postObject.actualEndTime = this.updateForm.actualEndTime
       if (!this.validateForm(postObject, null)) {
@@ -163,8 +166,8 @@ export default {
       if (val.hasOwnProperty('type')) {
         // 计划阶段
         this.updateForm.type = val.type
-        this.updateForm.planStartTime = this.$global.transformDateString(val.planStartTime)
-        this.updateForm.planEndTime = this.$global.transformDateString(val.planEndTime)
+        this.updateForm.planStartTime = val.planStartTime
+        this.updateForm.planEndTime = val.planEndTime
         this.updateForm.actualStartTime = this.$global.transformDateString(val.actualStartTime)
         this.updateForm.actualEndTime = this.$global.transformDateString(val.actualEndTime)
 
@@ -177,7 +180,7 @@ export default {
       }
       // 检查点
       this.updateForm.type = 0
-      this.updateForm.planCheckTime = this.$global.transformDateString(val.planCheckTime)
+      this.updateForm.planCheckTime = val.planCheckTime
       this.updateForm.actualCheckTime = this.$global.transformDateString(val.actualCheckTime)
       this.updateForm.planStatus = val.planStatus
       this.updateForm.actualStatus = val.actualStatus === null ? 0 : val.actualStatus

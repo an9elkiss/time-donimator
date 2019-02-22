@@ -34,6 +34,17 @@
                   <option value="2">已完成</option>
                 </select>
               </div>
+              <div class="form-group">
+                <label>优先级</label>
+                <select class="form-control input-xs" v-model="query.projectLevel">
+                  <option value="">全部</option>
+                  <option value="1">1星</option>
+                  <option value="2">2星</option>
+                  <option value="3">3星</option>
+                  <option value="4">4星</option>
+                  <option value="5">5星</option>
+                </select>
+              </div>
             </div>
             <button class="btn btn-space btn-primary btn-add floatRight" @click="submitQueryProjectPlanTracking">搜索</button>
           </div>
@@ -52,7 +63,7 @@
               </div>
               <div class="panel-collapse collapse" :id="'plan-accordion-body-' + projectPlanTracking.id">
                 <div class="panel-body">
-                  <project-plan-panel :trackingSetting="projectPlanTracking" @updateEchartItem="updateEchartItem(index, $event)"></project-plan-panel>
+                  <project-plan-panel :trackingSetting="projectPlanTracking" @updateEchartItem="updateEchartItem(index, $event)" @redraw="redraw"></project-plan-panel>
                 </div>
               </div>
             </div>
@@ -85,7 +96,8 @@ export default {
         planStartTime: null,
         planEndTime: null,
         userId: '',
-        lifecycle: ''
+        lifecycle: '',
+        projectLevel: ''
       },
       queryProjectOptions: [{id: '', value: '全部'}],
       queryPersonOptions: [{id: '', name: '全部'}],
@@ -182,6 +194,9 @@ export default {
         self.showProjectPlanTrackings[index].updateFlag = !self.showProjectPlanTrackings[index].updateFlag
       })
     },
+    redraw () {
+      this.submitQueryProjectPlanTracking()
+    },
     routerToEdit () {
       this.$router.push({name: 'editProjectPlanTracking'})
     },
@@ -209,5 +224,10 @@ export default {
 }
 .plan-accordion a.collapsed {
   padding: 10px;
+}
+@media (min-width: 768px) {
+  .filter .form-group {
+    width: 16%;
+  }
 }
 </style>

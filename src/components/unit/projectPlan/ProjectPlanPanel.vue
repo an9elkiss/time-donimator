@@ -1,8 +1,11 @@
 <template>
   <div class="project-plan-panel">
-    <project-plan-chart :planSetting="trackingSetting" :setting="echartSetting" :updateFlag="updateFlag" tableClass="col-md-8" @updateUpdateFlag="updateUpdateFlag" @itemClicked="echartItemClicked"></project-plan-chart>
-    <button class="btn btn-space btn-primary btn-add added" @click="routerToEdit">修改计划</button>
-    <div class="operation-form center col-md-4">
+    <project-plan-chart :planSetting="trackingSetting" :setting="echartSetting" :updateFlag="updateFlag" :tableClass="updateFormFlag ? 'col-md-8' : 'col-md-12'" @updateUpdateFlag="updateUpdateFlag" @itemClicked="echartItemClicked"></project-plan-chart>
+    <div class="added">
+      <button v-if="trackingSetting.lifecycle === 1" class="btn btn-space btn-primary btn-add" @click="updateCompleteStatus">标记完成</button>
+      <button class="btn btn-space btn-primary btn-add" @click="routerToEdit">修改计划</button>
+    </div>
+    <div class="operation-form center col-md-4" v-if="updateFormFlag">
       <div class="form-group clearfix">
         <label class="col-xs-4 text-right">类型</label>
         <div class="col-xs-8">
@@ -47,6 +50,7 @@ import Global from '@/components/Global'
 import ProjectPlanChart from '@/components/unit/projectPlan/ProjectPlanChart'
 import DateRangeInput from '@/components/unit/DateRangeInput'
 import DateInput from '@/components/unit/DateInput'
+import { Dialog } from 'vant'
 
 export default {
   name: 'ProjectPlanPanel',
@@ -87,6 +91,9 @@ export default {
     }
   },
   computed: {
+    updateFormFlag () {
+      return this.updateForm.id != null
+    },
     clickCount () {
       return this.trackingSetting.clickCount
     },
@@ -108,11 +115,20 @@ export default {
       } else if (value > 0 && value % 2 === 1) {
         // 图表resize
         this.updateFlag = true
+      } else if (value > 0 && value % 2 === 0) {
+        // 收缩时，清空傍边的表单
+        this.updateForm.id = null
       }
     },
     async strengthUpdateFlag () {
       // 发送ajax 更新图表
       this.updateEchartSetting()
+    },
+    updateFormFlag () {
+      let self = this
+      this.$nextTick(() => {
+        self.updateFlag = true
+      })
     }
   },
   mounted () {
@@ -126,6 +142,24 @@ export default {
         self.echartSetting = result.data.data
         self.updateFlag = true
       }
+    },
+    updateCompleteStatus () {
+      let self = this
+      // 更新计划为完成状态
+      Dialog.confirm({
+        title: '警告',
+        message: '确定完成了' + self.trackingSetting.name + '计划吗？'
+      }).then(async () => {
+        let postObject = {
+          id: self.trackingSetting.id,
+          lifecycle: 2
+        }
+        let result = await self.$api(Global.url.apiProjectPlanTracking + '/' + postObject.id, postObject, 'POST')
+        self.$global.showResult(result.data)
+        if (result && result.data.code === 200) {
+          self.$emit('redraw')
+        }
+      })
     },
     routerToEdit () {
       this.$router.push({name: 'editProjectPlanTracking', params: this.trackingSetting})
@@ -260,8 +294,8 @@ export default {
   margin-bottom: 5px;
 }
 .added {
-    position: absolute;
-    right: 0;
-    top: -45px;
+  position: absolute;
+  right: 0;
+  top: -45px;
 }
 </style>

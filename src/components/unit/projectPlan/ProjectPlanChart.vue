@@ -57,16 +57,10 @@ export default {
     self.echartsInstant.on('click', function (params) {
       switch (params.componentType) {
         case 'series':
-          // 计划阶段被点击
-          if (params.value[0] === 0) {
-            self.$emit('itemClicked', self.findOriginSetting('planPhase', params.value[5]))
-          }
+          self.$emit('itemClicked', self.findOriginSetting('planPhase', params.value[5]))
           break
         case 'markLine':
-          // 检查点被点击
-          if (params.data.append.isPlan) {
-            self.$emit('itemClicked', self.findOriginSetting('planPhaseCheck', params.data.append.id))
-          }
+          self.$emit('itemClicked', self.findOriginSetting('planPhaseCheck', params.data.append.id))
           break
       }
 

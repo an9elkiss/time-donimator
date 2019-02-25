@@ -433,7 +433,7 @@ export default {
         this.projectPlanPanelSubmitFlag.projectLevel = false
       }
       if (!result && !this.projectPlanPanelSubmitFlag.projectLevel) {
-        this.$global.showMessage('请输入红色标注的表单信息和计划优先级')
+        this.$global.showMessage('请输入红色标注的表单信息和优先级')
       } else if (!result && this.projectPlanPanelSubmitFlag.projectLevel) {
         this.$global.showMessage('请输入红色标注的表单信息')
       } else if (result && !this.projectPlanPanelSubmitFlag.projectLevel) {

@@ -123,6 +123,9 @@ export default {
     await this.initQueryPersonOptions()
     await this.submitQueryProjectPlanTracking()
   },
+  async activated () {
+    await this.submitQueryProjectPlanTracking()
+  },
   methods: {
     async initQueryProjectOptions () {
       let self = this
@@ -163,7 +166,7 @@ export default {
           let projectOption = self.queryProjectOptions[ele.project]
           return {
             ...ele,
-            projectName: projectOption.value,
+            projectName: projectOption === undefined ? null : projectOption.value,
             // collapse点击次数，1 发ajax 之后每当单数resize
             clickCount: 0,
             // panel 里面echarts强制更新的标志

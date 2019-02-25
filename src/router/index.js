@@ -182,7 +182,7 @@ export default new Router({
           name: 'projectPlanTracking',
           meta: {
             requireAuth: true,
-            keepAlive: false
+            keepAlive: true
           },
           component: ProjectPlanTracking
         },

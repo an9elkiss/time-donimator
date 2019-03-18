@@ -162,7 +162,7 @@ export default {
       })
     },
     routerToEdit () {
-      this.$router.push({name: 'editProjectPlanTracking', params: this.trackingSetting})
+      this.$router.push({name: 'editProjectPlanTracking', params: {id: this.trackingSetting.id}})
     },
     updateModel () {
       let type = 'check'

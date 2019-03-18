@@ -58,7 +58,8 @@ const url = {
   apiProjectPlanTracking: managerApiBase + '/api-super-manager/1.0.0/projectplan',
   apiQueryProjectPlanTracking: managerApiBase + '/api-super-manager/1.0.0/projectplans',
   apiProjectPlanPhase: managerApiBase + '/api-super-manager/1.0.0/projectplanphase',
-  apiProjectPlanPhaseCheck: managerApiBase + '/api-super-manager/1.0.0/projectplanphasecheck'
+  apiProjectPlanPhaseCheck: managerApiBase + '/api-super-manager/1.0.0/projectplanphasecheck',
+  apiTaskArchive: managerApiBase + '/api-super-manager/1.0.0/document/tree'
 }
 
 const event = {

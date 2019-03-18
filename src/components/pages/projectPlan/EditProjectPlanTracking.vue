@@ -218,17 +218,28 @@ export default {
       }
     }
   },
-  mounted () {
+  async mounted () {
     let self = this
     if (self.$route.params.hasOwnProperty('id')) {
       self.flags.updateFlag = true
-      self.orginProjectPlan = self.$route.params
-      self.initModel(self.$route.params)
+      await self.initOriginProjectPlan(self.$route.params.id)
+      self.initModel(self.orginProjectPlan)
       self.initProjectPlanTrackingChart()
     }
     self.initQueryProjectOptions()
   },
   methods: {
+    async initOriginProjectPlan (id) {
+      let result = await this.$api(Global.url.apiQueryProjectPlanTracking, {id: id}, 'POST')
+      if (result && result.data.code === 200) {
+        if (result.data.data.length !== 1) {
+          this.$global.showMessage('没有找到相关数据')
+          this.$router.go(-1)
+          return
+        }
+        this.orginProjectPlan = result.data.data[0]
+      }
+    },
     async initQueryProjectOptions () {
       let self = this
       let result = await this.$api(Global.url.apiGetCommonType, '', 'GET')

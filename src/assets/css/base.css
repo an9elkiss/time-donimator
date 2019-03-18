@@ -194,3 +194,20 @@
 .inline {
   display: inline;
 }
+.pointer {
+  cursor: pointer;
+}
+/* 全局调整select2组件的高度 */
+.select2-container .select2-selection--single{  
+  height: 37px;  
+  line-height: 37px;  
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  height: 37px;
+  line-height: 37px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  width: 30px;
+  top: -3px;
+  height: 37px;
+}

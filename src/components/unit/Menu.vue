@@ -22,6 +22,7 @@
                   <sub-menu v-show="menuBtn.m202" id="sm_3" path="/task-mangement-list" name="一周任务" />
                   <sub-menu v-show="menuBtn.m203" id="sm_4" path="/code-review-list" name="代码审核" />
                   <sub-menu v-show="menuBtn.m204" id="sm_5" path="/project-plan-tracking" name="任务计划" />
+                  <sub-menu v-show="menuBtn.m205" id="sm_12" path="/task-archive" name="任务归档树" />
                 </ul>
               </li>
               <li v-show="menuBtn.m301" class="parent">
@@ -74,6 +75,7 @@ export default {
         m202: false,
         m203: false,
         m204: false,
+        m205: false,
         m301: false,
         m302: false,
         m303: false,
@@ -128,6 +130,8 @@ export default {
               this.menuBtn.m203 = true
             } else if (item.menuId === 204) {
               this.menuBtn.m204 = true
+            } else if (item.menuId === 205) {
+              this.menuBtn.m205 = true
             } else if (item.menuId === 301) {
               this.menuBtn.m301 = true
             } else if (item.menuId === 302) {

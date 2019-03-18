@@ -107,11 +107,20 @@ export default {
   },
   mounted: async function () {
     await this.initialLoginUserName()
-    this.codeReviewInit()
+    await this.codeReviewInit()
     await this.codeReviewInfo()
   },
   methods: {
-    codeReviewInit () {
+    async codeReviewInit () {
+      let result = await this.$api(Global.url.apiCodeReview + '?id=' + this.$route.params.id, '', 'GET')
+      if (result && result.data.code === 200) {
+        if (result.data.data == null) {
+          this.$global.showMessage('没有找到数据')
+          this.$router.go(-1)
+          return
+        }
+      }
+      this.$store.commit('setCodeReview', result.data.data)
       if (this.codeReview.codeReviewlevel !== null) {
         this.myflag = true
         this.codeReviewCommand.codeReviewlevel = this.codeReview.codeReviewlevel
@@ -120,15 +129,13 @@ export default {
       }
     },
     async initialLoginUserName () {
-      while (this.loginUserChineseName === '') {
-        let result = await this.$api(Global.url.apiPersons, '', 'GET')
-        if (result.data && result.data.code === 200) {
-          let persons = result.data.data
-          for (let index in persons) {
-            if (persons[index].userId === Number(this.user.id)) {
-              this.loginUserChineseName = persons[index].name
-              return
-            }
+      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        let persons = result.data.data
+        for (let index in persons) {
+          if (persons[index].userId === Number(this.user.id)) {
+            this.loginUserChineseName = persons[index].name
+            return
           }
         }
       }

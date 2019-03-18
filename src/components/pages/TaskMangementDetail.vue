@@ -30,17 +30,7 @@
               <div class="col-sm-6">
                 <div class="pcPart">
                   <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
-                  <select class="form-control input-sm" v-model="taskCommand.parentId" v-else @change="parentTaskChange">
-                    <option value="">未选择</option>
-                    <option v-for="(project, index) of task.parentProject" :key="index" :value="project.id">{{project.title}}</option>
-                  </select>
-                  <input v-if="!(isDisabled && taskCommand.parentTitle)" v-model="filter" @focus="searchInputFocus" @keydown="dropdownShow = true" @blur="getNull" class="form-control input-sm transfrom">
-                  <div v-if="!(isDisabled && taskCommand.parentTitle)" class="triangle"></div>
-                  <div v-if="!(isDisabled && taskCommand.parentTitle)" @mouseover="isIn = true" @mouseleave="dropdownLoosePoint" :class="dropdownShow?'is-active':''" class="select-dropdown">
-                    <ul>
-                      <li v-for="(project, index) of filterParentProject" :key="index" @click="setParentId(project)" @mouseover="moveIndex = index" :class="{'is-on': moveIndex==index}">&nbsp;&nbsp;&nbsp;&nbsp;{{project.title}}</li>
-                    </ul>
-                  </div>
+                  <select2 v-else name="parentId" :value="taskCommand.parentId" :options="task.parentProject" @update="parentIdChanged"></select2>
                 </div>
                 <div class="mobPart">
                   <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
@@ -159,6 +149,53 @@
                 <input data-parsley-type="number" placeholder="实际工时" class="form-control input-sm" v-model="taskCommand.actualHours" @keydown.enter.prevent>
               </div>
             </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Jira Url</label>
+              <editable-and-clickable-input type="input" name="jiraUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.jiraUrl" @input="updateValue(taskCommand, 'jiraUrl', $event)"></editable-and-clickable-input>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">进度追踪</label>
+              <editable-and-clickable-input type="select" name="planTrackingId" divClass="col-sm-6" routerBaseUrl="/edit-project-plan-tracking" :options="task.projectPlans" editLabel="重新绑定" :value="taskCommand.planTrackingId" @input="updateValue(taskCommand, 'planTrackingId', $event)"></editable-and-clickable-input>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">设计文档</label>
+              <div class="col-sm-6">
+                <div class="be-checkbox inline">
+                  <input v-model="taskCommand.documentTypeArr" id="flowChartUrl" value="flowChartUrl" type="checkbox">
+                  <label for="flowChartUrl">流程图</label>
+                </div>
+                <div class="be-checkbox inline">
+                  <input v-model="taskCommand.documentTypeArr" id="interfaceUrl" value="interfaceUrl" type="checkbox">
+                  <label for="interfaceUrl">接口文档</label>
+                </div>
+                <div class="be-checkbox inline">
+                  <input v-model="taskCommand.documentTypeArr" id="dbDesignUrl" value="dbDesignUrl" type="checkbox">
+                  <label for="dbDesignUrl">数据模型</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" v-if="taskCommand.documentTypeArr.includes('flowChartUrl')">
+              <label class="col-sm-3 control-label">流程图Url</label>
+              <editable-and-clickable-input type="input" name="flowChartUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.flowChartUrl" @input="updateValue(taskCommand, 'flowChartUrl', $event)"></editable-and-clickable-input>
+            </div>
+            <div class="form-group" v-if="taskCommand.documentTypeArr.includes('interfaceUrl')">
+              <label class="col-sm-3 control-label">接口文档Url</label>
+              <editable-and-clickable-input type="input" name="interfaceUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.interfaceUrl" @input="updateValue(taskCommand, 'interfaceUrl', $event)"></editable-and-clickable-input>
+            </div>
+            <div class="form-group" v-if="taskCommand.documentTypeArr.includes('dbDesignUrl')">
+              <label class="col-sm-3 control-label">数据模型Url</label>
+              <editable-and-clickable-input type="input" name="dbDesignUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.dbDesignUrl" @input="updateValue(taskCommand, 'dbDesignUrl', $event)"></editable-and-clickable-input>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Review 负责人</label>
+              <div class="col-sm-6">
+                <select2 name="reviewUserId" :value="taskCommand.reviewUserId" :options="task.codeReviewers" @update="updateValue(taskCommand, 'reviewUserId', $event)"></select2>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Review 记录</label>
+              <editable-and-clickable-input type="select" name="reviewId" divClass="col-sm-6" routerBaseUrl="/code-review-detail" :options="task.codeReviews" editLabel="重新绑定" :value="taskCommand.reviewId" @input="updateValue(taskCommand, 'reviewId', $event)"></editable-and-clickable-input>
+            </div>
             <div class="form-group box-fixed">
               <div class="center">
                 <a class="btn btn-space btn-primary" v-if="nowIndex-1 >= 0" @click="turnToTask(nowIndex-1)">上一个</a>
@@ -181,6 +218,8 @@ import Global from '@/components/Global'
 import ClickableButton from '@/components/unit/ClickableButton'
 import NewButton from '@/components/unit/NewButton'
 import InputSelect from '../unit/InputSelect'
+import Select2 from '@/components/unit/form/Select2'
+import EditableAndClickableInput from '@/components/unit/form/EditableAndClickableInput'
 
 export default {
   data () {
@@ -195,6 +234,9 @@ export default {
         tag: {},
         tags: [],
         parentProject: [],
+        projectPlans: [],
+        codeReviewers: [],
+        codeReviews: [],
         parentHours: '',
         parentScore: '',
         num1: 0,
@@ -208,6 +250,8 @@ export default {
         selectedType: []
       },
       taskCommand: {
+        taskWeekId: '',
+        taskId: '',
         title: '',
         project: '',
         tags: '',
@@ -224,7 +268,16 @@ export default {
         percent: '',
         level: '',
         userId: '',
-        userName: ''
+        userName: '',
+        jiraUrl: '',
+        planTrackingId: '',
+        documentType: '',
+        flowChartUrl: '',
+        interfaceUrl: '',
+        dbDesignUrl: '',
+        documentTypeArr: [],
+        reviewUserId: '',
+        reviewId: ''
       },
       mustInputTaskAttributes: {
         titleFlag: false,
@@ -253,7 +306,9 @@ export default {
   components: {
     InputSelect,
     ClickableButton,
-    NewButton
+    NewButton,
+    Select2,
+    EditableAndClickableInput
   },
   computed: {
     ...mapState({
@@ -282,16 +337,9 @@ export default {
       })
       list.splice(0, 0, {text: '未选择', disabled: true})
       return list
-    },
-    filterParentProject () {
-      let projects = this.task.parentProject.filter(project => {
-        return project.title.toLowerCase().includes(this.filter.toLowerCase())
-      })
-      projects.splice(0, 0, {value: '', title: '未选择'})
-      return projects
     }
   },
-  mounted () {
+  async mounted () {
     var self = this
     window.$(document).ready(function () {
       // window.App.init()
@@ -304,9 +352,12 @@ export default {
           self.taskCommand.endTime = value
         })
     })
-    this.init()
-    this.initialProjectStatusAndTag()
-    this.initialParentProjectList()
+    await this.initialProjectStatusAndTag()
+    await this.initialParentProjectList()
+    await this.initialProjectPlans()
+    await this.initialCodeReviewers()
+    await this.initialCodeReviews()
+    await this.init()
   },
   methods: {
     simpleObjectToArray (obj) {
@@ -318,6 +369,10 @@ export default {
         arr.push(o)
       }
       return arr
+    },
+    parentIdChanged (value) {
+      this.taskCommand.parentId = value
+      this.parentTaskChange()
     },
     parentSelectChange (index) {
       this.taskCommand.parentId = this.task.parentProject[index - 1].id
@@ -350,8 +405,9 @@ export default {
     },
     parentTaskChange () {
       if (this.taskCommand.parentId) {
+        let parentId = Number(this.taskCommand.parentId)
         for (var index in this.task.parentProject) {
-          if (this.taskCommand.parentId === this.task.parentProject[index].id) {
+          if (parentId === this.task.parentProject[index].id) {
             this.taskCommand.project = this.task.parentProject[index].project
           }
         }
@@ -379,7 +435,7 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    init () {
+    async init () {
       var t = this
       t.taskCommand.userName = t.personMsg.name
       t.taskCommand.userId = t.personMsg.userId
@@ -388,7 +444,7 @@ export default {
       t.taskWeekId = t.$route.query.id
       t.nowIndex = Number(t.$route.query.index)
       if (t.taskWeekId) {
-        t.getTask()
+        await t.getTask()
       }
     },
     async getTask () {
@@ -403,7 +459,7 @@ export default {
         }
         t.task.parentIdCopy = res.parentId
         t.task.projectCopy = res.project
-        t.taskCommand = res
+        this.saveTaskCommand(res)
         t.taskCommand.percent = t.personMsg.percent
         this.task.selectedType = t.taskCommand.tags.split(',')
         // t.$refs.inputTimer.value = t.taskCommand.endTime
@@ -461,6 +517,7 @@ export default {
       } else {
         t.taskCommand.isParent = null
       }
+      this.taskCommand.documentType = this.taskCommand.documentTypeArr.toString()
       if (this.validateForm()) {
         var api = t.taskWeekId ? Global.url.apiTaskUpdate + '/' + t.taskWeekId : Global.url.apiTaskSave
         const result = await t.$api(api, t.taskCommand)
@@ -470,25 +527,7 @@ export default {
             t.initialParentProjectList()
             t.isParentFlag = 'false'
             t.task.selectedType = []
-            t.taskCommand = {
-              title: '',
-              project: '',
-              tags: '',
-              description: '',
-              planScore: 0,
-              actualScore: '',
-              currentStatus: '',
-              planStatus: '',
-              parentId: '',
-              isParent: null,
-              endTime: '',
-              planHours: '',
-              actualHours: '',
-              percent: t.personMsg.percent,
-              level: t.personMsg.level,
-              userId: t.personMsg.userId,
-              userName: t.personMsg.name
-            }
+            t.clearTaskCommand()
           }
         }
       }
@@ -508,6 +547,42 @@ export default {
       var result = await this.$api(Global.url.apiGetTaskParents, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.task.parentProject = result.data.data
+      }
+    },
+    async initialProjectPlans () {
+      let self = this
+      let result = await this.$api(Global.url.apiQueryProjectPlanTracking, '', 'POST')
+      if (result.data && result.data.code === 200) {
+        let temp = result.data.data.map(projectPlan => {
+          return {
+            ...projectPlan,
+            projectName: self.task.project[projectPlan.project]
+          }
+        })
+        self.$global.updateSelect2OptionsTitle(temp, 'title', 'projectName,name')
+        this.task.projectPlans = this.task.projectPlans.concat(temp)
+      }
+    },
+    async initialCodeReviewers () {
+      let result = await this.$api(Global.url.apiGetAllPersons, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.task.codeReviewers = result.data.data.map(ele => {
+          return {
+            'id': ele.userId,
+            'title': ele.name
+          }
+        })
+      }
+    },
+    async initialCodeReviews () {
+      let result = await this.$api(Global.url.apiCodeReview + '/' + this.personMsg.userId, '', 'GET')
+      if (result.data && result.data.code === 200) {
+        this.task.codeReviews = result.data.data.map(codeReview => {
+          return {
+            id: codeReview.id,
+            title: codeReview.userLabel
+          }
+        })
       }
     },
     async addNewTag (tag) {
@@ -534,14 +609,24 @@ export default {
       }
       return false
     },
+    updateValue (model, attr, value) {
+      model[attr] = value
+    },
     turnToTask (taskListIndex) {
       this.$router.replace({name: 'TaskMangementDetail', query: {'id': this.taskList[taskListIndex].taskWeekId, 'index': taskListIndex, 'flag': '0'}})
     },
     async initialScoreProgress () {
-      var result = await this.$api(Global.url.apiGetChildTaskScore + this.taskList[this.nowIndex].taskId, '', 'GET')
+      var result = await this.$api(Global.url.apiGetChildTaskScore + this.taskCommand.taskId, '', 'GET')
       if (result.data && result.data.code === 200 && result.data.data) {
         this.setProgressWidth(result.data.data)
       }
+    },
+    saveTaskCommand (obj) {
+      for (let attr in this.taskCommand) {
+        this.taskCommand[attr] = obj[attr]
+      }
+      // 归档文档特殊处理
+      this.taskCommand.documentTypeArr = obj.documentType ? obj.documentType.split(',') : []
     },
     setProgressWidth (data) {
       this.planAllScore = data.planAllScore
@@ -553,48 +638,46 @@ export default {
       this.$refs.planAllScore.style.width = 100 * this.planAllScore / (this.planAllScore + this.actualAllScore) + '%'
       this.$refs.actualAllScore.style.width = 100 * this.actualAllScore / (this.planAllScore + this.actualAllScore) + '%'
     },
+    clearTaskCommand () {
+      let t = this
+      t.taskCommand.title = ''
+      t.taskCommand.project = ''
+      t.taskCommand.tags = ''
+      t.taskCommand.description = ''
+      t.taskCommand.planScore = 0
+      t.taskCommand.actualScore = ''
+      t.taskCommand.currentStatus = ''
+      t.taskCommand.planStatus = ''
+      t.taskCommand.parentId = ''
+      t.taskCommand.isParent = null
+      t.taskCommand.endTime = ''
+      t.taskCommand.planHours = ''
+      t.taskCommand.actualHours = ''
+      t.taskCommand.jiraUrl = ''
+      t.taskCommand.planTrackingId = ''
+      t.taskCommand.documentType = ''
+      t.taskCommand.documentTypeArr = []
+      t.taskCommand.flowChartUrl = ''
+      t.taskCommand.interfaceUrl = ''
+      t.taskCommand.dbDesignUrl = ''
+      t.taskCommand.reviewUserId = ''
+      t.taskCommand.reviewId = ''
+      t.taskCommand.percent = t.personMsg.percent
+      t.taskCommand.level = t.personMsg.level
+      t.taskCommand.userId = t.personMsg.userId
+      t.taskCommand.userName = t.personMsg.name
+    },
     findElementFromListById (list, id) {
       return list.find(ele => {
         return Number(ele.id) === Number(id)
       })
-    },
-    searchInputFocus () {
-      this.filter = ''
-      this.dropdownShow = true
-    },
-    setParentId (project) {
-      this.filter = project.title
-      this.taskCommand.parentId = project.id
-      this.isIn = false
-      this.dropdownShow = false
-      this.parentTaskChange()
-    },
-    dropdownLoosePoint () {
-      this.isIn = false
-      this.dropdownShow = false
-    },
-    getNull () {
-      if (this.filterParentProject.length === 2) {
-        let project = this.filterParentProject[1]
-        this.filter = project.title
-        this.taskCommand.parentId = project.id
-        this.dropdownShow = false
-        this.parentTaskChange()
-        return
-      }
-      if (!this.isIn) {
-        this.taskCommand.parentId = null
-        this.filter = '未选择'
-        this.dropdownShow = false
-        this.parentTaskChange()
-      }
     }
   },
   watch: {
-    '$route': function () {
-      this.init()
-      this.initialProjectStatusAndTag()
-      this.initialParentProjectList()
+    '$route': async function () {
+      await this.initialProjectStatusAndTag()
+      await this.initialParentProjectList()
+      await this.init()
     },
     'taskCommand': {
       handler (newValue) {

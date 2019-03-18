@@ -20,6 +20,7 @@ import ReportForm from '@/components/pages/charts/ReportForm'
 import ShowReportFormInfo from '@/components/pages/charts/ShowReportFormInfo'
 import ProjectPlanTracking from '@/components/pages/projectPlan/ProjectPlanTracking'
 import EditProjectPlanTracking from '@/components/pages/projectPlan/EditProjectPlanTracking'
+import TaskArchive from '@/components/pages/task/TaskArchive'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -77,6 +78,15 @@ export default new Router({
             keepAlive: false
           },
           component: TaskMangementDetail
+        },
+        {
+          path: 'task-archive',
+          name: 'TaskArchive',
+          meta: {
+            requireAuth: true,
+            keepAlive: false
+          },
+          component: TaskArchive
         },
         {
           path: 'code-review-detail/:id',
@@ -187,7 +197,7 @@ export default new Router({
           component: ProjectPlanTracking
         },
         {
-          path: 'edit-project-plan-tracking',
+          path: 'edit-project-plan-tracking/:id',
           name: 'editProjectPlanTracking',
           meta: {
             requireAuth: true,

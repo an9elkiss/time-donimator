@@ -98,6 +98,15 @@ export const showMessage = (message) => {
   Toast(message)
 }
 
+export const updateSelect2OptionsTitle = (arr, attr, attrs) => {
+  arr.map(ele => {
+    let attrArray = attrs.split(',')
+    ele[attr] = attrArray.map(attr => {
+      return ele[attr]
+    }).join(' - ')
+  })
+}
+
 export default {
   url,
   event,
@@ -109,5 +118,6 @@ export default {
   goNext,
   showResult,
   showMessage,
+  updateSelect2OptionsTitle,
   name: 'Global'
 }

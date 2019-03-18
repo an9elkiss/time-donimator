@@ -101,7 +101,7 @@ export default {
       // this.$store.commit('setTemporaryCodeReviewPerson', this.selectedPerson)
     },
     async getPersons () {
-      let result = await this.$api(Global.url.apiPersons, '', 'GET')
+      let result = await this.$api(Global.url.apiGetAllPersons, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.persons = result.data.data
       }

@@ -10,7 +10,7 @@
             </div>
           </div>
           <div class="aside-nav collapse">
-            <div id="taskArchive" class="ztree"></div>
+            <div id="taskArchive" class="ztree content"></div>
           </div>
         </div>
       </div>

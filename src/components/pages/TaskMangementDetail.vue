@@ -151,11 +151,11 @@
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">Jira Url</label>
-              <editable-and-clickable-input type="input" name="jiraUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.jiraUrl" @input="updateValue(taskCommand, 'jiraUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="input" name="jiraUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="Jira Url" :value="taskCommand.jiraUrl" @input="updateValue(taskCommand, 'jiraUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">进度追踪</label>
-              <editable-and-clickable-input type="select" name="planTrackingId" divClass="col-sm-6" routerBaseUrl="/edit-project-plan-tracking" :options="task.projectPlans" editLabel="重新绑定" :value="taskCommand.planTrackingId" @input="updateValue(taskCommand, 'planTrackingId', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="select" name="planTrackingId" class="col-sm-6" routerBaseUrl="/edit-project-plan-tracking" :options="task.projectPlans" editLabel="重新绑定" :value="taskCommand.planTrackingId" @input="updateValue(taskCommand, 'planTrackingId', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">设计文档</label>
@@ -176,15 +176,15 @@
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('flowChartUrl')">
               <label class="col-sm-3 control-label">流程图Url</label>
-              <editable-and-clickable-input type="input" name="flowChartUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.flowChartUrl" @input="updateValue(taskCommand, 'flowChartUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="input" name="flowChartUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="流程图Url" :value="taskCommand.flowChartUrl" @input="updateValue(taskCommand, 'flowChartUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('interfaceUrl')">
               <label class="col-sm-3 control-label">接口文档Url</label>
-              <editable-and-clickable-input type="input" name="interfaceUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.interfaceUrl" @input="updateValue(taskCommand, 'interfaceUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="input" name="interfaceUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="接口文档Url" :value="taskCommand.interfaceUrl" @input="updateValue(taskCommand, 'interfaceUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('dbDesignUrl')">
               <label class="col-sm-3 control-label">数据模型Url</label>
-              <editable-and-clickable-input type="input" name="dbDesignUrl" divClass="col-sm-6" inputClass="form-control input-sm" :value="taskCommand.dbDesignUrl" @input="updateValue(taskCommand, 'dbDesignUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="input" name="dbDesignUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="数据模型Url" :value="taskCommand.dbDesignUrl" @input="updateValue(taskCommand, 'dbDesignUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">Review 负责人</label>
@@ -194,7 +194,7 @@
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">Review 记录</label>
-              <editable-and-clickable-input type="select" name="reviewId" divClass="col-sm-6" routerBaseUrl="/code-review-detail" :options="task.codeReviews" editLabel="重新绑定" :value="taskCommand.reviewId" @input="updateValue(taskCommand, 'reviewId', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="select" name="reviewId" class="col-sm-6" routerBaseUrl="/code-review-detail" :options="task.codeReviews" editLabel="重新绑定" :value="taskCommand.reviewId" @input="updateValue(taskCommand, 'reviewId', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group box-fixed">
               <div class="center">
@@ -356,7 +356,7 @@ export default {
     await this.initialParentProjectList()
     await this.initialProjectPlans()
     await this.initialCodeReviewers()
-    await this.initialCodeReviews()
+    // await this.initialCodeReviews()
     await this.init()
   },
   methods: {
@@ -433,7 +433,11 @@ export default {
       return this.task.selectedType.toString()
     },
     goBack () {
-      this.$router.go(-1)
+      if (window.history.length > 1) {
+        this.$router.go(-1)
+        return
+      }
+      this.$router.push({name: 'TaskMangementList'})
     },
     async init () {
       var t = this
@@ -446,6 +450,7 @@ export default {
       if (t.taskWeekId) {
         await t.getTask()
       }
+      await this.initialCodeReviews()
     },
     async getTask () {
       var t = this
@@ -575,7 +580,7 @@ export default {
       }
     },
     async initialCodeReviews () {
-      let result = await this.$api(Global.url.apiCodeReview + '/' + this.personMsg.userId, '', 'GET')
+      let result = await this.$api(Global.url.apiCodeReview + '/' + this.taskCommand.userId, '', 'GET')
       if (result.data && result.data.code === 200) {
         this.task.codeReviews = result.data.data.map(codeReview => {
           return {
@@ -627,6 +632,13 @@ export default {
       }
       // 归档文档特殊处理
       this.taskCommand.documentTypeArr = obj.documentType ? obj.documentType.split(',') : []
+      // taskCommand parentTitle
+      let parentOption = this.task.parentProject.find(option => {
+        return option.id === obj.parentId
+      })
+      if (parentOption) {
+        this.taskCommand.parentTitle = parentOption.title
+      }
     },
     setProgressWidth (data) {
       this.planAllScore = data.planAllScore
@@ -675,8 +687,12 @@ export default {
   },
   watch: {
     '$route': async function () {
-      await this.initialProjectStatusAndTag()
-      await this.initialParentProjectList()
+      // 节约流量
+      // await this.initialProjectStatusAndTag()
+      // await this.initialParentProjectList()
+      // await this.initialProjectPlans()
+      // await this.initialCodeReviewers()
+      // await this.initialCodeReviews()
       await this.init()
     },
     'taskCommand': {
@@ -686,6 +702,13 @@ export default {
         }
       },
       deep: true
+    },
+    'taskCommand.documentTypeArr': function (val, oldVal) {
+      for (let index = 0; index < oldVal.length; index++) {
+        if (!val.includes(oldVal[index])) {
+          this.taskCommand[oldVal[index]] = ''
+        }
+      }
     }
   }
 }

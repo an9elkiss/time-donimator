@@ -329,6 +329,7 @@ export default {
         let postObject = JSON.parse(JSON.stringify(self.projectPlanPhaseModel))
         postObject.planStartTime += ' 00:00:00'
         postObject.planEndTime += ' 23:59:59'
+        delete postObject.planTrackingId
         let result = await self.$api(Global.url.apiProjectPlanPhase + '/' + self.projectPlanPhaseModel.id, postObject, 'POST')
         self.$global.showResult(result.data)
         if (result && result.data.code === 200) {
@@ -508,7 +509,11 @@ export default {
       model[endAttr] = endDate
     },
     goBack () {
-      this.$router.go(-1)
+      if (window.history.length > 1) {
+        this.$router.go(-1)
+        return
+      }
+      this.$router.push({name: 'projectPlanTracking'})
     },
     echartItemClicked (val) {
       // 准备显示修改panel

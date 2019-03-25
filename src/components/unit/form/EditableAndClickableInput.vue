@@ -21,6 +21,7 @@ export default {
     return {
       valueCopy: '',
       selectLabel: '',
+      divClass: '',
       editable: false // 控制是否可以编辑的状态
     }
   },
@@ -51,9 +52,6 @@ export default {
     routeStyle: {
       type: String,
       default: 'blank'
-    },
-    divClass: {
-      type: String | null
     },
     inputClass: {
       type: String | null
@@ -92,13 +90,13 @@ export default {
       } else {
         this.editable = true
       }
-      if (this.type === 'select' && this.valueCopy) {
-        let value = this.valueCopy
-        let option = this.options.find(op => {
-          return op.id === value
-        })
-        this.selectLabel = option.title
-      }
+      this.updateLabel()
+    },
+    options: {
+      handler: function () {
+        this.updateLabel()
+      },
+      deep: true
     }
   },
   methods: {
@@ -141,6 +139,19 @@ export default {
           // 打开新的窗口 跳转
           window.open(url)
           break
+      }
+    },
+    updateLabel () {
+      if (this.type === 'select' && this.valueCopy) {
+        let value = this.valueCopy
+        let option = this.options.find(op => {
+          return op.id === value
+        })
+        if (option) {
+          this.selectLabel = option.title
+        } else {
+          this.selectLabel = ''
+        }
       }
     },
     getUrl () {

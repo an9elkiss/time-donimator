@@ -79,6 +79,10 @@
                         <p class="cfix"><span class="fLeft">折算工时：</span><span>{{task.percentHours}}小时</span></p>
                         <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
                       </div>
+                      <p class="overflow-p" v-if="task.jiraUrl"><span>Jira：</span><a :href="task.jiraUrl" target="_blank">{{task.jiraUrl}}</a></p>
+                      <p class="overflow-p" v-if="task.flowChartUrl"><span>流程图：</span><a :href="task.flowChartUrl" target="_blank">{{task.flowChartUrl}}</a></p>
+                      <p class="overflow-p" v-if="task.interfaceUrl"><span>接口文档：</span><a :href="task.interfaceUrl" target="_blank">{{task.interfaceUrl}}</a></p>
+                      <p class="overflow-p" v-if="task.dbDesignUrl"><span>数据设计：</span><a :href="task.dbDesignUrl" target="_blank">{{task.dbDesignUrl}}</a></p>
                     </div>
                   </div>
                 </div>
@@ -465,5 +469,11 @@ export default {
       bottom: 40%;
       right: 45px;
     }
+  }
+  .overflow-p {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow: hidden;
   }
 </style>

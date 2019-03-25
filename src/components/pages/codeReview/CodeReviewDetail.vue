@@ -75,7 +75,7 @@ export default {
     return {
       codeReviewCommand: {
         id: 0,
-        userId: 0,
+        // userId: 0,
         codeReviewTime: '',
         userLabel: '',
         codeReviewInfos: '',
@@ -190,7 +190,7 @@ export default {
     },
     prepareCodeReviewCommand () {
       this.codeReviewCommand.id = this.codeReview.id
-      this.codeReviewCommand.userId = this.codeReviewPerson.userId
+      // this.codeReviewCommand.userId = this.codeReview.userId
       this.codeReviewCommand.codeReviewTime = this.codeReview.codeReviewTime
       this.codeReviewCommand.userLabel = this.codeReview.userLabel
       this.codeReviewCommand.codeReviewInfos = JSON.stringify(this.codeReviewDetailModules)

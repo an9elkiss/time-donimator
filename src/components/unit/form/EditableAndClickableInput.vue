@@ -3,8 +3,12 @@
     <input v-if="editable && type==='input'" v-model="valueCopy" :class="inputClass" :name="name" :placeholder="placeholder" @blur="completeEditValue"/>
     <!-- <span  v-if="editable && !nullable && type==='input'" class="mdi mdi-close pointer"></span> -->
     <select2 v-if="editable && type==='select'" :name="name" :value="valueCopy" :options="options" @update="selectedValue"></select2>
+    <textarea v-if="editable && type==='textarea'" v-model="valueCopy" :class="inputClass" :ref="name" type="textarea" :name="name" :placeholder="placeholder" @blur="completeEditValue"></textarea>
     <a v-if="!editable && type==='input'" class="address" @click="valueClicked">{{valueCopy}}</a>
     <a v-if="!editable && type==='select'" class="address" @click="valueClicked">{{selectLabel}}</a>
+    <div v-if="!editable && type==='textarea'" class="column">
+      <a v-for="(url, index) in valueCopy.split('\n')" :key="index" class="address" @click="valueClicked(url)">{{url}}</a>
+    </div>
     <a v-if="!editable" style="float: right;" @click="editValue">{{editLabel}}</a>
   </div>
 </template>
@@ -31,6 +35,7 @@ export default {
   //   }
   // },
   props: {
+    // 可以是 input select textarea
     type: {
       type: String,
       default: 'input'
@@ -106,6 +111,10 @@ export default {
         this.$nextTick(() => {
           window.$('input[name=' + this.name + ']').focus()
         })
+      } else if (this.type === 'textarea') {
+        this.$nextTick(() => {
+          this.$refs[this.name].focus()
+        })
       }
     },
     completeEditValue () {
@@ -128,16 +137,20 @@ export default {
       }
       this.completeEditValue()
     },
-    valueClicked () {
+    valueClicked (url) {
+      if (url) {
+        window.open(url)
+        return
+      }
       if (this.valueCopy === null || this.valueCopy === '') {
         // 没有跳转路径的url，放弃本次跳转操作
         return
       }
-      let url = this.getUrl()
+      let transformedUrl = this.getUrl()
       switch (this.routeStyle) {
         case 'blank':
           // 打开新的窗口 跳转
-          window.open(url)
+          window.open(transformedUrl)
           break
       }
     },
@@ -185,5 +198,9 @@ export default {
     top: 8px;
     right: 18px;
     font-size: 21px;
+  }
+  div.column {
+    display: flex;
+    flex-direction: column;
   }
 </style>

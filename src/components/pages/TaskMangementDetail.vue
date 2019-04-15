@@ -176,15 +176,15 @@
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('flowChartUrl')">
               <label class="col-sm-3 control-label">流程图Url</label>
-              <editable-and-clickable-input type="input" name="flowChartUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="流程图Url" :value="taskCommand.flowChartUrl" @input="updateValue(taskCommand, 'flowChartUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="textarea" name="flowChartUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="流程图Url" :value="taskCommand.flowChartUrl" @input="updateValue(taskCommand, 'flowChartUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('interfaceUrl')">
               <label class="col-sm-3 control-label">接口文档Url</label>
-              <editable-and-clickable-input type="input" name="interfaceUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="接口文档Url" :value="taskCommand.interfaceUrl" @input="updateValue(taskCommand, 'interfaceUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="textarea" name="interfaceUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="接口文档Url" :value="taskCommand.interfaceUrl" @input="updateValue(taskCommand, 'interfaceUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group" v-if="taskCommand.documentTypeArr.includes('dbDesignUrl')">
               <label class="col-sm-3 control-label">数据模型Url</label>
-              <editable-and-clickable-input type="input" name="dbDesignUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="数据模型Url" :value="taskCommand.dbDesignUrl" @input="updateValue(taskCommand, 'dbDesignUrl', $event)"></editable-and-clickable-input>
+              <editable-and-clickable-input type="textarea" name="dbDesignUrl" class="col-sm-6" inputClass="form-control input-sm" placeholder="数据模型Url" :value="taskCommand.dbDesignUrl" @input="updateValue(taskCommand, 'dbDesignUrl', $event)"></editable-and-clickable-input>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label">Review 负责人</label>

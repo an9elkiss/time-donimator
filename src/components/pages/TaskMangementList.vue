@@ -1,7 +1,6 @@
 <template>
   <div class="be-content taskMangementList">
     <div class="main-content container-fluid">
-
       <div class="panel panel-default">
         <div class="panel-heading panel-heading-divider">时间筛选</div>
         <div class="panel-body">
@@ -80,9 +79,9 @@
                         <p class="cfix"><span class="fLeft">实际工时：</span><span v-if="task.actualHours">{{task.actualHours}}小时</span></p>
                       </div>
                       <p class="overflow-p" v-if="task.jiraUrl"><span>Jira：</span><a :href="task.jiraUrl" target="_blank">{{task.jiraUrl}}</a></p>
-                      <p class="overflow-p" v-if="task.flowChartUrl"><span>流程图：</span><a :href="task.flowChartUrl" target="_blank">{{task.flowChartUrl}}</a></p>
-                      <p class="overflow-p" v-if="task.interfaceUrl"><span>接口文档：</span><a :href="task.interfaceUrl" target="_blank">{{task.interfaceUrl}}</a></p>
-                      <p class="overflow-p" v-if="task.dbDesignUrl"><span>数据设计：</span><a :href="task.dbDesignUrl" target="_blank">{{task.dbDesignUrl}}</a></p>
+                      <div class="overflow-p" v-if="task.flowChartUrl"><span>流程图：</span><div><a v-for="(url, index) in task.flowChartUrl.split('\n')" :key="index" :href="url" target="_blank">{{url}}</a></div></div>
+                      <div class="overflow-p" v-if="task.interfaceUrl"><span>接口文档：</span><div><a v-for="(url, index) in task.interfaceUrl.split('\n')" :key="index" :href="url" target="_blank">{{url}}</a></div></div>
+                      <div class="overflow-p" v-if="task.dbDesignUrl"><span>数据设计：</span><div><a v-for="(url, index) in task.dbDesignUrl.split('\n')" :key="index" :href="url" target="_blank">{{url}}</a></div></div>
                     </div>
                   </div>
                 </div>
@@ -471,9 +470,24 @@ export default {
     }
   }
   .overflow-p {
+    display: flex;
+    margin-bottom: 8px;
+  }
+  div.overflow-p {
+    flex-wrap: nowrap;
+    font-size: 12px;
+  }
+  .overflow-p > span {
+    min-width: 68px;
+  }
+  .overflow-p > div {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .overflow-p a {
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 90%;
     overflow: hidden;
   }
 </style>

@@ -138,7 +138,7 @@ export default {
       this.completeEditValue()
     },
     valueClicked (url) {
-      if (url) {
+      if (this.type === 'textarea' && url) {
         window.open(url)
         return
       }

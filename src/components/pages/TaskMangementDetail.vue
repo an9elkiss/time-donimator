@@ -34,7 +34,7 @@
                 </div>
                 <div class="mobPart">
                   <p class="disabledP" v-if="isDisabled && taskCommand.parentTitle">{{taskCommand.parentTitle}}</p>
-                  <input-select v-else title='选择父任务' :columns="parentColumns" state="true" :initial="taskCommand.parentId?findElementFromListById(task.parentProject, taskCommand.parentId).title:'未选择'" @selectConfirmed="parentSelectChange"></input-select>
+                  <input-select v-else title='选择父任务' :columns="parentColumns" state="true" :initial="taskCommand.parentTitle ? taskCommand.parentTitle :'未选择'" @selectConfirmed="parentSelectChange"></input-select>
                 </div>
               </div>
             </div>
@@ -48,11 +48,11 @@
                   </select>
                 </div>
                 <div class="mobPart">
-                  <input-select title="选择项目名称" :columns="projectColumns" :state="isDisabled?'':'true'" :hasErrorFlag="mustInputTaskAttributes.projectFlag" :initial="taskCommand.project?task.project[taskCommand.project]:'未选择'" @selectConfirmed="projectSelectChange"></input-select>
-                  <select v-model="taskCommand.project" required="" :disabled="isDisabled" class="placeholder">
+                  <select v-if="isDisabled" v-model="taskCommand.project" class="form-control input-sm" required="" :disabled="isDisabled">
                     <option value="">未选择</option>
                     <option v-for="(value, key) of task.project" :key="key" :value="key"> {{value}} </option>
                   </select>
+                  <input-select v-else title="选择项目名称" :columns="projectColumns" :state="!isDisabled" :hasErrorFlag="mustInputTaskAttributes.projectFlag" :initial="taskCommand.project?task.project[taskCommand.project]:'未选择'" @selectConfirmed="projectSelectChange"></input-select>
                 </div>
               </div>
             </div>
@@ -239,14 +239,6 @@ export default {
         codeReviews: [],
         parentHours: '',
         parentScore: '',
-        num1: 0,
-        num2: 1,
-        state1: '未完成',
-        state2: '已完成',
-        date: '',
-        time1: 2,
-        time2: 1,
-        time3: 1,
         selectedType: []
       },
       taskCommand: {
@@ -261,6 +253,7 @@ export default {
         currentStatus: '',
         planStatus: '',
         parentId: '',
+        parentTitle: '',
         isParent: null,
         endTime: '',
         planHours: '',
@@ -376,6 +369,7 @@ export default {
     },
     parentSelectChange (index) {
       this.taskCommand.parentId = this.task.parentProject[index - 1].id
+      this.taskCommand.parentTitle = this.task.parentProject[index - 1].title
       this.parentTaskChange()
     },
     projectSelectChange (index) {
@@ -632,13 +626,6 @@ export default {
       }
       // 归档文档特殊处理
       this.taskCommand.documentTypeArr = obj.documentType ? obj.documentType.split(',') : []
-      // taskCommand parentTitle
-      let parentOption = this.task.parentProject.find(option => {
-        return option.id === obj.parentId
-      })
-      if (parentOption) {
-        this.taskCommand.parentTitle = parentOption.title
-      }
     },
     setProgressWidth (data) {
       this.planAllScore = data.planAllScore
@@ -661,6 +648,7 @@ export default {
       t.taskCommand.currentStatus = ''
       t.taskCommand.planStatus = ''
       t.taskCommand.parentId = ''
+      t.taskCommand.parentTitle = ''
       t.taskCommand.isParent = null
       t.taskCommand.endTime = ''
       t.taskCommand.planHours = ''
@@ -678,11 +666,6 @@ export default {
       t.taskCommand.level = t.personMsg.level
       t.taskCommand.userId = t.personMsg.userId
       t.taskCommand.userName = t.personMsg.name
-    },
-    findElementFromListById (list, id) {
-      return list.find(ele => {
-        return Number(ele.id) === Number(id)
-      })
     }
   },
   watch: {

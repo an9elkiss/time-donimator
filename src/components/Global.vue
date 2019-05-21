@@ -13,6 +13,7 @@ const url = {
   apiUpdateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry/',
   apiCreateTimeEntry: apiBase + '/api-time-dominator/1.0.0/time-entry',
   apiLogin: userApiBase + '/api-union-user/1.0.0/login',
+  apiResetPassword: userApiBase + '/api-union-user/1.0.0/reset/password',
   apiMenus: userApiBase + '/api-union-user/1.0.0/menus',
   apiGetAllPersons: userApiBase + '/api-union-user/1.0.0/allPersons',
   apiPersons: userApiBase + '/api-union-user/1.0.0/persons',

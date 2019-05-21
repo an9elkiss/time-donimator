@@ -14,9 +14,7 @@
                     <div class="user-name">{{ userName }}</div>
                   </div>
                 </li>
-                <li><a href="#"><span class="icon mdi mdi-face"></span> Account</a></li>
-                <li><a href="#"><span class="icon mdi mdi-settings"></span> Settings</a></li>
-                <li><a href="#"><span class="icon mdi mdi-power"></span> Logout</a></li>
+                <li> <router-link :to="{name: 'ResetPassword'}" class="icon mdi mdi-face"> reset Password </router-link> </li>
               </ul>
             </li>
           </ul>

@@ -21,6 +21,7 @@ import ShowReportFormInfo from '@/components/pages/charts/ShowReportFormInfo'
 import ProjectPlanTracking from '@/components/pages/projectPlan/ProjectPlanTracking'
 import EditProjectPlanTracking from '@/components/pages/projectPlan/EditProjectPlanTracking'
 import TaskArchive from '@/components/pages/task/TaskArchive'
+import ResetPassword from '@/components/pages/ResetPassword'
 
 Vue.use(VueResource)
 Vue.use(Router)
@@ -36,7 +37,11 @@ export default new Router({
       name: 'LoginPage',
       component: LoginPage
     },
-
+    {
+      path: '/resetPassword',
+      name: 'ResetPassword',
+      component: ResetPassword
+    },
     {
       path: '/',
       name: 'App',

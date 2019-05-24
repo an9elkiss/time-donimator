@@ -40,6 +40,10 @@ export default {
               treeNode.open = true
               return
             }
+            if (!treeNode.id) {
+              // 当没有id时，不打开新的标签页
+              return
+            }
             window.open('/#/task-mangement-detail?flag=0&id=' + treeNode.id)
           }
         }

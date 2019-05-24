@@ -1,20 +1,12 @@
 <template>
-  <div class="be-content be-no-padding">
-    <aside class="page-aside">
-      <div class="be-scroller">
-        <div class="aside-content">
-          <div class="content">
-            <div class="aside-header">
-              <button data-target=".aside-nav" data-toggle="collapse" type="button" class="navbar-toggle"><span class="icon mdi mdi-caret-down"></span></button><span class="title">任务归档树</span>
-              <p class="description">Task Archive</p>
-            </div>
-          </div>
-          <div class="aside-nav collapse">
-            <div id="taskArchive" class="ztree content"></div>
-          </div>
-        </div>
-      </div>
-    </aside>
+  <div class="be-content">
+    <div class="page-head">
+      <h2 class="page-head-title">任务归档树</h2>
+      <p class="description">Task Archive</p>
+    </div>
+    <div class="main-content container-fluid">
+      <div id="taskArchive" class="ztree content"></div>
+    </div>
   </div>
 </template>
 
@@ -93,7 +85,10 @@ export default {
 </script>
 
 <style scoped>
-.page-aside {
-  width: 100%;
+.be-content {
+  background: #ffffff;
+}
+.be-content p.description{
+  margin-bottom: 0;
 }
 </style>

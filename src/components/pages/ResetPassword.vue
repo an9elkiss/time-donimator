@@ -83,11 +83,15 @@ export default {
 
   methods: {
     resetPassword () {
+      var pwdreg = /^(?![^A-Za-z]+$)(?![^0-9]+$)(?=.*[^\w\s]+).{6,12}$/
       if (this.oldPassword.length < 6 || this.newPassword < 6 || this.repeatNewPassword < 6) {
-        this.errorMessage = '密码必须大于6位'
+        this.errorMessage = '请注意：密码必须大于6位'
         return
       } else if (this.newPassword !== this.repeatNewPassword) {
-        this.errorMessage = '新密码与第二次输入的密码不同'
+        this.errorMessage = '请注意：新密码与第二次输入的密码不同'
+        return
+      } else if (!pwdreg.test(this.newPassword)) {
+        this.errorMessage = '请注意：新密码必须由数字、字母、特殊符号组成'
         return
       }
       this.$http.post(Global.url.apiResetPassword, { oldPassword: this.oldPassword, newPassword: this.newPassword, repeatNewPassword: this.repeatNewPassword }).then(response => {
